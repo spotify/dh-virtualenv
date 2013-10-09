@@ -1,0 +1,12 @@
+*.py[oc]
+
+# Temp files
+*~
+~*
+.*~
+\#*
+.#*
+*#
+
+# Sphinx build
+doc/_build

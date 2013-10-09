@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with python2
+
+override_dh_installdocs:
+	python setup.py build_sphinx
+	dh_installdocs doc/_build/html

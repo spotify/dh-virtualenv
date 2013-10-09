@@ -1,0 +1,8 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: dh-virtualenv
+Upstream-Contact: Jyrki Pulliainen <jyrki@spotify.com>
+Source: http://www.github.com/spotify/dh-virtualenv
+
+Files: *
+Copyright: 2013 Spotify AB
+License: GPL-2+

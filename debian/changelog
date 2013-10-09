@@ -1,0 +1,5 @@
+dh-virtualenv (0.5-1) unstable; urgency=low
+
+  * Initial public release
+
+ -- Jyrki Pulliainen <jyrki@spotify.com>  Wed, 09 Oct 2013 17:18:09 +0200

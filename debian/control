@@ -1,0 +1,16 @@
+Source: dh-virtualenv
+Section: net
+Priority: extra
+Maintainer: Jyrki Pulliainen <jyrki@spotify.com>
+Build-Depends: debhelper (>= 8), python(>= 2.6.6-3~),
+ python-setuptools, python-sphinx, python-mock
+Standards-Version: 3.9.3
+X-Python-Version: >= 2.6
+
+Package: dh-virtualenv
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}, python-virtualenv (>= 1.7),
+ grep
+Description: Wrap & build python packages using virtualenv
+ This package provides a dh sequencer that helps you to deploy your
+ virtualenv wrapped installation inside a Debian package.
