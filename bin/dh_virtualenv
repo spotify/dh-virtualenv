@@ -63,7 +63,11 @@ def main():
     if verbose:
         log.setLevel(logging.DEBUG)
 
-    dh = DebHelper(options)
+    if sys.version_info[0] == 2:
+        dh = DebHelper(options)
+    else:
+        dh = DepHelper(options.package or None)
+ 
     for package, details in dh.packages.items():
         def _info(msg):
             log.info('{0}: {1}'.format(package, msg))
