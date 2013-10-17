@@ -18,6 +18,7 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 
+import inspect
 import logging
 import os
 import sys
@@ -63,7 +64,15 @@ def main():
     if verbose:
         log.setLevel(logging.DEBUG)
 
-    dh = DebHelper(options.package or None)
+    # Older DebHelpers, like the one on Debian Squeeze, expect to be
+    # passed the packages keyword argument. Newer (like Ubuntu
+    # Precise) expect the whole optoins to be passed.
+
+    arguments = inspect.getargspec(DebHelper.__init__).args
+    if 'packages' in arguments:
+        dh = DebHelper(packages=options.package or None)
+    else:
+        dh = DebHelper(options)
     for package, details in dh.packages.items():
         def _info(msg):
             log.info('{0}: {1}'.format(package, msg))
