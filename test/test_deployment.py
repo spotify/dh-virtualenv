@@ -126,7 +126,6 @@ def test_create_venv(callmock):
     d.create_virtualenv()
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 '--python=/usr/bin/python2.6',
                                  'debian/test/usr/share/python/test'])
     eq_(['debian/test/usr/share/python/test/bin/python',
          'debian/test/usr/share/python/test/bin/pip',
@@ -141,7 +140,6 @@ def test_create_venv_with_verbose(callmock):
     d.create_virtualenv()
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 '--python=/usr/bin/python2.6',
                                  'debian/test/usr/share/python/test'])
     eq_(['debian/test/usr/share/python/test/bin/python',
          'debian/test/usr/share/python/test/bin/pip',
@@ -157,7 +155,6 @@ def test_create_venv_with_extra_urls(callmock):
     d.create_virtualenv()
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 '--python=/usr/bin/python2.6',
                                  'debian/test/usr/share/python/test'])
     eq_(['debian/test/usr/share/python/test/bin/python',
          'debian/test/usr/share/python/test/bin/pip',
@@ -174,7 +171,6 @@ def test_create_venv_with_custom_index_url(callmock):
     d.create_virtualenv()
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 '--python=/usr/bin/python2.6',
                                  'debian/test/usr/share/python/test'])
     eq_(['debian/test/usr/share/python/test/bin/python',
          'debian/test/usr/share/python/test/bin/pip',
