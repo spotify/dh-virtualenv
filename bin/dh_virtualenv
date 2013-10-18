@@ -77,6 +77,8 @@ def main():
         _info('Fixing paths')
         deploy.fix_activate_path()
         deploy.fix_shebangs()
+        deploy.fix_local_symlinks()
+
         _info('dh-virtualenv: All done!')
 
 if __name__ == '__main__':
