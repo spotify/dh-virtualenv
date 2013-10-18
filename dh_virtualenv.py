@@ -28,7 +28,7 @@ DEFAULT_INSTALL_DIR = '/usr/share/python/'
 
 class Deployment(object):
     def __init__(self, package, extra_urls=None, preinstall=None,
-                 pypi_url=None, verbose=False):
+                 pypi_url=None, setuptools=False, verbose=False):
         self.package = package
         self.install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
         root = self.install_root.lstrip('/')
@@ -41,14 +41,22 @@ class Deployment(object):
         self.pypi_url = pypi_url
         self.log_file = tempfile.NamedTemporaryFile()
         self.verbose = verbose
+        self.setuptools = setuptools
 
     def clean(self):
         shutil.rmtree(self.debian_root)
 
     def create_virtualenv(self):
-        subprocess.check_call(['virtualenv',
-                               '--no-site-packages',
-                               self.package_dir])
+        virtualenv = ['virtualenv', '--no-site-packages']
+
+        if self.setuptools:
+            virtualenv.append('--setuptools')
+
+        if self.verbose:
+            virtualenv.append('--verbose')
+
+        virtualenv.append(self.package_dir)
+        subprocess.check_call(virtualenv)
 
         # We need to prefix the pip run with the location of python
         # executable. Otherwise it would just blow up due to too long

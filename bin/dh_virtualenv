@@ -46,6 +46,8 @@ def main():
                       help='do not act on the specified package')
     parser.add_option('-v', '--verbose', action='store_true',
                       default=False, help='Turn on verbose mode')
+    parser.add_option('-s', '--setuptools', action='store_true',
+                      default=False, help='Use Setuptools instead of Distribute')
     parser.add_option('--extra-index-url', action='append',
                       help='extra index URL to pass to pip.',
                       default=[])
@@ -84,6 +86,7 @@ def main():
             extra_urls=options.extra_index_url,
             preinstall=options.preinstall,
             pypi_url=options.pypi_url,
+            setuptools=options.setuptools,
             verbose=verbose,
         )
 
