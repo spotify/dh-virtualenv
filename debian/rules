@@ -1,7 +1,11 @@
 #!/usr/bin/make -f
 
+export DH_VERBOSE=1
 %:
 	dh $@ --with python2
+
+#override_dh_virtualenv:
+#	dh_virtualenv --buildout --buildout-version 2.1.1
 
 override_dh_installdocs:
 	python setup.py build_sphinx

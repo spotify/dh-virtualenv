@@ -28,7 +28,7 @@ DEFAULT_INSTALL_DIR = '/usr/share/python/'
 
 class Deployment(object):
     def __init__(self, package, extra_urls=None, preinstall=None,
-                 pypi_url=None, verbose=False):
+                 pypi_url=None, verbose=False, use_buildout=False, buildout_version=None):
         self.package = package
         self.install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
         root = self.install_root.lstrip('/')
@@ -41,6 +41,8 @@ class Deployment(object):
         self.pypi_url = pypi_url
         self.log_file = tempfile.NamedTemporaryFile()
         self.verbose = verbose
+        self.use_buildout = use_buildout
+        self.buildout_version = buildout_version
 
     def clean(self):
         shutil.rmtree(self.debian_root)
@@ -69,8 +71,20 @@ class Deployment(object):
         ])
         self.pip_prefix.append('--log={0}'.format(self.log_file.name))
 
+        if self.use_buildout:
+            self.buildout_prefix = [
+                os.path.join(self.bin_dir, 'python'),
+                os.path.join(self.bin_dir, 'buildout'),
+            ]
+            self.buildout_prefix.append('-N')
+
+
     def pip(self, *args):
         return self.pip_prefix + list(args)
+
+    def buildout(self):
+        return self.buildout_prefix 
+
 
     def install_dependencies(self):
         # Install preinstall stage packages. This is handy if you need
@@ -82,6 +96,12 @@ class Deployment(object):
 
         if os.path.exists('requirements.txt'):
             subprocess.check_call(self.pip('-r', 'requirements.txt'))
+
+        if self.buildout and os.path.exists('lib/bootstrap.py'):
+            subprocess.check_call([
+                os.path.join(self.bin_dir, 'python'),
+                'lib/bootstrap.py', '--version', '{0}'.format(self.buildout_version),
+                ])
 
     def fix_shebangs(self):
         """Translate /usr/bin/python and /usr/bin/env python sheband
@@ -105,12 +125,16 @@ class Deployment(object):
                  f])
 
     def install_package(self):
-        temp = tempfile.NamedTemporaryFile()
-        subprocess.check_call([
-            os.path.join(self.bin_dir, 'python'),
-            'setup.py',
-            'install',
-            '--record', temp.name,
-            '--install-headers',
-            os.path.join(self.package_dir, 'include/site/python2.6'),
-        ])
+        if self.buildout:
+            subprocess.check_call(self.buildout())
+        else: 
+            temp = tempfile.NamedTemporaryFile()
+            subprocess.check_call([
+              os.path.join(self.bin_dir, 'python'),
+              'setup.py',
+              'install',
+              '--record', temp.name,
+              '--install-headers',
+              os.path.join(self.package_dir, 'include/site/python2.6'),
+            ])
+
