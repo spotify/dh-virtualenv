@@ -140,6 +140,7 @@ def test_create_venv_with_verbose(callmock):
     d.create_virtualenv()
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
+                                 '--verbose',
                                  'debian/test/usr/share/python/test'])
     eq_(['debian/test/usr/share/python/test/bin/python',
          'debian/test/usr/share/python/test/bin/pip',
@@ -178,6 +179,22 @@ def test_create_venv_with_custom_index_url(callmock):
          '--pypi-url=http://example.com/simple',
          '--extra-index-url=foo',
          '--extra-index-url=bar',
+         '--log=foo'], d.pip_prefix)
+
+
+@patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
+@patch('subprocess.check_call')
+def test_create_venv_with_setuptools(callmock):
+    d = Deployment('test', setuptools=True)
+    d.create_virtualenv()
+    eq_('debian/test/usr/share/python/test', d.package_dir)
+    callmock.assert_called_with(['virtualenv', '--no-site-packages',
+                                 '--setuptools',
+                                 'debian/test/usr/share/python/test'])
+    eq_(['debian/test/usr/share/python/test/bin/python',
+         'debian/test/usr/share/python/test/bin/pip',
+         '-v',
+         'install',
          '--log=foo'], d.pip_prefix)
 
 

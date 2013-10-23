@@ -85,6 +85,10 @@ few command line options:
    default will be whatever ``pip`` uses as default (usually
    ``http://pypi.python.org/simple``).
 
+.. cmdoption:: --setuptools
+
+   Use setuptools instead of distribute in the virtualenv
+
 Advanced usage
 ==============
 
