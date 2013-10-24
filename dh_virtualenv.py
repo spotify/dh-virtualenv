@@ -73,10 +73,8 @@ class Deployment(object):
 
         if self.use_buildout:
             self.buildout_prefix = [
-                os.path.join(self.bin_dir, 'python'),
                 os.path.join(self.bin_dir, 'buildout'),
             ]
-            self.buildout_prefix.append('-N')
 
 
     def pip(self, *args):
