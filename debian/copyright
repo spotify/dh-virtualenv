@@ -6,3 +6,4 @@ Source: http://www.github.com/spotify/dh-virtualenv
 Files: *
 Copyright: 2013 Spotify AB
 License: GPL-2+
+ Full license available at /usr/share/common-licenses/GPL-2
