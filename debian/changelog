@@ -1,3 +1,11 @@
+dh-virtualenv (0.6) unstable; urgency=low
+
+  * Fix lintian errors
+  * Support setuptools
+  * Support newer version of debhelper
+
+ -- Jyrki Pulliainen <jyrki@spotify.com>  Fri, 25 Oct 2013 18:17:59 +0200
+
 dh-virtualenv (0.5-1) unstable; urgency=low
 
   * Initial public release
