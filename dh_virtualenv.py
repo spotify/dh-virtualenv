@@ -121,6 +121,8 @@ class Deployment(object):
         # Make those links relative
         # See https://github.com/pypa/virtualenv/commit/5cb7cd652953441a6696c15bdac3c4f9746dfaa1
         local_dir = os.path.join(self.package_dir, "local")
+        if not os.path.isdir(local_dir):
+            return
         for d in os.listdir(local_dir):
             path = os.path.join(local_dir, d)
             if os.path.islink(path):
