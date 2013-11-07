@@ -56,6 +56,7 @@ def main():
                             'requirements.txt.'),
                       default=[])
     parser.add_option('--pypi-url', help='Base URL of the PyPI server')
+    parser.add_option('--python', help='The Python to use')
     # Ignore user-specified option bunldes
     parser.add_option('-O', help=SUPPRESS_HELP)
 
@@ -87,6 +88,7 @@ def main():
             preinstall=options.preinstall,
             pypi_url=options.pypi_url,
             setuptools=options.setuptools,
+            python=options.python,
             verbose=verbose,
         )
 

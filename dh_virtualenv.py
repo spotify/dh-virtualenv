@@ -28,7 +28,7 @@ DEFAULT_INSTALL_DIR = '/usr/share/python/'
 
 class Deployment(object):
     def __init__(self, package, extra_urls=None, preinstall=None,
-                 pypi_url=None, setuptools=False, verbose=False):
+                 pypi_url=None, setuptools=False, python=None, verbose=False):
         self.package = package
         self.install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
         root = self.install_root.lstrip('/')
@@ -42,6 +42,7 @@ class Deployment(object):
         self.log_file = tempfile.NamedTemporaryFile()
         self.verbose = verbose
         self.setuptools = setuptools
+        self.python = python
 
     def clean(self):
         shutil.rmtree(self.debian_root)
@@ -54,6 +55,9 @@ class Deployment(object):
 
         if self.verbose:
             virtualenv.append('--verbose')
+
+        if self.python:
+            virtualenv.extend(('--python', self.python))
 
         virtualenv.append(self.package_dir)
         subprocess.check_call(virtualenv)
