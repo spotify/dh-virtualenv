@@ -202,10 +202,8 @@ def test_create_venv_with_setuptools(callmock):
 def test_install_package(callmock):
     d = Deployment('test')
     d.bin_dir = 'derp'
+    d.pip_prefix = ['derp/python', 'derp/pip']
     d.install_package()
     callmock.assert_called_with([
-        'derp/python', 'setup.py', 'install',
-        '--record', 'foo',
-        '--install-headers',
-        'debian/test/usr/share/python/test/include/site/python2.6'
+        'derp/python', 'derp/pip', '.',
     ])

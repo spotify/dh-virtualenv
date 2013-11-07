@@ -113,12 +113,4 @@ class Deployment(object):
                  f])
 
     def install_package(self):
-        temp = tempfile.NamedTemporaryFile()
-        subprocess.check_call([
-            os.path.join(self.bin_dir, 'python'),
-            'setup.py',
-            'install',
-            '--record', temp.name,
-            '--install-headers',
-            os.path.join(self.package_dir, 'include/site/python2.6'),
-        ])
+        subprocess.check_call(self.pip("."))
