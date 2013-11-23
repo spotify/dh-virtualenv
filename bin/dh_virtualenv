@@ -61,6 +61,7 @@ def main():
     parser.add_option('--buildout-version', help='Use buildout version')
     parser.add_option('--buildout-dir', help='Use buildout directory')
     parser.add_option('--buildout-srcdir', help='Use buildout src directory')
+    parser.add_option('-t', '--twistd', action='store_true',
 
     # Ignore user-specified option bunldes
     parser.add_option('-O', help=SUPPRESS_HELP)
@@ -99,6 +100,7 @@ def main():
             buildout_version=options.buildout_version,
             buildout_dir=options.buildout_dir,
             buildout_srcdir=options.buildout_srcdir,
+            buildout_srcdir=options.twistd,
         )
 
         _info('Creating virtualenv')
@@ -107,6 +109,7 @@ def main():
         deploy.install_dependencies()
         deploy.install_package()
         deploy.fix_shebangs()
+        deploy.fix_twistd()
 
 
 if __name__ == '__main__':

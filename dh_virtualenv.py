@@ -126,6 +126,12 @@ class Deployment(object):
                    os.path.join(self.bin_dir, 'python'),
                    '{0}'.format(bootstrap),
                    ])
+    def fix_twistd(self):
+        '''TODO:
+             Sync dir to debian/ directory
+             Edit twistd syspath to be correct.
+        '''
+        pass
 
     def fix_shebangs(self):
         """Translate /usr/bin/python and /usr/bin/env python sheband
