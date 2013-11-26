@@ -50,7 +50,6 @@ class Deployment(object):
         self.buildout_srcdir = buildout_srcdir if buildout_srcdir is not None else os.getcwd()
         self.buildout_dir = buildout_dir if buildout_dir is not None else os.getcwd()
 
-
     def clean(self):
         shutil.rmtree(self.debian_root)
 
@@ -126,12 +125,35 @@ class Deployment(object):
                    os.path.join(self.bin_dir, 'python'),
                    '{0}'.format(bootstrap),
                    ])
-    def fix_twistd(self):
-        '''TODO:
-             Sync dir to debian/ directory
-             Edit twistd syspath to be correct.
+
+    def fix_syspath(self):
         '''
-        pass
+             Sync dir to debian/ directory
+             Edit syspath to be correct.
+        '''
+        
+        subprocess.check_call(['rsync','-a','-q',
+            os.path.join(self.buildout_srcdir,'src'),
+            self.package_dir,
+            ])
+
+        grep_proc = subprocess.Popen(
+            ['grep', '-l', '-r', r'^#!.*python',
+            self.bin_dir],
+            stdout=subprocess.PIPE
+            )
+        files, stderr = grep_proc.communicate()
+        files = files.strip()
+        if not files:
+            return
+
+        origpath = os.path.join(os.getcwd(),'debian', self.package)
+        for f in files.split('\n'):
+            subprocess.check_call(
+            ['sed', '-i', r's|{0}||'.format(origpath 
+            ),
+            f])
+
 
     def fix_shebangs(self):
         """Translate /usr/bin/python and /usr/bin/env python sheband
