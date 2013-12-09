@@ -1,6 +1,6 @@
-==========
- Tutorial
-==========
+========
+Tutorial
+========
 
 This tutorial will guide you through setting up your first project
 using *dh-virtualenv*. Having some knowledge on how Debian packages
@@ -18,9 +18,11 @@ after you have cloned the repository are:
 
 .. code-block:: bash
 
-   cd dh-virtualenv           # Here I assume you cloned the repository
-   sudo mk-build-deps -ri     # This will install build dependencies
-   dpkg-buildpackage -us -uc  # Build the *dh-virtualenv* package
+   sudo apt-get install devscripts python-virtualenv git  # Install needed packages
+   git clone https://github.com/spotify/dh-virtualenv.git # Clone Git repository
+   cd dh-virtualenv                                       # Move into the repository
+   sudo mk-build-deps -ri                                 # This will install build dependencies
+   dpkg-buildpackage -us -uc                              # Build the *dh-virtualenv* package
 
    # and finally, install it (you might have to solve some
    # dependencies when doing this):
@@ -99,7 +101,7 @@ for that is fairly straightforward:
   #!/usr/bin/make -f
 
   %:
-  	dh $@ --with python-virtualenv
+      dh $@ --with python-virtualenv
 
 And there we go, debianization of your new package is ready!
 
