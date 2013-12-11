@@ -96,6 +96,7 @@ def main():
         deploy.install_dependencies()
         deploy.install_package()
         deploy.fix_shebangs()
+        deploy.fix_local_symlinks()
 
 
 if __name__ == '__main__':
