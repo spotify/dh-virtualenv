@@ -1,5 +1,7 @@
 # dh-virtualenv
 
+[![Build Status](https://travis-ci.org/spotify/dh-virtualenv.png)](https://travis-ci.org/spotify/dh-virtualenv)
+
 dh-virtualenv is a tool that aims to combine Debian packaging with
 self-contained virtualenv based Python deployments.
 
