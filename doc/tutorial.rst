@@ -101,10 +101,7 @@ for that is fairly straightforward:
   #!/usr/bin/make -f
 
   %:
-  	dh $@ --with python-virtualenv
-
-**Warning**: Use a tab character to indent ``dh $@ --with python-virtualenv`` line. Otherwise, you will have this error during the build: ``debian/rules:4: *** 
-missing separator.  Stop.``
+      dh $@ --with python-virtualenv
 
 And there we go, debianization of your new package is ready!
 
