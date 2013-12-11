@@ -199,6 +199,21 @@ def test_create_venv_with_setuptools(callmock):
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 @patch('subprocess.check_call')
+def test_venv_with_custom_python(callmock):
+    d = Deployment('test', python='/tmp/python')
+    d.create_virtualenv()
+    eq_('debian/test/usr/share/python/test', d.package_dir)
+    callmock.assert_called_with(['virtualenv', '--no-site-packages',
+                                 '--python', '/tmp/python',
+                                 'debian/test/usr/share/python/test'])
+    eq_(['debian/test/usr/share/python/test/bin/python',
+         'debian/test/usr/share/python/test/bin/pip',
+         'install',
+         '--log=foo'], d.pip_prefix)
+
+
+@patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
+@patch('subprocess.check_call')
 def test_install_package(callmock):
     d = Deployment('test')
     d.bin_dir = 'derp'
