@@ -193,7 +193,6 @@ def test_create_venv_with_setuptools(callmock):
                                  'debian/test/usr/share/python/test'])
     eq_(['debian/test/usr/share/python/test/bin/python',
          'debian/test/usr/share/python/test/bin/pip',
-         '-v',
          'install',
          '--log=foo'], d.pip_prefix)
 
