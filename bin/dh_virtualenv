@@ -56,12 +56,19 @@ def main():
                             'requirements.txt.'),
                       default=[])
     parser.add_option('--pypi-url', help='Base URL of the PyPI server')
+    parser.add_option('-b', '--buildout', action='store_true',
+                      default=False, help='Use buildout')
+    parser.add_option('--buildout-version', help='Use buildout version')
+    parser.add_option('--buildout-dir', help='Use buildout directory')
+    parser.add_option('--buildout-srcdir', help='Use buildout src directory')
+
     # Ignore user-specified option bunldes
     parser.add_option('-O', help=SUPPRESS_HELP)
 
     options, args = parser.parse_args(
         sys.argv[1:] + os.environ.get('DH_OPTIONS', '').split())
 
+    use_buildout = options.buildout or os.environ.get('DH_BUILDOUT') == '1'
     verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
     if verbose:
         log.setLevel(logging.DEBUG)
@@ -88,6 +95,10 @@ def main():
             pypi_url=options.pypi_url,
             setuptools=options.setuptools,
             verbose=verbose,
+            use_buildout=use_buildout,
+            buildout_version=options.buildout_version,
+            buildout_dir=options.buildout_dir,
+            buildout_srcdir=options.buildout_srcdir,
         )
 
         _info('Creating virtualenv')
@@ -96,6 +107,7 @@ def main():
         deploy.install_dependencies()
         deploy.install_package()
         deploy.fix_shebangs()
+        deploy.fix_syspath()
 
 
 if __name__ == '__main__':
