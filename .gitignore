@@ -8,5 +8,9 @@
 .#*
 *#
 
+# Build files
+build/
+dh_virtualenv.egg-info/
+
 # Sphinx build
 doc/_build

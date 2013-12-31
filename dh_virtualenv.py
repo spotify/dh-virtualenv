@@ -18,6 +18,7 @@
 # <http://www.gnu.org/licenses/>.
 
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -30,9 +31,10 @@ class Deployment(object):
     def __init__(self, package, extra_urls=None, preinstall=None,
                  pypi_url=None, setuptools=False, python=None, verbose=False):
         self.package = package
-        self.install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
-        root = self.install_root.lstrip('/')
-        self.debian_root = os.path.join('debian', package, root)
+        install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
+        self.virtualenv_install_dir = os.path.join(install_root, self.package)
+        self.debian_root = os.path.join(
+            'debian', package, install_root.lstrip('/'))
         self.package_dir = os.path.join(self.debian_root, package)
         self.bin_dir = os.path.join(self.package_dir, 'bin')
 
@@ -109,12 +111,26 @@ class Deployment(object):
         if not files:
             return
 
-        pythonpath = os.path.join(self.install_root, self.package, 'bin/python')
+        pythonpath = os.path.join(self.virtualenv_install_dir, 'bin/python')
         for f in files.split('\n'):
             subprocess.check_call(
                 ['sed', '-i', r's|^#!.*bin/\(env \)\?python|#!{0}|'.format(
                     pythonpath),
                  f])
+
+    def fix_activate_path(self):
+        """Replace the `VIRTUAL_ENV` path in bin/activate to reflect the
+        post-install path of the virtualenv.
+        """
+        virtualenv_path = 'VIRTUAL_ENV="{0}"'.format(
+            self.virtualenv_install_dir)
+        pattern = re.compile(r'^VIRTUAL_ENV=.*$', flags=re.M)
+
+        with open(os.path.join(self.bin_dir, 'activate'), 'r+') as fh:
+            content = pattern.sub(virtualenv_path, fh.read())
+            fh.seek(0)
+            fh.truncate()
+            fh.write(content)
 
     def install_package(self):
         subprocess.check_call(self.pip("."))

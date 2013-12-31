@@ -19,6 +19,7 @@
 
 import os
 import tempfile
+import textwrap
 
 from mock import patch, call
 
@@ -222,3 +223,31 @@ def test_install_package(callmock):
     callmock.assert_called_with([
         'derp/python', 'derp/pip', '.',
     ])
+
+
+def test_fix_activate_path():
+    deployment = Deployment('test')
+    temp = tempfile.NamedTemporaryFile()
+
+    with open(temp.name, 'w') as fh:
+        fh.write(textwrap.dedent("""
+            other things
+
+            VIRTUAL_ENV="/this/path/is/wrong/and/longer/than/new/path"
+
+            more other things
+        """))
+
+    expected = textwrap.dedent("""
+        other things
+
+        VIRTUAL_ENV="/usr/share/python/test"
+
+        more other things
+    """)
+
+    with patch('dh_virtualenv.os.path.join', return_value=temp.name):
+        deployment.fix_activate_path()
+
+    with open(temp.name) as fh:
+        eq_(expected, temp.read())
