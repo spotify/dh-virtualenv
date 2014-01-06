@@ -57,6 +57,7 @@ def main():
                       default=[])
     parser.add_option('--pypi-url', help='Base URL of the PyPI server')
     parser.add_option('--python', help='The Python to use')
+    parser.add_option('--src-dir', help='The source path relative to current working directory')
     # Ignore user-specified option bunldes
     parser.add_option('-O', help=SUPPRESS_HELP)
 
@@ -69,7 +70,7 @@ def main():
 
     # Older DebHelpers, like the one on Debian Squeeze, expect to be
     # passed the packages keyword argument. Newer (like Ubuntu
-    # Precise) expect the whole optoins to be passed.
+    # Precise) expect the whole options to be passed.
 
     arguments = inspect.getargspec(DebHelper.__init__).args
     if 'packages' in arguments:
@@ -81,7 +82,6 @@ def main():
             log.info('{0}: {1}'.format(package, msg))
 
         _info('Processing package...')
-
         deploy = Deployment(
             package,
             extra_urls=options.extra_index_url,
@@ -89,6 +89,7 @@ def main():
             pypi_url=options.pypi_url,
             setuptools=options.setuptools,
             python=options.python,
+            src_dir=options.src_dir,
             verbose=verbose,
         )
 
