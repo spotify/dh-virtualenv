@@ -259,7 +259,7 @@ def test_fix_activate_path():
 def test_custom_src_dir(callmock):
     d = Deployment('test')
     d.pip_prefix = ['pip', 'install']
-    d.src_dir = 'root/srv/application'
+    d.sourcedirectory = 'root/srv/application'
     d.create_virtualenv()
     d.install_dependencies()
     callmock.assert_called_with([

@@ -57,12 +57,13 @@ def main():
                       default=[])
     parser.add_option('--pypi-url', help='Base URL of the PyPI server')
     parser.add_option('--python', help='The Python to use')
-    parser.add_option('--src-dir', help='The source path relative to current working directory')
+    parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
+                      help='The source directory')
     # Ignore user-specified option bunldes
     parser.add_option('-O', help=SUPPRESS_HELP)
 
-    options, args = parser.parse_args(
-        sys.argv[1:] + os.environ.get('DH_OPTIONS', '').split())
+    sys_args_o = [o[2:] for o in sys.argv[1:] if o.startswith('-O-')]
+    options, args = parser.parse_args(sys_args_o + os.environ.get('DH_OPTIONS', '').split())
 
     verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
     if verbose:
@@ -89,7 +90,7 @@ def main():
             pypi_url=options.pypi_url,
             setuptools=options.setuptools,
             python=options.python,
-            src_dir=options.src_dir,
+            sourcedirectory=options.sourcedirectory,
             verbose=verbose,
         )
 
