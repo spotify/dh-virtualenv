@@ -28,11 +28,11 @@ in to your build dependencies and write following `debian/rules` file:
 Note that you might need to provide
 additional build dependencies too, if your requirements require them.
 
-Also, you are able to define the root path for your source directory by overriding
-in debian/rules:
+Also, you are able to define the root path for your source directory using
+`--sourcedirectory` or `-D` argument:
 
-override_dh_virtualenv:
-    dh_virtualenv --src-dir=root/srv/application/
+      %:
+              dh $@ --with python-virtualenv --sourcedirectory=root/srv/application
 
 NOTE: Be aware that the configuration in debian/rules expects tabs instead of spaces!
 
