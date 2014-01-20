@@ -1,0 +1,3 @@
+version=3
+opts=filenamemangle=s/.+\/v?(\d\S*)\.tar\.gz/dh-virtualenv-$1.tar.gz/ \
+  https://github.com/spotify/dh-virtualenv/releases .*/v?(\d\S*)\.tar\.gz

@@ -1,0 +1,9 @@
+Document: dh-virtualenv
+Title: dh-virtualenv documentation
+Author: Spotify
+Abstract: This manual describes dh-virtualenv and how to use it.
+Section: Programming
+
+Format: HTML
+Index: /usr/share/doc/dh-virtualenv/html/index.html
+Files: /usr/share/doc/dh-virtualenv/html/*.html

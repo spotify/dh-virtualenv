@@ -1,7 +1,11 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --with python2
+	dh $@ --with python2 --with sphinxdoc
+
+override_dh_auto_build:
+	rst2man doc/dh_virtualenv.1.rst > doc/dh_virtualenv.1
+	dh_auto_build
 
 override_dh_installdocs:
 	python setup.py build_sphinx

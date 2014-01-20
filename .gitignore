@@ -14,3 +14,6 @@ dh_virtualenv.egg-info/
 
 # Sphinx build
 doc/_build
+
+# Generated man page
+doc/dh_virtualenv.1
