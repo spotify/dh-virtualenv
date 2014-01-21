@@ -28,8 +28,8 @@ DEFAULT_INSTALL_DIR = '/usr/share/python/'
 
 
 class Deployment(object):
-    def __init__(self, package, extra_urls=None, preinstall=None,
-                 pypi_url=None, setuptools=False, python=None, verbose=False):
+    def __init__(self, package, extra_urls=None, preinstall=None, pypi_url=None,
+        setuptools=False, python=None, sourcedirectory=None, verbose=False):
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
         self.virtualenv_install_dir = os.path.join(install_root, self.package)
@@ -45,6 +45,7 @@ class Deployment(object):
         self.verbose = verbose
         self.setuptools = setuptools
         self.python = python
+        self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
 
     def clean(self):
         shutil.rmtree(self.debian_root)
@@ -94,8 +95,9 @@ class Deployment(object):
         if self.preinstall:
             subprocess.check_call(self.pip(*self.preinstall))
 
-        if os.path.exists('requirements.txt'):
-            subprocess.check_call(self.pip('-r', 'requirements.txt'))
+        requirements_path = os.path.join(self.sourcedirectory, 'requirements.txt')
+        if os.path.exists(requirements_path):
+            subprocess.check_call(self.pip('-r', requirements_path))
 
     def fix_shebangs(self):
         """Translate /usr/bin/python and /usr/bin/env python sheband
@@ -133,4 +135,5 @@ class Deployment(object):
             fh.write(content)
 
     def install_package(self):
-        subprocess.check_call(self.pip("."))
+        setup_path = os.path.join(self.sourcedirectory)
+        subprocess.check_call(self.pip(setup_path))

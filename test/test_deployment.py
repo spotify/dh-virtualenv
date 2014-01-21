@@ -96,7 +96,7 @@ def test_install_dependencies_with_requirements(callmock):
     d.pip_prefix = ['pip', 'install']
     d.install_dependencies()
     callmock.assert_called_with(
-        ['pip', 'install', '-r', 'requirements.txt'])
+        ['pip', 'install', '-r', './requirements.txt'])
 
 
 @patch('subprocess.check_call')
@@ -116,7 +116,7 @@ def test_install_dependencies_with_preinstall_with_requirements(callmock):
     d.install_dependencies()
     callmock.assert_has_calls([
         call(['pip', 'install', 'foobar']),
-        call(['pip', 'install', '-r', 'requirements.txt'])
+        call(['pip', 'install', '-r', './requirements.txt'])
     ])
 
 
@@ -251,3 +251,30 @@ def test_fix_activate_path():
 
     with open(temp.name) as fh:
         eq_(expected, temp.read())
+
+
+@patch('os.path.exists', lambda x: True)
+@patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
+@patch('subprocess.check_call')
+def test_custom_src_dir(callmock):
+    d = Deployment('test')
+    d.pip_prefix = ['pip', 'install']
+    d.sourcedirectory = 'root/srv/application'
+    d.create_virtualenv()
+    d.install_dependencies()
+    callmock.assert_called_with([
+        'debian/test/usr/share/python/test/bin/python',
+        'debian/test/usr/share/python/test/bin/pip',
+        'install',
+        '--log=foo',
+        '-r',
+        'root/srv/application/requirements.txt'],
+    )
+    d.install_package()
+    callmock.assert_called_with([
+        'debian/test/usr/share/python/test/bin/python',
+        'debian/test/usr/share/python/test/bin/pip',
+        'install',
+        '--log=foo',
+        'root/srv/application',
+    ])
