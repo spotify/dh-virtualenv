@@ -62,15 +62,15 @@ def main():
     # Ignore user-specified option bunldes
     parser.add_option('-O', help=SUPPRESS_HELP)
 
-    parser.add_option('-a', '--arch', dest="arch", 
+    parser.add_option('-a', '--arch', dest="arch",
                       help=("Act on architecture dependent packages that "
                             "should be built for the build architecture. "
-                            "currently ignored"), 
-                      action="store_true")
+                            "This option is ignored"),
+                      action="store", type="string")
 
-    parser.add_option('-i', '--indep', dest="indep", 
+    parser.add_option('-i', '--indep', dest="indep",
                       help=("Act on all architecture independent packages. "
-                            "currently ignored"),
+                            "This option is ignored"),
                       action="store_true")
 
     sys_args_o = [(o[2:] if o.startswith('-O-') else o) for o in sys.argv[1:]]
