@@ -73,8 +73,6 @@ def main():
                             "currently ignored"),
                       action="store_true")
 
-    parser.add_option('-i', dest="irsch", help="irsch", action="store_true")
-
     sys_args_o = [(o[2:] if o.startswith('-O-') else o) for o in sys.argv[1:]]
     options, args = parser.parse_args(sys_args_o + os.environ.get('DH_OPTIONS', '').split())
 
