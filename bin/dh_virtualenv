@@ -39,6 +39,7 @@ def main():
     parser = get_default_parser()
     options, args = parser.parse_args()
 
+    # TODO: Reduce redundancy with this and the Deployment.from_options
     verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
     if verbose:
         log.setLevel(logging.DEBUG)
@@ -57,16 +58,7 @@ def main():
             log.info('{0}: {1}'.format(package, msg))
 
         _info('Processing package...')
-        deploy = Deployment(
-            package,
-            extra_urls=options.extra_index_url,
-            preinstall=options.preinstall,
-            pypi_url=options.pypi_url,
-            setuptools=options.setuptools,
-            python=options.python,
-            sourcedirectory=options.sourcedirectory,
-            verbose=verbose,
-        )
+        deploy = Deployment.from_options(package, options)
 
         _info('Creating virtualenv')
         deploy.create_virtualenv()

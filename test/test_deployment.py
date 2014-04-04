@@ -25,6 +25,7 @@ from mock import patch, call
 
 from nose.tools import eq_
 from dh_virtualenv import Deployment
+from dh_virtualenv.cmdline import get_default_parser
 
 
 class FakeTemporaryFile(object):
@@ -279,3 +280,32 @@ def test_custom_src_dir(callmock):
         '--log=foo',
         'root/srv/application',
     ])
+
+
+def test_deployment_from_options():
+        options, _ = get_default_parser().parse_args([
+            '--extra-index-url', 'http://example.com',
+            '-O--pypi-url', 'http://example.org'
+        ])
+        d = Deployment.from_options('foo', options)
+        eq_(d.package, 'foo')
+        eq_(d.pypi_url, 'http://example.org')
+        eq_(d.extra_urls, ['http://example.com'])
+
+
+def test_deployment_from_options_with_verbose():
+        options, _ = get_default_parser().parse_args([
+            '--verbose'
+        ])
+        d = Deployment.from_options('foo', options)
+        eq_(d.package, 'foo')
+        eq_(d.verbose, True)
+
+
+@patch('os.environ.get')
+def test_deployment_from_options_with_verbose_from_env(env_mock):
+        env_mock.return_value = '1'
+        options, _ = get_default_parser().parse_args([])
+        d = Deployment.from_options('foo', options)
+        eq_(d.package, 'foo')
+        eq_(d.verbose, True)

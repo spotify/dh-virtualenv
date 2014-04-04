@@ -47,6 +47,18 @@ class Deployment(object):
         self.python = python
         self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
 
+    @classmethod
+    def from_options(cls, package, options):
+        verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
+        return cls(package,
+                   extra_urls=options.extra_index_url,
+                   preinstall=options.preinstall,
+                   pypi_url=options.pypi_url,
+                   setuptools=options.setuptools,
+                   python=options.python,
+                   sourcedirectory=options.sourcedirectory,
+                   verbose=verbose)
+
     def clean(self):
         shutil.rmtree(self.debian_root)
 
