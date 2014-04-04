@@ -15,3 +15,26 @@ from the sequence:
 
 In the sequence the ``dh_virtualenv`` is inserted right after
 ``dh_perl``.
+
+
+===========
+ Changelog
+===========
+
+Following list contains most notable changes by version. For full list
+consult the git history of the project.
+
+0.7 (unreleased)
+================
+
+ * **Backwards incompatible** Support running tests. This change
+   breaks builds that use distutils. For those cases a flag
+   ``--no-test`` needs to be passed.
+ * Add tutorial to documentation
+ * Don't crash on debbuild parameters ``-i`` and ``-a``
+ * Support custom source directory (debhelper's flag ``-D``)
+
+0.6
+===
+
+First public release of *dh-virtualenv*

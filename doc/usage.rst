@@ -89,6 +89,12 @@ few command line options:
 
    Use setuptools instead of distribute in the virtualenv
 
+.. cmdoption:: --no-test
+
+   Skip running ``python setup.py test`` after dependencies and the
+   package is installed. This is useful if the PYthon code is packaged
+   using distutils and not setuptools.
+
 Advanced usage
 ==============
 

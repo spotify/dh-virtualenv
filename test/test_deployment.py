@@ -82,8 +82,9 @@ def test_shebangs_fix_overridden_root():
     del os.environ['DH_VIRTUALENV_INSTALL_ROOT']
 
 
+@patch('os.path.exists', lambda x: False)
 @patch('subprocess.check_call')
-def test_install_dependencies(callmock):
+def test_install_dependencies_with_no_requirements(callmock):
     d = Deployment('test')
     d.pip_prefix = ['pip', 'install']
     d.install_dependencies()
@@ -280,6 +281,26 @@ def test_custom_src_dir(callmock):
         '--log=foo',
         'root/srv/application',
     ])
+
+
+@patch('os.path.exists', lambda *a: True)
+@patch('subprocess.check_call')
+def test_testrunner(callmock):
+    d = Deployment('test')
+    d.run_tests()
+    callmock.assert_called_once_with([
+        'debian/test/usr/share/python/test/bin/python',
+        'setup.py',
+        'test',
+    ])
+
+
+@patch('os.path.exists', lambda *a: False)
+@patch('subprocess.check_call')
+def test_testrunner_setuppy_not_found(callmock):
+    d = Deployment('test')
+    d.run_tests()
+    eq_(callmock.call_count, 0)
 
 
 def test_deployment_from_options():

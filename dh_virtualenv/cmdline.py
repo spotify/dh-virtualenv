@@ -61,9 +61,12 @@ def get_default_parser():
     parser.add_option('--python', help='The Python to use')
     parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
                       help='The source directory')
+    parser.add_option('--no-test', action='store_false', dest='test',
+                      help="Don't run tests for the package. Useful "
+                      "for example when you have packaged with distutils.")
+
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
-
     parser.add_option('-a', '--arch', dest="arch",
                       help=("Act on architecture dependent packages that "
                             "should be built for the build architecture. "

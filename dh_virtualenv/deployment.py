@@ -111,6 +111,12 @@ class Deployment(object):
         if os.path.exists(requirements_path):
             subprocess.check_call(self.pip('-r', requirements_path))
 
+    def run_tests(self):
+        python = os.path.join(self.bin_dir, 'python')
+        setup_py = os.path.join(self.sourcedirectory, 'setup.py')
+        if os.path.exists(setup_py):
+            subprocess.check_call([python, 'setup.py', 'test'])
+
     def fix_shebangs(self):
         """Translate /usr/bin/python and /usr/bin/env python sheband
         lines to point to our virtualenv python.

@@ -39,7 +39,7 @@ def main():
     parser = get_default_parser()
     options, args = parser.parse_args()
 
-    # TODO: Reduce redundancy with this and the Deployment.from_options
+    # TODO: Figure out what to do to this verbose setting
     verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
     if verbose:
         log.setLevel(logging.DEBUG)
@@ -58,26 +58,20 @@ def main():
             log.info('{0}: {1}'.format(package, msg))
 
         _info('Processing package...')
-        deploy = Deployment.from_options(package, options)
+        deploy = Deployment(
+            package,
+            extra_urls=options.extra_index_url,
+            preinstall=options.preinstall,
+            pypi_url=options.pypi_url,
+            setuptools=options.setuptools,
+            python=options.python,
+            sourcedirectory=options.sourcedirectory,
+            verbose=verbose,
+        )
 
-        _info('Creating virtualenv')
-        deploy.create_virtualenv()
+        _info('Running tests')
+        deploy.run_tests()
 
-        _info('Installing dependencies')
-        deploy.install_dependencies()
-
-        _info('Installing package')
-        deploy.install_package()
-        if options.test:
-            _info('Running tests')
-            deploy.run_tests()
-        else:
-            _info('Skipped tests')
-
-        _info('Fixing paths')
-        deploy.fix_activate_path()
-        deploy.fix_shebangs()
-        _info('dh-virtualenv: All done!')
 
 if __name__ == '__main__':
     sys.exit(main() or 0)
