@@ -15,7 +15,7 @@ deploy a Python package in a self-contained virtualenv
 SYNOPSIS
 ========
 
-**dh-virtualenv** [*OPTIONS*]
+**dh_virtualenv** [*OPTIONS*]
 
 
 DESCRIPTION

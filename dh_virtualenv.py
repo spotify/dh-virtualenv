@@ -29,7 +29,7 @@ DEFAULT_INSTALL_DIR = '/usr/share/python/'
 
 class Deployment(object):
     def __init__(self, package, extra_urls=None, preinstall=None, pypi_url=None,
-        setuptools=False, python=None, sourcedirectory=None, verbose=False):
+                 setuptools=False, python=None, sourcedirectory=None, verbose=False):
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
         self.virtualenv_install_dir = os.path.join(install_root, self.package)
