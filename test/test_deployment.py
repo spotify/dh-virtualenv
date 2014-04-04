@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013 Spotify AB
+# Copyright (c) 2013-2014 Spotify AB
 
 # This file is part of dh-virtualenv.
 
@@ -246,7 +246,8 @@ def test_fix_activate_path():
         more other things
     """)
 
-    with patch('dh_virtualenv.os.path.join', return_value=temp.name):
+    with patch('dh_virtualenv.deployment.os.path.join',
+               return_value=temp.name):
         deployment.fix_activate_path()
 
     with open(temp.name) as fh:

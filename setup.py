@@ -29,7 +29,7 @@ setup(name='dh_virtualenv',
       description='Debian packaging sequence for Python virtualenvs.',
       license='GNU General Public License v2 or later',
       scripts=['bin/dh_virtualenv'],
-      py_modules=['dh_virtualenv'],
+      packages=['dh_virtualenv'],
       classifiers=[
           'Intended Audience :: Developers',
           'Intended Audience :: System Administrators',

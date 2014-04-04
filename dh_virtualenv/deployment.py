@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013 Spotify AB
+# Copyright (c) 2013 - 2014 Spotify AB
 
 # This file is part of dh-virtualenv.
 
