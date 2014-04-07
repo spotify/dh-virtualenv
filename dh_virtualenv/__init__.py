@@ -1,7 +1,5 @@
-#! /usr/bin/perl
-# debhelper sequence for wrapping packages inside virtualenvs
-
-# Copyright (c) Spotify AB 2013
+# -*- coding: utf-8 -*-
+# Copyright (c) 2014 Spotify AB
 
 # This file is part of dh-virtualenv.
 
@@ -19,18 +17,4 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 
-use warnings;
-use strict;
-use Debian::Debhelper::Dh_Lib;
-
-insert_after("dh_perl", "dh_virtualenv");
-
-# dh_auto_test can cause system python to run 'python setup.py test',
-# which will break due missing dependencies.
-remove_command("dh_auto_test");
-remove_command("dh_auto_install");
-remove_command("dh_python2");
-remove_command("dh_pycentral");
-remove_command("dh_pysupport");
-
-1
+from .deployment import Deployment

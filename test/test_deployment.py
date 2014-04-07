@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013 Spotify AB
+# Copyright (c) 2013-2014 Spotify AB
 
 # This file is part of dh-virtualenv.
 
@@ -25,6 +25,7 @@ from mock import patch, call
 
 from nose.tools import eq_
 from dh_virtualenv import Deployment
+from dh_virtualenv.cmdline import get_default_parser
 
 
 class FakeTemporaryFile(object):
@@ -81,8 +82,9 @@ def test_shebangs_fix_overridden_root():
     del os.environ['DH_VIRTUALENV_INSTALL_ROOT']
 
 
+@patch('os.path.exists', lambda x: False)
 @patch('subprocess.check_call')
-def test_install_dependencies(callmock):
+def test_install_dependencies_with_no_requirements(callmock):
     d = Deployment('test')
     d.pip_prefix = ['pip', 'install']
     d.install_dependencies()
@@ -246,7 +248,8 @@ def test_fix_activate_path():
         more other things
     """)
 
-    with patch('dh_virtualenv.os.path.join', return_value=temp.name):
+    with patch('dh_virtualenv.deployment.os.path.join',
+               return_value=temp.name):
         deployment.fix_activate_path()
 
     with open(temp.name) as fh:
@@ -278,3 +281,52 @@ def test_custom_src_dir(callmock):
         '--log=foo',
         'root/srv/application',
     ])
+
+
+@patch('os.path.exists', lambda *a: True)
+@patch('subprocess.check_call')
+def test_testrunner(callmock):
+    d = Deployment('test')
+    d.run_tests()
+    callmock.assert_called_once_with([
+        'debian/test/usr/share/python/test/bin/python',
+        'setup.py',
+        'test',
+    ])
+
+
+@patch('os.path.exists', lambda *a: False)
+@patch('subprocess.check_call')
+def test_testrunner_setuppy_not_found(callmock):
+    d = Deployment('test')
+    d.run_tests()
+    eq_(callmock.call_count, 0)
+
+
+def test_deployment_from_options():
+        options, _ = get_default_parser().parse_args([
+            '--extra-index-url', 'http://example.com',
+            '-O--pypi-url', 'http://example.org'
+        ])
+        d = Deployment.from_options('foo', options)
+        eq_(d.package, 'foo')
+        eq_(d.pypi_url, 'http://example.org')
+        eq_(d.extra_urls, ['http://example.com'])
+
+
+def test_deployment_from_options_with_verbose():
+        options, _ = get_default_parser().parse_args([
+            '--verbose'
+        ])
+        d = Deployment.from_options('foo', options)
+        eq_(d.package, 'foo')
+        eq_(d.verbose, True)
+
+
+@patch('os.environ.get')
+def test_deployment_from_options_with_verbose_from_env(env_mock):
+        env_mock.return_value = '1'
+        options, _ = get_default_parser().parse_args([])
+        d = Deployment.from_options('foo', options)
+        eq_(d.package, 'foo')
+        eq_(d.verbose, True)
