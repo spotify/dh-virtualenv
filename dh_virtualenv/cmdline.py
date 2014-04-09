@@ -63,7 +63,8 @@ def get_default_parser():
                       help='The source directory')
     parser.add_option('--no-test', action='store_false', dest='test',
                       help="Don't run tests for the package. Useful "
-                      "for example when you have packaged with distutils.")
+                      "for example when you have packaged with distutils.",
+                      default=True)
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
