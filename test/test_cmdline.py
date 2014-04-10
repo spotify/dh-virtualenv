@@ -55,3 +55,15 @@ def test_get_default_parser():
     ])
     eq_('/tmp/foo', opts.sourcedirectory)
     eq_(['http://example.com'], opts.extra_index_url)
+
+
+def test_that_default_test_option_should_be_true():
+    parser = cmdline.get_default_parser()
+    opts, args = parser.parse_args()
+    eq_(True, opts.test)
+
+
+def test_that_test_option_can_be_false():
+    parser = cmdline.get_default_parser()
+    opts, args = parser.parse_args(['--no-test'])
+    eq_(False, opts.test)
