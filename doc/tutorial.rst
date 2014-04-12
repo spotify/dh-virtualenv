@@ -12,9 +12,16 @@ also need some basic build tools, so it is recommended to install
 Step 1: Install dh-virtualenv
 =============================
 
-In order to use it, you need to install the *dh-virtualenv*. Currently
-the only way is to build and install it yourself. Steps to do that,
-after you have cloned the repository are:
+In order to use it, you need to install the *dh-virtualenv*. If you
+run Debian Jessie (testing) or unstable, you can install *dh-virtualenv*
+simply with *apt-get*:
+
+.. code-block:: bash
+
+   sudo apt-get install dh-virtualenv
+
+For other systems the only way is to build and install it yourself.
+Steps to do that, after you have cloned the repository are:
 
 .. code-block:: bash
 
