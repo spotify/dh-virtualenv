@@ -13,8 +13,8 @@ Step 1: Install dh-virtualenv
 =============================
 
 In order to use it, you need to install the *dh-virtualenv*. If you
-run Debian Jessie (testing) or unstable, you can install *dh-virtualenv*
-simply with *apt-get*:
+run Debian Jessie (testing), Debian Sid (unstable) or Ubuntu 14.04 LTS (Trusty),
+you can install *dh-virtualenv* simply with *apt-get*:
 
 .. code-block:: bash
 
