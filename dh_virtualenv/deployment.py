@@ -155,3 +155,26 @@ class Deployment(object):
     def install_package(self):
         setup_path = os.path.join(self.sourcedirectory)
         subprocess.check_call(self.pip(setup_path))
+
+    def fix_local_symlinks(self):
+        # The virtualenv might end up with a local folder that points outside the package
+        # Specifically it might point at the build environment that created it!
+        # Make those links relative
+        # See https://github.com/pypa/virtualenv/commit/5cb7cd652953441a6696c15bdac3c4f9746dfaa1
+        local_dir = os.path.join(self.package_dir, "local")
+        if not os.path.isdir(local_dir):
+            return
+        for d in os.listdir(local_dir):
+            path = os.path.join(local_dir, d)
+            if not os.path.islink(path):
+                continue
+
+            existing_target = os.readlink(path)
+            if not os.path.isabs(existing_target):
+                # If the symlink is already relative, we don't
+                # want to touch it.
+                continue
+
+            new_target = os.path.relpath(existing_target, local_dir)
+            os.unlink(path)
+            os.symlink(new_target, path)
