@@ -17,7 +17,9 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 
+import functools
 import os
+import shutil
 import tempfile
 import textwrap
 
@@ -29,7 +31,22 @@ from dh_virtualenv.cmdline import get_default_parser
 
 
 class FakeTemporaryFile(object):
-        name = 'foo'
+    name = 'foo'
+
+
+def temporary_dir(fn):
+    """Pass a temporary directory to the fn.
+
+    This method makes sure it is destroyed at the end
+    """
+    @functools.wraps(fn)
+    def _inner(*args, **kwargs):
+        try:
+            tempdir = tempfile.mkdtemp()
+            return fn(tempdir, *args, **kwargs)
+        finally:
+            shutil.rmtree(tempdir)
+    return _inner
 
 
 def test_shebangs_fix():
@@ -330,3 +347,40 @@ def test_deployment_from_options_with_verbose_from_env(env_mock):
         d = Deployment.from_options('foo', options)
         eq_(d.package, 'foo')
         eq_(d.verbose, True)
+
+
+@temporary_dir
+def test_fix_local_symlinks(deployment_dir):
+        d = Deployment('testing')
+        d.package_dir = deployment_dir
+
+        local = os.path.join(deployment_dir, 'local')
+        os.makedirs(local)
+        target = os.path.join(deployment_dir, 'sometarget')
+        symlink = os.path.join(local, 'symlink')
+        os.symlink(target, symlink)
+
+        d.fix_local_symlinks()
+        eq_(os.readlink(symlink), '../sometarget')
+
+
+@temporary_dir
+def test_fix_local_symlinks_with_relative_links(deployment_dir):
+        # Runs shouldn't ruin the already relative symlinks.
+        d = Deployment('testing')
+        d.package_dir = deployment_dir
+
+        local = os.path.join(deployment_dir, 'local')
+        os.makedirs(local)
+        symlink = os.path.join(local, 'symlink')
+        os.symlink('../target', symlink)
+
+        d.fix_local_symlinks()
+        eq_(os.readlink(symlink), '../target')
+
+
+@temporary_dir
+def test_fix_local_symlinks_does_not_blow_up_on_missing_local(deployment_dir):
+        d = Deployment('testing')
+        d.package_dir = deployment_dir
+        d.fix_local_symlinks()

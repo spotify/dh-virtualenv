@@ -166,8 +166,15 @@ class Deployment(object):
             return
         for d in os.listdir(local_dir):
             path = os.path.join(local_dir, d)
-            if os.path.islink(path):
-                existing_target = os.readlink(path)
-                new_target = os.path.relpath(existing_target, local_dir)
-                os.unlink(path)
-                os.symlink(new_target, path)
+            if not os.path.islink(path):
+                continue
+
+            existing_target = os.readlink(path)
+            if not os.path.isabs(existing_target):
+                # If the symlink is already relative, we don't
+                # want to touch it.
+                continue
+
+            new_target = os.path.relpath(existing_target, local_dir)
+            os.unlink(path)
+            os.symlink(new_target, path)
