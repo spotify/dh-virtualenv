@@ -48,7 +48,7 @@ is not mandatory.
 Next you need to define the Debian packaging for your software. To do
 this, create a directory called ``debian`` in the project root.
 
-To be able to build a debian package, a few files is needed. First, we
+To be able to build a debian package, a few files are needed. First, we
 need to define the compatibility level of the project. For this, do:
 
 .. code-block:: bash
