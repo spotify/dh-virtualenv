@@ -70,7 +70,7 @@ project is about, a file called ``control``. Enter a following
    Standards-Version: 3.9.5
 
    Package: my-awesome-python-software
-   Architecture: all
+   Architecture: any
    Depends: ${python:Depends}, ${misc:Depends}
    Description: really neat package!
     second line can contain extra information about it.
