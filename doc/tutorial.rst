@@ -75,7 +75,7 @@ project is about, a file called ``control``. Enter a following
    Description: really neat package!
     second line can contain extra information about it.
 
-The control file is used to define the build dependencies, so if you
+The ``control`` file is used to define the build dependencies, so if you
 are building a package that requires for example ``lxml``, make sure
 you define ``libxml2-dev`` in *Build-Depends* etc.
 
@@ -96,11 +96,11 @@ package builder. Here's a short sample changelog to be entered in
 
     -- Matt Maintainer <matt@example.com>  Fri, 01 Nov 2013 17:00:00 +0200
 
-You don't need to create these files by hand, a handy command called
-dch exists for entering new changelog entries.
+You don't need to create this file by hand, a handy tool called
+``dch`` exists for entering new changelog entries.
 
 Now, last bit is left, which is the ``debian/rules`` file. This file
-is basically a Makefile that Debian uses to build the package. Context
+is basically a Makefile that Debian uses to build the package. Content
 for that is fairly straightforward:
 
 .. code-block:: make
