@@ -24,8 +24,8 @@ In the sequence the ``dh_virtualenv`` is inserted right after
 Following list contains most notable changes by version. For full list
 consult the git history of the project.
 
-0.7 (unreleased)
-================
+0.7
+===
 
  * **Backwards incompatible** Support running tests. This change
    breaks builds that use distutils. For those cases a flag
