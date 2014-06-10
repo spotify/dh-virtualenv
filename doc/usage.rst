@@ -92,8 +92,15 @@ few command line options:
 .. cmdoption:: --no-test
 
    Skip running ``python setup.py test`` after dependencies and the
-   package is installed. This is useful if the PYthon code is packaged
+   package is installed. This is useful if the Python code is packaged
    using distutils and not setuptools.
+
+.. cmdoption:: --python <path>
+
+   Use a specific Python interpreter found in ``path`` as the
+   interpreter for the virtualenv. Default is to use the system
+   default, usually ``/usr/bin/python``.
+
 
 Advanced usage
 ==============
