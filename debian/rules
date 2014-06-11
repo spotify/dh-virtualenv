@@ -3,6 +3,12 @@
 %:
 	dh $@ --with python2 --with sphinxdoc
 
+override_dh_auto_clean:
+	rm -rf doc/_build
+	rm -f doc/dh_virtualenv.1
+	rm -rf dh_virtualenv.egg-info
+	dh_auto_clean
+
 override_dh_auto_build:
 	rst2man doc/dh_virtualenv.1.rst > doc/dh_virtualenv.1
 	dh_auto_build
