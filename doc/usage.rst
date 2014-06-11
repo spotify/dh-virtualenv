@@ -101,6 +101,15 @@ few command line options:
    interpreter for the virtualenv. Default is to use the system
    default, usually ``/usr/bin/python``.
 
+.. cmdoption:: --builtin-venv
+
+   Enable the use of the build-in ``venv`` module, i.e. use ``python
+   -m venv`` to create the virtualenv. For this to work, requires
+   Python 3.4 or later to be used, e.g. by using the option ``--python
+   /usr/bin/python3.4``. (Python 3.3 has the ``venv`` module, but
+   virtualenvs created with Python 3.3 are not bootstrapped with
+   setuptools or pip.)
+
 
 Advanced usage
 ==============

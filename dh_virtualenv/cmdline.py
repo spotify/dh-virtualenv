@@ -59,6 +59,9 @@ def get_default_parser():
                       default=[])
     parser.add_option('--pypi-url', help='Base URL of the PyPI server')
     parser.add_option('--python', help='The Python to use')
+    parser.add_option('--builtin-venv', action='store_true',
+                      help='Use the built-in venv module. Only works on '
+                      'Python 3.4 and later.')
     parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
                       help='The source directory')
     parser.add_option('--no-test', action='store_false', dest='test',

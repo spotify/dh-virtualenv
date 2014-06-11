@@ -29,7 +29,7 @@ DEFAULT_INSTALL_DIR = '/usr/share/python/'
 
 class Deployment(object):
     def __init__(self, package, extra_urls=None, preinstall=None, pypi_url=None,
-                 setuptools=False, python=None, sourcedirectory=None, verbose=False):
+                 setuptools=False, python=None, builtin_venv=False, sourcedirectory=None, verbose=False):
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
         self.virtualenv_install_dir = os.path.join(install_root, self.package)
@@ -37,6 +37,7 @@ class Deployment(object):
             'debian', package, install_root.lstrip('/'))
         self.package_dir = os.path.join(self.debian_root, package)
         self.bin_dir = os.path.join(self.package_dir, 'bin')
+        self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
 
         self.extra_urls = extra_urls if extra_urls is not None else []
         self.preinstall = preinstall if preinstall is not None else []
@@ -45,6 +46,7 @@ class Deployment(object):
         self.verbose = verbose
         self.setuptools = setuptools
         self.python = python
+        self.builtin_venv = builtin_venv
         self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
 
     @classmethod
@@ -56,6 +58,7 @@ class Deployment(object):
                    pypi_url=options.pypi_url,
                    setuptools=options.setuptools,
                    python=options.python,
+                   builtin_venv=options.builtin_venv,
                    sourcedirectory=options.sourcedirectory,
                    verbose=verbose)
 
@@ -63,27 +66,35 @@ class Deployment(object):
         shutil.rmtree(self.debian_root)
 
     def create_virtualenv(self):
-        virtualenv = ['virtualenv', '--no-site-packages']
+        if self.builtin_venv:
+            virtualenv = [self.python, '-m', 'venv']
+        else:
+            virtualenv = ['virtualenv', '--no-site-packages']
 
-        if self.setuptools:
-            virtualenv.append('--setuptools')
+            if self.setuptools:
+                virtualenv.append('--setuptools')
 
-        if self.verbose:
-            virtualenv.append('--verbose')
+            if self.verbose:
+                virtualenv.append('--verbose')
 
-        if self.python:
-            virtualenv.extend(('--python', self.python))
+            if self.python:
+                virtualenv.extend(('--python', self.python))
 
         virtualenv.append(self.package_dir)
         subprocess.check_call(virtualenv)
 
-        # We need to prefix the pip run with the location of python
-        # executable. Otherwise it would just blow up due to too long
-        # shebang-line.
-        self.pip_prefix = [
-            os.path.join(self.bin_dir, 'python'),
-            os.path.join(self.bin_dir, 'pip'),
-        ]
+        if self.builtin_venv:
+            # When using the venv module, pip is in local/bin
+            self.pip_prefix = [os.path.join(self.local_bin_dir, 'pip')]
+        else:
+            # We need to prefix the pip run with the location of python
+            # executable. Otherwise it would just blow up due to too long
+            # shebang-line.
+            self.pip_prefix = [
+                os.path.join(self.bin_dir, 'python'),
+                os.path.join(self.bin_dir, 'pip'),
+            ]
+
         if self.verbose:
             self.pip_prefix.append('-v')
 
