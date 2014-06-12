@@ -1,8 +1,9 @@
 dh-virtualenv (0.7-2) unstable; urgency=low
 
-  * Closes: #751192
+  * Fix virtualenv dependency. Closes: #751192
+  * Fix cleaning with dh_auto_clean
 
- -- Jyrki Pulliainen <jyrki@spotify.com>  Wed, 11 Jun 2014 14:04:44 +0200
+ -- Jyrki Pulliainen <jyrki@spotify.com>  Wed, 11 Jun 2014 16:54:10 +0200
 
 dh-virtualenv (0.7-1) unstable; urgency=low
 
