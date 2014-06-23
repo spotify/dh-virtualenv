@@ -175,6 +175,12 @@ class Deployment(object):
         local_dir = os.path.join(self.package_dir, "local")
         if not os.path.isdir(local_dir):
             return
+        elif os.path.samefile(self.package_dir, local_dir):
+            # "local" points directly to its containing directory
+            os.unlink(local_dir)
+            os.symlink(".", local_dir)
+            return
+
         for d in os.listdir(local_dir):
             path = os.path.join(local_dir, d)
             if not os.path.islink(path):
