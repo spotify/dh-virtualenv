@@ -123,10 +123,10 @@ class Deployment(object):
             subprocess.check_call(self.pip('-r', requirements_path))
 
     def run_tests(self):
-        python = os.path.join(self.bin_dir, 'python')
+        python = os.path.abspath(os.path.join(self.bin_dir, 'python'))
         setup_py = os.path.join(self.sourcedirectory, 'setup.py')
         if os.path.exists(setup_py):
-            subprocess.check_call([python, 'setup.py', 'test'])
+            subprocess.check_call([python, 'setup.py', 'test'], cwd=self.sourcedirectory)
 
     def fix_shebangs(self):
         """Translate /usr/bin/python and /usr/bin/env python sheband
@@ -164,8 +164,7 @@ class Deployment(object):
             fh.write(content)
 
     def install_package(self):
-        setup_path = os.path.join(self.sourcedirectory)
-        subprocess.check_call(self.pip(setup_path))
+        subprocess.check_call(self.pip('.'), cwd=os.path.abspath(self.sourcedirectory))
 
     def fix_local_symlinks(self):
         # The virtualenv might end up with a local folder that points outside the package
