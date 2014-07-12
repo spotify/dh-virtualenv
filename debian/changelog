@@ -1,3 +1,10 @@
+dh-virtualenv (0.7-3~git+2014-06-17) precise; urgency=low
+
+  * Fix: Make "local" symlink relative in cases where it points
+    directly to its containing directory
+
+ -- Juergen Hermann <jh@web.de>  Tue, 17 Jun 2014 16:29:46 +0200
+
 dh-virtualenv (0.7-2) unstable; urgency=low
 
   * Fix virtualenv dependency. Closes: #751192
