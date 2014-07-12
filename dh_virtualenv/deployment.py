@@ -85,14 +85,14 @@ class Deployment(object):
 
         if self.builtin_venv:
             # When using the venv module, pip is in local/bin
-            self.pip_prefix = [os.path.join(self.local_bin_dir, 'pip')]
+            self.pip_prefix = [os.path.abspath(os.path.join(self.local_bin_dir, 'pip'))]
         else:
             # We need to prefix the pip run with the location of python
             # executable. Otherwise it would just blow up due to too long
             # shebang-line.
             self.pip_prefix = [
-                os.path.join(self.bin_dir, 'python'),
-                os.path.join(self.bin_dir, 'pip'),
+                os.path.abspath(os.path.join(self.bin_dir, 'python')),
+                os.path.abspath(os.path.join(self.bin_dir, 'pip')),
             ]
 
         if self.verbose:
@@ -105,7 +105,7 @@ class Deployment(object):
         self.pip_prefix.extend([
             '--extra-index-url={0}'.format(url) for url in self.extra_urls
         ])
-        self.pip_prefix.append('--log={0}'.format(self.log_file.name))
+        self.pip_prefix.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
 
     def pip(self, *args):
         return self.pip_prefix + list(args)
@@ -123,10 +123,10 @@ class Deployment(object):
             subprocess.check_call(self.pip('-r', requirements_path))
 
     def run_tests(self):
-        python = os.path.join(self.bin_dir, 'python')
+        python = os.path.abspath(os.path.join(self.bin_dir, 'python'))
         setup_py = os.path.join(self.sourcedirectory, 'setup.py')
         if os.path.exists(setup_py):
-            subprocess.check_call([python, 'setup.py', 'test'])
+            subprocess.check_call([python, 'setup.py', 'test'], cwd=self.sourcedirectory)
 
     def fix_shebangs(self):
         """Translate /usr/bin/python and /usr/bin/env python sheband
@@ -164,8 +164,7 @@ class Deployment(object):
             fh.write(content)
 
     def install_package(self):
-        setup_path = os.path.join(self.sourcedirectory)
-        subprocess.check_call(self.pip(setup_path))
+        subprocess.check_call(self.pip('.'), cwd=os.path.abspath(self.sourcedirectory))
 
     def fix_local_symlinks(self):
         # The virtualenv might end up with a local folder that points outside the package
