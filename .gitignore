@@ -24,3 +24,9 @@ lib/
 local/
 include/
 man/
+
+# buildpackage
+debian/*.debhelper
+debian/*.substvars
+debian/dh-virtualenv/
+debian/files
