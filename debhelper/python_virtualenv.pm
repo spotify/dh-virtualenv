@@ -28,7 +28,15 @@ insert_after("dh_perl", "dh_virtualenv");
 # dh_auto_test can cause system python to run 'python setup.py test',
 # which will break due missing dependencies.
 remove_command("dh_auto_test");
+
+# dh_auto_build causes system python to run 'python setup.py build'
+# which is unnecessary as we will run that inside the virtualenv
+# anyway
+remove_command("dh_auto_build");
+
+# Same for dh_auto_install and dh_auto_clean
 remove_command("dh_auto_install");
+remove_command("dh_auto_clean");
 remove_command("dh_python2");
 remove_command("dh_pycentral");
 remove_command("dh_pysupport");
