@@ -149,6 +149,22 @@ class Deployment(object):
                     pythonpath),
                  f])
 
+    def relocate(self):
+        if self.builtin_venv:
+            fix_activate_path()
+            fix_shebangs()
+        else:
+            virtualenv = ['virtualenv', '--relocatable']
+
+            if self.verbose:
+                virtualenv.append('--verbose')
+
+            if self.python:
+                virtualenv.extend(('--python', self.python))
+
+            virtualenv.append(self.package_dir)
+            subprocess.check_call(virtualenv)
+
     def fix_activate_path(self):
         """Replace the `VIRTUAL_ENV` path in bin/activate to reflect the
         post-install path of the virtualenv.
