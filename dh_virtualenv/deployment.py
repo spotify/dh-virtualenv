@@ -110,13 +110,14 @@ class Deployment(object):
             '--extra-index-url={0}'.format(url) for url in self.extra_urls
         ])
         self.pip_prefix.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
-        if self.extra_pip_args:
-            self.pip_prefix.append(" ".join(self.extra_pip_args))
 
     def pip(self, *args):
         return self.pip_prefix + list(args)
 
     def install_dependencies(self):
+        # Add in any user supplied args
+        if self.extra_pip_args:
+            self.pip_prefix.append(" ".join(self.extra_pip_args))
         # Install preinstall stage packages. This is handy if you need
         # a custom package to install dependencies (think something
         # along lines of setuptools), but that does not get installed
