@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright (c) 2014 Spotify AB
 
@@ -17,29 +18,29 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 
-"""Helpers to handle debhelper command line options."""
-
+import logging
+import inspect
 import os
+import sys
 
-from optparse import OptionParser, SUPPRESS_HELP
+# The debpython resides here
+sys.path.insert(1, '/usr/share/python/')
+
+from debpython.debhelper import DebHelper
+
+from dh_virtualenv.build import Build
+from dh_virtualenv.dhoptionparser import DebhelperOptionParser
+from dh_virtualenv.install import Install
+
+logging.basicConfig(format='%(levelname).1s: %(module)s:%(lineno)d: '
+                    '%(message)s')
+log = logging.getLogger(__name__)
+
+ROOT_ENV_KEY = 'DH_VIRTUALENV_INSTALL_ROOT'
+DEFAULT_INSTALL_DIR = '/usr/share/python/'
 
 
-class DebhelperOptionParser(OptionParser):
-    """Special OptionParser for handling Debhelper options.
-
-    Basically this means converting -O--option to --option before
-    parsing.
-
-    """
-    def parse_args(self, args=None, values=None):
-        args = [o[2:] if o.startswith('-O-') else o
-                for o in self._get_args(args)]
-        args.extend(os.environ.get('DH_OPTIONS', '').split())
-        # Unfortunately OptionParser is an old style class :(
-        return OptionParser.parse_args(self, args, values)
-
-
-def get_default_parser():
+def main():
     usage = '%prog [options]'
     parser = DebhelperOptionParser(usage, version='%prog 0.7')
     parser.add_option('-p', '--package', action='append',
@@ -72,17 +73,62 @@ def get_default_parser():
                       help="Don't run tests for the package. Useful "
                       "for example when you have packaged with distutils.",
                       default=True)
+    parser.add_option('-n', '--noscripts', action='store_false', dest='autoscripts',
+                      help="Do not modify postinst and similar scripts.",
+                      default=True)
 
-    # Ignore user-specified option bundles
-    parser.add_option('-O', help=SUPPRESS_HELP)
-    parser.add_option('-a', '--arch', dest="arch",
-                      help=("Act on architecture dependent packages that "
-                            "should be built for the build architecture. "
-                            "This option is ignored"),
-                      action="store", type="string")
+    options, args = parser.parse_args()
+    option_dict = vars(options)
 
-    parser.add_option('-i', '--indep', dest="indep",
-                      help=("Act on all architecture independent packages. "
-                            "This option is ignored"),
-                      action="store_true")
-    return parser
+    verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
+    if verbose:
+        log.setLevel(logging.DEBUG)
+
+    install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
+
+    arguments = inspect.getargspec(DebHelper.__init__).args
+    if 'packages' in arguments:
+        dh = DebHelper(packages=options.package or None)
+    else:
+        dh = DebHelper(options)
+    for package, _ in dh.packages.items():
+        build_dir = os.path.join('debian',
+                                 package,
+                                 install_root.lstrip('/'),
+                                 'tmp',
+                                 package)
+
+        option_dict['build_dir'] = build_dir
+        build = Build.from_options(option_dict)
+
+        log.info('Processing package...')
+        build.clean
+
+        log.info('Processing package...')
+
+        log.info('Creating virtualenv')
+        build.create_virtualenv()
+
+        if options.preinstall:
+            log.info('Installing dependencies')
+            build.install_dependencies()
+
+        log.info('Installing package')
+        build.install_package()
+        if options.test:
+            log.info('Running tests')
+            build.run_tests()
+        else:
+            log.info('Skipped tests')
+
+        log.info('{0}: Processing package...'.format(package))
+
+        install = Install(package, build_dir=build_dir)
+        install.relocate()
+        install.fix_local_symlinks()
+
+    log.info('dh-virtualenv: All done!')
+
+
+if __name__ == '__main__':
+    sys.exit(main() or 0)

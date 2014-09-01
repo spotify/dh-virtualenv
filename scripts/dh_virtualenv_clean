@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2014 Spotify AB
+# Copyright (c) 2013-2014 Spotify AB
 
 # This file is part of dh-virtualenv.
 
@@ -16,3 +17,15 @@
 # You should have received a copy of the GNU General Public License
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
+
+from dh_virtualenv.build import Build, DEFAULT_BUILD_DIR
+from dh_virtualenv.dhoptionparser import DebhelperOptionParser
+
+if __name__ == '__main__':
+    usage = '%prog [options]'
+    parser = DebhelperOptionParser(usage, version='%prog 0.7')
+    parser.add_option('-B', '--builddirectory', dest='build_dir',
+                      default=DEFAULT_BUILD_DIR, help='Build dir')
+    options, args = parser.parse_args()
+
+    Build(build_dir=options.build_dir).clean

@@ -1,1 +1,2 @@
 debhelper/python_virtualenv.pm usr/share/perl5/Debian/Debhelper/Sequence
+debhelper/dh_virtualenv.pm usr/share/perl5/Debian/Debhelper/Sequence
