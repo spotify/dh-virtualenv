@@ -208,8 +208,8 @@ def test_create_venv_with_custom_index_url(callmock):
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 @patch('subprocess.check_call')
-def test_create_venv_with_extra_pip_args(callmock):
-    d = Deployment('test', extra_pip_args=['--no-compile'])
+def test_create_venv_with_extra_pip_arg(callmock):
+    d = Deployment('test', extra_pip_arg=['--no-compile'])
     d.create_virtualenv()
     d.install_dependencies()
     eq_('debian/test/usr/share/python/test', d.package_dir)

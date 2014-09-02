@@ -31,7 +31,7 @@ class Deployment(object):
     def __init__(self, package, extra_urls=[], preinstall=[],
                  pypi_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None, verbose=False,
-                 extra_pip_args=[]):
+                 extra_pip_arg=[]):
 
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
@@ -44,7 +44,7 @@ class Deployment(object):
 
         self.extra_urls = extra_urls
         self.preinstall = preinstall
-        self.extra_pip_args = extra_pip_args
+        self.extra_pip_arg = extra_pip_arg
         self.pypi_url = pypi_url
         self.log_file = tempfile.NamedTemporaryFile()
         self.verbose = verbose
@@ -64,7 +64,7 @@ class Deployment(object):
                    python=options.python,
                    builtin_venv=options.builtin_venv,
                    sourcedirectory=options.sourcedirectory,
-                   verbose=verbose, extra_pip_args=options.extra_pip_args)
+                   verbose=verbose, extra_pip_arg=options.extra_pip_arg)
 
     def clean(self):
         shutil.rmtree(self.debian_root)
@@ -116,8 +116,8 @@ class Deployment(object):
 
     def install_dependencies(self):
         # Add in any user supplied args
-        if self.extra_pip_args:
-            self.pip_prefix.append(" ".join(self.extra_pip_args))
+        if self.extra_pip_arg:
+            self.pip_prefix.append(" ".join(self.extra_pip_arg))
         # Install preinstall stage packages. This is handy if you need
         # a custom package to install dependencies (think something
         # along lines of setuptools), but that does not get installed
