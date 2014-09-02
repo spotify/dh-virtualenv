@@ -87,6 +87,16 @@ few command line options:
    default will be whatever ``pip`` uses as default (usually
    ``http://pypi.python.org/simple``).
 
+.. cmdoption:: --extra-pip-arg <PIP ARG>
+
+   Extra parameters to pass to the pip executable. This is useful if
+   you need to change the behaviour of pip during the packaging process.
+   You can use this flag multiple times to pass in different pip flags.
+   As an example passing in --extra-pip-arg "--no-compile" to the
+   override_dh_virtualenv section of the debian/rules file will
+   disable the generation of pyc files.
+
+
 .. cmdoption:: --setuptools
 
    Use setuptools instead of distribute in the virtualenv

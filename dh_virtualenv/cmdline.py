@@ -57,6 +57,10 @@ def get_default_parser():
                       help=('package to install before processing '
                             'requirements.txt.'),
                       default=[])
+    parser.add_option('--extra-pip-arg', action='append',
+                      help='Extra args for the pip binary.'
+                      'You can use this flag multiple times to pass in'
+                      ' parameters to pip.', default=[])
     parser.add_option('--pypi-url', help='Base URL of the PyPI server')
     parser.add_option('--python', help='The Python to use')
     parser.add_option('--builtin-venv', action='store_true',

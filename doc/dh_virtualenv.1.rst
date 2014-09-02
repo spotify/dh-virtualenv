@@ -44,6 +44,7 @@ OPTIONS
 --extra-index-url			Pass extra index URL to pip
 --preinstall=PACKAGE			Preinstall a PACKAGE before
 					running pip.
+--extra-pip-arg				Extra arg for the pip executable.
 --pypi-url				Base URL for PyPI server.
 --setuptools				Use setuptools instead of
 					distribute.

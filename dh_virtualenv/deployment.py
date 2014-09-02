@@ -28,8 +28,11 @@ DEFAULT_INSTALL_DIR = '/usr/share/python/'
 
 
 class Deployment(object):
-    def __init__(self, package, extra_urls=None, preinstall=None, pypi_url=None,
-                 setuptools=False, python=None, builtin_venv=False, sourcedirectory=None, verbose=False):
+    def __init__(self, package, extra_urls=[], preinstall=[],
+                 pypi_url=None, setuptools=False, python=None,
+                 builtin_venv=False, sourcedirectory=None, verbose=False,
+                 extra_pip_arg=[]):
+
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
         self.virtualenv_install_dir = os.path.join(install_root, self.package)
@@ -39,8 +42,9 @@ class Deployment(object):
         self.bin_dir = os.path.join(self.package_dir, 'bin')
         self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
 
-        self.extra_urls = extra_urls if extra_urls is not None else []
-        self.preinstall = preinstall if preinstall is not None else []
+        self.extra_urls = extra_urls
+        self.preinstall = preinstall
+        self.extra_pip_arg = extra_pip_arg
         self.pypi_url = pypi_url
         self.log_file = tempfile.NamedTemporaryFile()
         self.verbose = verbose
@@ -60,7 +64,8 @@ class Deployment(object):
                    python=options.python,
                    builtin_venv=options.builtin_venv,
                    sourcedirectory=options.sourcedirectory,
-                   verbose=verbose)
+                   verbose=verbose,
+                   extra_pip_arg=options.extra_pip_arg)
 
     def clean(self):
         shutil.rmtree(self.debian_root)
@@ -106,6 +111,9 @@ class Deployment(object):
             '--extra-index-url={0}'.format(url) for url in self.extra_urls
         ])
         self.pip_prefix.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
+        # Add in any user supplied pip args
+        if self.extra_pip_arg:
+            self.pip_prefix.extend(self.extra_pip_arg)
 
     def pip(self, *args):
         return self.pip_prefix + list(args)
