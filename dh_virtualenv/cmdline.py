@@ -72,6 +72,9 @@ def get_default_parser():
                       help="Don't run tests for the package. Useful "
                       "for example when you have packaged with distutils.",
                       default=True)
+    parser.add_option('-n', '--noscripts', action='store_false', dest='autoscripts',
+                      help="Do not modify postinst and similar scripts.",
+                      default=True)
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
