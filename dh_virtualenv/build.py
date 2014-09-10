@@ -28,7 +28,7 @@ DEFAULT_BUILD_DIR = 'debian/dh_virtualenv'
 
 
 class Build(object):
-    def __init__(self, extra_urls=None, preinstall=None,
+    def __init__(self, extra_urls=[], preinstall=None,
                  pypi_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None,
                  build_dir=None, verbose=False, extra_pip_arg=[]):
