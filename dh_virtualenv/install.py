@@ -21,8 +21,6 @@ import os
 import re
 import shutil
 import subprocess
-import tempfile
-import shutil
 
 from dh_virtualenv.build import DEFAULT_BUILD_DIR
 

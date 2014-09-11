@@ -22,9 +22,6 @@ import inspect
 import logging
 import os
 import sys
-import shutil
-
-from optparse import OptionParser, SUPPRESS_HELP
 
 # The debpython resides here
 sys.path.insert(1, '/usr/share/python/')

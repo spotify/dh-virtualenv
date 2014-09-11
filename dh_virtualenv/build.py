@@ -18,11 +18,9 @@
 # <http://www.gnu.org/licenses/>.
 
 import os
-import re
 import shutil
 import subprocess
 import tempfile
-import shutil
 
 DEFAULT_BUILD_DIR = 'debian/dh_virtualenv'
 

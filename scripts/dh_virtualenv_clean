@@ -31,5 +31,5 @@ if __name__ == '__main__':
                       default=DEFAULT_BUILD_DIR, help='Build dir')
     options, args = parser.parse_args()
 
-    if os.path.exists(build_dir):
-        shutil.rmtree(build_dir, ignore_errors=True)
+    if os.path.exists(options.build_dir):
+        shutil.rmtree(options.build_dir, ignore_errors=True)

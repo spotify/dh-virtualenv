@@ -21,7 +21,7 @@
 
 import os
 
-from optparse import OptionParser, SUPPRESS_HELP, BadOptionError, AmbiguousOptionError
+from optparse import OptionParser, BadOptionError, AmbiguousOptionError
 
 
 class DebhelperOptionParser(OptionParser):
@@ -51,8 +51,8 @@ def get_default_parser():
     parser = DebhelperOptionParser(usage, version='%prog 0.7')
     parser.add_option('-v', '--verbose', action='store_true',
                       default=False, help='Turn on verbose mode')
-    parser.add_option('-s', '--setuptools', action='store_true',
-                      default=False, help='Use Setuptools instead of Distribute')
+    parser.add_option('-s', '--setuptools', action='store_true', default=False,
+                      help='Use Setuptools instead of Distribute')
     parser.add_option('--extra-index-url', action='append',
                       help='extra index URL to pass to pip.',
                       default=[])

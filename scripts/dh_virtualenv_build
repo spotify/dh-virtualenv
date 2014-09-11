@@ -18,7 +18,6 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 
-import inspect
 import logging
 import os
 import sys
@@ -26,7 +25,6 @@ import sys
 # The debpython resides here
 sys.path.insert(1, '/usr/share/python/')
 
-from debpython.debhelper import DebHelper
 from dh_virtualenv.build import Build
 from dh_virtualenv.cmdline import get_default_parser
 
