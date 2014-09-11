@@ -22,8 +22,10 @@ define the requirements of your package in `requirements.txt` file, in
 To build a package using dh-virtualenv, you need to add dh-virtualenv
 in to your build dependencies and write following `debian/rules` file:
 
-      %:
-              dh $@ --with python-virtualenv
+```Makefile
+%:
+	dh $@ --with python-virtualenv
+```
 
 Note that you might need to provide
 additional build dependencies too, if your requirements require them.
@@ -31,8 +33,10 @@ additional build dependencies too, if your requirements require them.
 Also, you are able to define the root path for your source directory using
 `--sourcedirectory` or `-D` argument:
 
-      %:
-              dh $@ --with python-virtualenv --sourcedirectory=root/srv/application
+```Makefile
+%:
+	dh $@ --with python-virtualenv --sourcedirectory=root/srv/application
+```
 
 NOTE: Be aware that the configuration in debian/rules expects tabs instead of spaces!
 
@@ -46,15 +50,36 @@ documentation in the `doc` folder.
 ## How does it work?
 
 To do the packaging, the package extends debhelper's sequence by
-providing a new command in sequence, `dh_virtualenv`, which
-effectively replaces following commands from the sequence:
+providing a new commands in sequence:
+* `dh_virtualenv_build`: Create virtualenv and install software in it.  
+* `dh_virtualenv_install`: Copy virtualenv in the good place
+* `dh_virtualenv_clean`: Suppress temporary files
 
-* `dh_auto_install`
-* `dh_python2`
-* `dh_pycentral`
-* `dh_pysupport`
+Have a look to [this file](debhelper/python_virtualenv.pm) for more details about order.
 
-In the sequence the dh_virtualenv is inserted right after dh_perl.
+## Example
+
+`debian/rules`:
+
+```Makefile
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+export DH_ALWAYS_EXCLUDE := .pyc
+
+%:
+	dh $@ --with python-virtualenv
+
+override_dh_virtualenv_build:
+	dh_virtualenv_build --no-test --extra-index-url https://pypi.fury.io/myrepo/
+
+override_dh_virtualenv_install:
+	myCommandToUse.py
+	dh_virtualenv_install --package=myPackage
+```
 
 ## Running tests
 
@@ -65,4 +90,4 @@ In the sequence the dh_virtualenv is inserted right after dh_perl.
 Copyright (c) 2013 Spotify AB
 
 dh-virtualenv is licensed under GPL v2 or later. Full license is
-available in the `LICENSE` file.
+available in the [`LICENSE`](LICENSE) file.
