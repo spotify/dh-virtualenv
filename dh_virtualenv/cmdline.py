@@ -21,7 +21,7 @@
 
 import os
 
-from optparse import OptionParser, SUPPRESS_HELP
+from optparse import OptionParser, BadOptionError, AmbiguousOptionError
 
 
 class DebhelperOptionParser(OptionParser):
@@ -38,18 +38,21 @@ class DebhelperOptionParser(OptionParser):
         # Unfortunately OptionParser is an old style class :(
         return OptionParser.parse_args(self, args, values)
 
+    def _process_args(self, largs, rargs, values):
+        while rargs:
+            try:
+                OptionParser._process_args(self, largs, rargs, values)
+            except (BadOptionError, AmbiguousOptionError), e:
+                largs.append(e.opt_str)
+
 
 def get_default_parser():
     usage = '%prog [options]'
     parser = DebhelperOptionParser(usage, version='%prog 0.7')
-    parser.add_option('-p', '--package', action='append',
-                      help='act on the package named PACKAGE')
-    parser.add_option('-N', '--no-package', action='append',
-                      help='do not act on the specified package')
     parser.add_option('-v', '--verbose', action='store_true',
                       default=False, help='Turn on verbose mode')
-    parser.add_option('-s', '--setuptools', action='store_true',
-                      default=False, help='Use Setuptools instead of Distribute')
+    parser.add_option('-s', '--setuptools', action='store_true', default=False,
+                      help='Use Setuptools instead of Distribute')
     parser.add_option('--extra-index-url', action='append',
                       help='extra index URL to pass to pip.',
                       default=[])
@@ -66,23 +69,12 @@ def get_default_parser():
     parser.add_option('--builtin-venv', action='store_true',
                       help='Use the built-in venv module. Only works on '
                       'Python 3.4 and later.')
+    parser.add_option('-B', '--builddirectory', dest='build_dir',
+                      help='Build dir')
     parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
                       help='The source directory')
     parser.add_option('--no-test', action='store_false', dest='test',
                       help="Don't run tests for the package. Useful "
                       "for example when you have packaged with distutils.",
                       default=True)
-
-    # Ignore user-specified option bundles
-    parser.add_option('-O', help=SUPPRESS_HELP)
-    parser.add_option('-a', '--arch', dest="arch",
-                      help=("Act on architecture dependent packages that "
-                            "should be built for the build architecture. "
-                            "This option is ignored"),
-                      action="store", type="string")
-
-    parser.add_option('-i', '--indep', dest="indep",
-                      help=("Act on all architecture independent packages. "
-                            "This option is ignored"),
-                      action="store_true")
     return parser
