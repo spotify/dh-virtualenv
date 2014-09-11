@@ -26,7 +26,7 @@ import sys
 sys.path.insert(1, '/usr/share/python/')
 
 from dh_virtualenv.build import Build
-from dh_virtualenv.cmdline import get_default_parser
+from dh_virtualenv.dhoptionparser import DebhelperOptionParser
 
 logging.basicConfig(format='%(levelname).1s: %(module)s:%(lineno)d: '
                     '%(message)s')
@@ -34,7 +34,41 @@ log = logging.getLogger(__name__)
 
 
 def main():
-    parser = get_default_parser()
+    usage = '%prog [options]'
+    parser = DebhelperOptionParser(usage, version='%prog 0.7')
+    parser.add_option('-v', '--verbose', action='store_true',
+                      default=False, help='Turn on verbose mode')
+    parser.add_option('-s', '--setuptools', action='store_true', default=False,
+                      help='Use Setuptools instead of Distribute')
+    parser.add_option('--extra-index-url', action='append',
+                      help='extra index URL to pass to pip.',
+                      default=[])
+    parser.add_option('--preinstall', action='append',
+                      help=('package to install before processing '
+                            'requirements.txt.'),
+                      default=[])
+    parser.add_option('--extra-pip-arg', action='append',
+                      help='Extra args for the pip binary.'
+                      'You can use this flag multiple times to pass in'
+                      ' parameters to pip.', default=[])
+    parser.add_option('--pypi-url', help='Base URL of the PyPI server')
+    parser.add_option('--python', help='The Python to use')
+    parser.add_option('--builtin-venv', action='store_true',
+                      help='Use the built-in venv module. Only works on '
+                      'Python 3.4 and later.')
+    parser.add_option('-B', '--builddirectory', dest='build_dir',
+                      help='Build dir')
+    parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
+                      help='The source directory')
+    parser.add_option('--no-test', action='store_false', dest='test',
+                      help="Don't run tests for the package. Useful "
+                      "for example when you have packaged with distutils.",
+                      default=True)
+    parser.add_option('--no-requirements', action='store_false',
+                      dest='requirements',
+                      help="Don't use requirements.txt. Trust setup.py",
+                      default=True)
+
     options, args = parser.parse_args()
 
     # TODO: Reduce redundancy with this and the Deployment.from_options
@@ -48,8 +82,13 @@ def main():
     log.info('Creating virtualenv')
     build.create_virtualenv()
 
-    log.info('Installing dependencies')
-    build.install_dependencies()
+    if options.preinstall:
+        log.info('Installing dependencies')
+        build.install_dependencies()
+
+    if options.requirements:
+        log.info('Installing dependencies')
+        build.install_requirements()
 
     log.info('Installing package')
     build.install_package()

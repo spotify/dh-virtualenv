@@ -22,7 +22,7 @@ import os
 import shutil
 
 from dh_virtualenv.build import DEFAULT_BUILD_DIR
-from dh_virtualenv.cmdline import DebhelperOptionParser
+from dh_virtualenv.dhoptionparser import DebhelperOptionParser
 
 if __name__ == '__main__':
     usage = '%prog [options]'

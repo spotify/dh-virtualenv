@@ -28,7 +28,7 @@ sys.path.insert(1, '/usr/share/python/')
 
 from debpython.debhelper import DebHelper
 from dh_virtualenv.install import Install
-from dh_virtualenv.cmdline import DebhelperOptionParser
+from dh_virtualenv.dhoptionparser import DebhelperOptionParser
 
 logging.basicConfig(format='%(levelname).1s: %(module)s:%(lineno)d: '
                     '%(message)s')

@@ -26,7 +26,6 @@ import textwrap
 from mock import patch, call
 
 from nose.tools import eq_
-from dh_virtualenv.cmdline import get_default_parser
 from dh_virtualenv.build import Build
 from dh_virtualenv.install import Install
 
@@ -107,7 +106,7 @@ def test_shebangs_fix_overridden_root():
 @patch('os.path.exists', lambda x: False)
 @patch('subprocess.check_call')
 def test_install_dependencies_with_no_requirements(callmock):
-    d = Build('test')
+    d = Build()
     d.pip_prefix = ['pip', 'install']
     d.install_dependencies()
     callmock.assert_has_calls([])
@@ -116,16 +115,16 @@ def test_install_dependencies_with_no_requirements(callmock):
 @patch('os.path.exists', lambda x: True)
 @patch('subprocess.check_call')
 def test_install_dependencies_with_requirements(callmock):
-    d = Build('test')
+    d = Build()
     d.pip_prefix = ['pip', 'install']
-    d.install_dependencies()
+    d.install_requirements()
     callmock.assert_called_with(
         ['pip', 'install', '-r', './requirements.txt'])
 
 
 @patch('subprocess.check_call')
 def test_install_dependencies_with_preinstall(callmock):
-    d = Build('test', preinstall=['foobar'])
+    d = Build(preinstall=['foobar'])
     d.pip_prefix = ['pip', 'install']
     d.install_dependencies()
     callmock.assert_called_with(
@@ -135,9 +134,10 @@ def test_install_dependencies_with_preinstall(callmock):
 @patch('os.path.exists', lambda x: True)
 @patch('subprocess.check_call')
 def test_install_dependencies_with_preinstall_with_requirements(callmock):
-    d = Build('test', preinstall=['foobar'])
+    d = Build(preinstall=['foobar'])
     d.pip_prefix = ['pip', 'install']
     d.install_dependencies()
+    d.install_requirements()
     callmock.assert_has_calls([
         call(['pip', 'install', 'foobar']),
         call(['pip', 'install', '-r', './requirements.txt'])
@@ -302,7 +302,7 @@ def test_custom_src_dir(callmock):
     d.pip_prefix = ['pip', 'install']
     d.sourcedirectory = 'root/srv/application'
     d.create_virtualenv()
-    d.install_dependencies()
+    d.install_requirements()
     callmock.assert_called_with([
         PY_CMD,
         PIP_CMD,
@@ -339,32 +339,6 @@ def test_testrunner_setuppy_not_found(callmock):
     d = Build('test')
     d.run_tests()
     eq_(callmock.call_count, 0)
-
-
-def test_deployment_from_options():
-        options, _ = get_default_parser().parse_args([
-            '--extra-index-url', 'http://example.com',
-            '-O--pypi-url', 'http://example.org'
-        ])
-        d = Build.from_options(options)
-        eq_(d.pypi_url, 'http://example.org')
-        eq_(d.extra_urls, ['http://example.com'])
-
-
-def test_deployment_from_options_with_verbose():
-        options, _ = get_default_parser().parse_args([
-            '--verbose'
-        ])
-        d = Build.from_options(options)
-        eq_(d.verbose, True)
-
-
-@patch('os.environ.get')
-def test_deployment_from_options_with_verbose_from_env(env_mock):
-        env_mock.return_value = '1'
-        options, _ = get_default_parser().parse_args([])
-        d = Build.from_options(options)
-        eq_(d.verbose, True)
 
 
 @temporary_dir

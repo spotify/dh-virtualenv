@@ -25,6 +25,7 @@ import tempfile
 DEFAULT_BUILD_DIR = 'debian/dh_virtualenv'
 
 
+
 class Build(object):
     def __init__(self, extra_urls=[], preinstall=None,
                  pypi_url=None, setuptools=False, python=None,
@@ -119,6 +120,7 @@ class Build(object):
         if self.preinstall:
             subprocess.check_call(self.pip(*self.preinstall))
 
+    def install_requirements(self):
         requirements_path = os.path.join(self.sourcedirectory,
                                          'requirements.txt')
         if os.path.exists(requirements_path):
