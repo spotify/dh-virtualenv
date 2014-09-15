@@ -21,7 +21,7 @@
 
 import os
 
-from optparse import OptionParser, BadOptionError, AmbiguousOptionError
+from optparse import OptionParser, SUPPRESS_HELP
 
 
 class DebhelperOptionParser(OptionParser):
@@ -31,6 +31,11 @@ class DebhelperOptionParser(OptionParser):
     parsing.
 
     """
+    def __init__(self, *args, **kwargs):
+        kwargs['conflict_handler'] = 'resolve'
+        OptionParser.__init__(self, *args, **kwargs)
+        self.add_default_options()
+
     def parse_args(self, args=None, values=None):
         args = [o[2:] if o.startswith('-O-') else o
                 for o in self._get_args(args)]
@@ -38,9 +43,16 @@ class DebhelperOptionParser(OptionParser):
         # Unfortunately OptionParser is an old style class :(
         return OptionParser.parse_args(self, args, values)
 
-    def _process_args(self, largs, rargs, values):
-        while rargs:
-            try:
-                OptionParser._process_args(self, largs, rargs, values)
-            except (BadOptionError, AmbiguousOptionError), e:
-                largs.append(e.opt_str)
+    def add_default_options(self):
+        self.add_option('-v', '--verbose', help=SUPPRESS_HELP)
+        self.add_option('--no-act', help=SUPPRESS_HELP)
+        self.add_option('-a', '--arch', help=SUPPRESS_HELP)
+        self.add_option('-i', '--indep', help=SUPPRESS_HELP)
+        self.add_option('-p', '--package', help=SUPPRESS_HELP)
+        self.add_option('-s', '--same-arch', help=SUPPRESS_HELP)
+        self.add_option('-N', '--no-package', help=SUPPRESS_HELP)
+        self.add_option('--remaining-packages', help=SUPPRESS_HELP)
+        self.add_option('--ignore', help=SUPPRESS_HELP)
+        self.add_option('-P', '--tmpdir', help=SUPPRESS_HELP)
+        self.add_option('--mainpackage', help=SUPPRESS_HELP)
+        self.add_option('-O', help=SUPPRESS_HELP)

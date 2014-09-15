@@ -28,7 +28,7 @@ from dh_virtualenv.dhoptionparser import DebhelperOptionParser
 def test_unknown_argument(error_mock):
     parser = DebhelperOptionParser(usage='foo')
     parser.parse_args(['-f'])
-    eq_(0, error_mock.call_count)
+    eq_(1, error_mock.call_count)
 
 
 def test_debhelper_option_parsing():
