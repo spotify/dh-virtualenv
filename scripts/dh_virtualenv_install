@@ -27,8 +27,8 @@ import sys
 sys.path.insert(1, '/usr/share/python/')
 
 from debpython.debhelper import DebHelper
-from dh_virtualenv import Deployment
-from dh_virtualenv.cmdline import get_default_parser
+from dh_virtualenv.install import Install
+from dh_virtualenv.dhoptionparser import DebhelperOptionParser
 
 logging.basicConfig(format='%(levelname).1s: %(module)s:%(lineno)d: '
                     '%(message)s')
@@ -36,10 +36,23 @@ log = logging.getLogger(__name__)
 
 
 def main():
-    parser = get_default_parser()
-    options, args = parser.parse_args()
+    usage = '%prog [options]'
+    parser = DebhelperOptionParser(usage, version='%prog 0.7')
+    parser.add_option('-p', '--package', action='append',
+                      help='act on the package named PACKAGE')
+    parser.add_option('-N', '--no-package', action='append',
+                      help='do not act on the specified package')
+    parser.add_option('-v', '--verbose', action='store_true',
+                      default=False, help='Turn on verbose mode')
+    parser.add_option('-d', '--destination', dest='destination',
+                      help='Final destination path')
+    parser.add_option('-P', '--tempdir', dest='package_dir',
+                      help='Use tmpdir for package build directory. '
+                      'The default is debian/package')
+    parser.add_option('-B', '--builddirectory', dest='build_dir',
+                      help='Build dir')
 
-    # TODO: Reduce redundancy with this and the Deployment.from_options
+    options, args = parser.parse_args()
     verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
     if verbose:
         log.setLevel(logging.DEBUG)
@@ -53,33 +66,19 @@ def main():
         dh = DebHelper(packages=options.package or None)
     else:
         dh = DebHelper(options)
-    for package, details in dh.packages.items():
+    for package, _ in dh.packages.items():
         def _info(msg):
             log.info('{0}: {1}'.format(package, msg))
-
         _info('Processing package...')
-        deploy = Deployment.from_options(package, options)
 
-        _info('Creating virtualenv')
-        deploy.create_virtualenv()
+        install = Install(package,
+                          destination=options.destination,
+                          package_dir=options.package_dir,
+                          build_dir=options.build_dir)
+        install.relocate()
+        install.fix_local_symlinks()
 
-        _info('Installing dependencies')
-        deploy.install_dependencies()
-
-        _info('Installing package')
-        deploy.install_package()
-        if options.test:
-            _info('Running tests')
-            deploy.run_tests()
-        else:
-            _info('Skipped tests')
-
-        _info('Fixing paths')
-        deploy.fix_activate_path()
-        deploy.fix_shebangs()
-        deploy.fix_local_symlinks()
-
-        _info('dh-virtualenv: All done!')
+        _info('dh-virtualenv_install: All done!')
 
 if __name__ == '__main__':
     sys.exit(main() or 0)

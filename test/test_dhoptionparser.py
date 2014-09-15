@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright (c) 2014 Spotify AB
 
@@ -16,3 +17,23 @@
 # You should have received a copy of the GNU General Public License
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
+
+from mock import patch
+from nose.tools import eq_
+
+from dh_virtualenv.dhoptionparser import DebhelperOptionParser
+
+
+@patch.object(DebhelperOptionParser, 'error')
+def test_unknown_argument(error_mock):
+    parser = DebhelperOptionParser(usage='foo')
+    parser.parse_args(['-f'])
+    eq_(1, error_mock.call_count)
+
+
+def test_debhelper_option_parsing():
+    parser = DebhelperOptionParser()
+    parser.add_option('--sourcedirectory')
+    opts, args = parser.parse_args(['-O--sourcedirectory', '/tmp'])
+    eq_('/tmp', opts.sourcedirectory)
+    eq_([], args)
