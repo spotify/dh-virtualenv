@@ -1,3 +1,9 @@
+dh-virtualenv (0.8-1~dev) unstable; urgency=low
+
+  * Added postinst autoscript to mirror host Python interpreter updates
+
+ -- Juergen Hermann <jh@web.de>  Wed, 10 Sep 2014 01:13:39 +0200
+
 dh-virtualenv (0.7-2) unstable; urgency=low
 
   * Fix virtualenv dependency. Closes: #751192

@@ -1,1 +1,2 @@
 debhelper/python_virtualenv.pm usr/share/perl5/Debian/Debhelper/Sequence
+autoscripts/*-dh-virtualenv /usr/share/debhelper/autoscripts
