@@ -25,17 +25,16 @@ import tempfile
 DEFAULT_BUILD_DIR = 'debian/dh_virtualenv'
 
 
-
 class Build(object):
-    def __init__(self, extra_urls=[], preinstall=None,
+    def __init__(self, extra_index_url=[], preinstall=None,
                  pypi_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None,
-                 build_dir=None, verbose=False, extra_pip_arg=[]):
+                 build_dir=None, verbose=False, extra_pip_arg=[], **kwargs):
         self.build_dir = build_dir if build_dir is not None else DEFAULT_BUILD_DIR
         self.bin_dir = os.path.join(self.build_dir, 'bin')
         self.local_bin_dir = os.path.join(self.build_dir, 'local', 'bin')
 
-        self.extra_urls = extra_urls
+        self.extra_urls = extra_index_url
         self.preinstall = preinstall
         self.extra_pip_arg = extra_pip_arg
         self.pypi_url = pypi_url
@@ -48,20 +47,13 @@ class Build(object):
 
     @classmethod
     def from_options(cls, options):
-        verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
-        return cls(extra_urls=options.extra_index_url,
-                   preinstall=options.preinstall,
-                   pypi_url=options.pypi_url,
-                   setuptools=options.setuptools,
-                   python=options.python,
-                   builtin_venv=options.builtin_venv,
-                   sourcedirectory=options.sourcedirectory,
-                   build_dir=options.build_dir,
-                   verbose=verbose,
-                   extra_pip_arg=options.extra_pip_arg)
+        if os.environ.get('DH_VERBOSE') == '1':
+            options['verbose'] = True
+        return cls(**options)
 
     def clean(self):
-        shutil.rmtree(self.build_dir)
+        if os.path.exists(self.build_dir):
+            shutil.rmtree(self.build_dir)
 
     def create_virtualenv(self):
         if self.builtin_venv:

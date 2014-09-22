@@ -177,7 +177,7 @@ def test_create_venv_with_verbose(callmock):
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 @patch('subprocess.check_call')
 def test_create_venv_with_extra_urls(callmock):
-    d = Build(extra_urls=['foo', 'bar'])
+    d = Build(extra_index_url=['foo', 'bar'])
     d.create_virtualenv()
     eq_('debian/dh_virtualenv', d.build_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
@@ -192,7 +192,7 @@ def test_create_venv_with_extra_urls(callmock):
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 @patch('subprocess.check_call')
 def test_create_venv_with_custom_index_url(callmock):
-    d = Build(extra_urls=['foo', 'bar'],
+    d = Build(extra_index_url=['foo', 'bar'],
                    pypi_url='http://example.com/simple')
     d.create_virtualenv()
     eq_('debian/dh_virtualenv', d.build_dir)

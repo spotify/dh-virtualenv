@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013-2014 Spotify AB
+# Copyright (c) 2014 Spotify AB
 
 # This file is part of dh-virtualenv.
 
@@ -19,14 +19,18 @@
 # <http://www.gnu.org/licenses/>.
 
 import logging
+import inspect
 import os
 import sys
 
 # The debpython resides here
 sys.path.insert(1, '/usr/share/python/')
 
+from debpython.debhelper import DebHelper
+
 from dh_virtualenv.build import Build
 from dh_virtualenv.dhoptionparser import DebhelperOptionParser
+from dh_virtualenv.install import Install
 
 logging.basicConfig(format='%(levelname).1s: %(module)s:%(lineno)d: '
                     '%(message)s')
@@ -36,10 +40,14 @@ log = logging.getLogger(__name__)
 def main():
     usage = '%prog [options]'
     parser = DebhelperOptionParser(usage, version='%prog 0.7')
+    parser.add_option('-p', '--package', action='append',
+                      help='act on the package named PACKAGE')
+    parser.add_option('-N', '--no-package', action='append',
+                      help='do not act on the specified package')
     parser.add_option('-v', '--verbose', action='store_true',
                       default=False, help='Turn on verbose mode')
-    parser.add_option('-s', '--setuptools', action='store_true', default=False,
-                      help='Use Setuptools instead of Distribute')
+    parser.add_option('-s', '--setuptools', action='store_true',
+                      default=False, help='Use Setuptools instead of Distribute')
     parser.add_option('--extra-index-url', action='append',
                       help='extra index URL to pass to pip.',
                       default=[])
@@ -56,29 +64,29 @@ def main():
     parser.add_option('--builtin-venv', action='store_true',
                       help='Use the built-in venv module. Only works on '
                       'Python 3.4 and later.')
-    parser.add_option('-B', '--builddirectory', dest='build_dir',
-                      help='Build dir')
     parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
                       help='The source directory')
     parser.add_option('--no-test', action='store_false', dest='test',
                       help="Don't run tests for the package. Useful "
                       "for example when you have packaged with distutils.",
                       default=True)
-    parser.add_option('--no-requirements', action='store_false',
-                      dest='requirements',
-                      help="Don't use requirements.txt. Trust setup.py",
+    parser.add_option('-n', '--noscripts', action='store_false', dest='autoscripts',
+                      help="Do not modify postinst and similar scripts.",
                       default=True)
 
     options, args = parser.parse_args()
     option_dict = vars(options)
 
-    # TODO: Reduce redundancy with this and the Deployment.from_options
     verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
     if verbose:
         log.setLevel(logging.DEBUG)
 
-    log.info('Processing package...')
     build = Build.from_options(option_dict)
+
+    log.info('Processing package...')
+    build.clean
+
+    log.info('Processing package...')
 
     log.info('Creating virtualenv')
     build.create_virtualenv()
@@ -86,10 +94,6 @@ def main():
     if options.preinstall:
         log.info('Installing dependencies')
         build.install_dependencies()
-
-    if options.requirements:
-        log.info('Installing dependencies')
-        build.install_requirements()
 
     log.info('Installing package')
     build.install_package()
@@ -99,7 +103,22 @@ def main():
     else:
         log.info('Skipped tests')
 
-    log.info('dh-virtualenv_build: All done!')
+    arguments = inspect.getargspec(DebHelper.__init__).args
+    if 'packages' in arguments:
+        dh = DebHelper(packages=options.package or None)
+    else:
+        dh = DebHelper(options)
+    for package, _ in dh.packages.items():
+        def _info(msg):
+            log.info('{0}: {1}'.format(package, msg))
+        _info('Processing package...')
+
+        install = Install(package)
+        install.relocate()
+        install.fix_local_symlinks()
+
+    log.info('dh-virtualenv: All done!')
+
 
 if __name__ == '__main__':
     sys.exit(main() or 0)

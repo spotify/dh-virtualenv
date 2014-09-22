@@ -24,7 +24,7 @@ in to your build dependencies and write following `debian/rules` file:
 
 ```Makefile
 %:
-	dh $@ --with python-virtualenv
+	dh $@ --with dh-virtualenv
 ```
 
 Note that you might need to provide
@@ -35,7 +35,7 @@ Also, you are able to define the root path for your source directory using
 
 ```Makefile
 %:
-	dh $@ --with python-virtualenv --sourcedirectory=root/srv/application
+	dh $@ --with dh-virtualenv --sourcedirectory=root/srv/application
 ```
 
 NOTE: Be aware that the configuration in debian/rules expects tabs instead of spaces!
@@ -71,7 +71,7 @@ Have a look to [this file](debhelper/python_virtualenv.pm) for more details abou
 export DH_ALWAYS_EXCLUDE := .pyc
 
 %:
-	dh $@ --with python-virtualenv
+	dh $@ --with dh-virtualenv
 
 override_dh_virtualenv_build:
 	dh_virtualenv_build --no-test --extra-index-url https://pypi.fury.io/myrepo/
@@ -84,6 +84,22 @@ override_dh_virtualenv_install:
 ## Running tests
 
     $ nosetests ./test/test_deployment.py
+
+## Backward Compatibility with `python-virtualenv`
+
+Previous version of dh-virtualenv offer a single command `dh_virtualenv`.
+This behavior have been keep and execute `clean`, `build`, `install` in this order.
+
+You can use it as before with:
+```Makefile
+%:
+	dh $@ --with python-virtualenv
+
+override_dh_virtualenv:
+	dh_virtualenv {options}
+```
+
+This is deprecated in favor of current 3 separate steps.
 
 ## License
 

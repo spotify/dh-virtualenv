@@ -18,10 +18,7 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 
-import os
-import shutil
-
-from dh_virtualenv.build import DEFAULT_BUILD_DIR
+from dh_virtualenv.build import Build, DEFAULT_BUILD_DIR
 from dh_virtualenv.dhoptionparser import DebhelperOptionParser
 
 if __name__ == '__main__':
@@ -31,5 +28,4 @@ if __name__ == '__main__':
                       default=DEFAULT_BUILD_DIR, help='Build dir')
     options, args = parser.parse_args()
 
-    if os.path.exists(options.build_dir):
-        shutil.rmtree(options.build_dir, ignore_errors=True)
+    Build(build_dir=options.build_dir).clean
