@@ -66,11 +66,12 @@ project is about, a file called ``control``. Enter a following
    Section: python
    Priority: extra
    Maintainer: Matt Maintainer <matt@example.com>
-   Build-Depends: debhelper (>= 9), python, dh-virtualenv
+   Build-Depends: debhelper (>= 9), python, dh-virtualenv (>= 0.8)
    Standards-Version: 3.9.5
 
    Package: my-awesome-python-software
    Architecture: any
+   Pre-Depends: dpkg (>= 1.16.1), python2.7-minimal | python2.6-minimal, ${misc:Pre-Depends}
    Depends: ${python:Depends}, ${misc:Depends}
    Description: really neat package!
     second line can contain extra information about it.
@@ -82,6 +83,28 @@ you define ``libxml2-dev`` in *Build-Depends* etc.
 *Depends* in the lower section is used to define run-time dependencies.
 Following the example above, in case of lxml you would add ``libxml2``
 in to the *Depends* field.
+
+To help keeping your installed virtualenv in sync with the host's Python
+interpreter in case of updates, create a file named
+``debian/«pkgname».triggers``, where ``«pkgname»`` is what you
+named your package in the ``control`` file. It triggers a special script
+whenever the Python binary changes; don't worry, that script is provided
+by ``dh-virtualenv`` automatically.
+
+.. code-block:: «pkgname».triggers
+
+   # Register interest in Python interpreter changes (Python 2 for now); and
+   # don't make the Python package dependent on the virtualenv package
+   # processing (noawait)
+   interest-noawait /usr/bin/python2.6
+   interest-noawait /usr/bin/python2.7
+
+   # Also provide a symbolic trigger for all dh-virtualenv packages
+   interest dh-virtualenv-interpreter-update
+
+Note that if you provide a custom ``postinst`` script with your package,
+then don't forget to put the ``#DEBHELPER#`` marker into it, else the trigger
+script will be missing.
 
 Next, we need a changelog file. It is basically a documentation of
 changes in your package plus the source for version number for Debian
