@@ -51,7 +51,7 @@ class Install(object):
     def relocate(self):
         if not os.path.exists(self.build_dir):
             return
-        shutil.copytree(self.build_dir, self.package_dir)
+        shutil.copytree(self.build_dir, self.package_dir, symlinks=True)
         self.fix_activate_path()
         self.fix_shebangs()
 
