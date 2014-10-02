@@ -41,7 +41,7 @@ class DebhelperOptionParser(OptionParser):
 
 def get_default_parser():
     usage = '%prog [options]'
-    parser = DebhelperOptionParser(usage, version='%prog 0.7')
+    parser = DebhelperOptionParser(usage, version='%prog 0.8')
     parser.add_option('-p', '--package', action='append',
                       help='act on the package named PACKAGE')
     parser.add_option('-N', '--no-package', action='append',

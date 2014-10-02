@@ -24,6 +24,21 @@ In the sequence the ``dh_virtualenv`` is inserted right after
 Following list contains most notable changes by version. For full list
 consult the git history of the project.
 
+0.8
+===
+
+ * Support for running triggers upon host interpreter update. This new
+   feature makes it possible to upgrade the host Python interpreter
+   and avoid breakage of all the virtualenvs installed with
+   virtualenv. For usage, see the the :doc:`tutorial`. Huge thanks to
+   `Jürgen Hermann <https://github.com/jhermann>`_ for implementing
+   this long wanted feature!
+ * Add support for the built-in ``venv`` module. Thanks to `Petri
+   Lehtinen <https://github.com/akheron>`_!
+ * Allow custom ``pip`` flags to be passed via the
+   ``--extra-pip-args`` flag. Thanks to `@labeneator
+   <https://github.com/labeneator>`_ for the feature.
+
 0.7
 ===
 
