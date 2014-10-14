@@ -24,7 +24,7 @@ in to your build dependencies and write following `debian/rules` file:
 
 ```Makefile
 %:
-	dh $@ --with dh-virtualenv
+	dh $@ --buildsystem python_virtualenv
 ```
 
 Note that you might need to provide
@@ -35,7 +35,7 @@ Also, you are able to define the root path for your source directory using
 
 ```Makefile
 %:
-	dh $@ --with dh-virtualenv --sourcedirectory=root/srv/application
+	dh $@ --buildsystem python_virtualenv --sourcedirectory=root/srv/application
 ```
 
 NOTE: Be aware that the configuration in debian/rules expects tabs instead of spaces!
@@ -53,7 +53,6 @@ To do the packaging, the package extends debhelper's sequence by
 providing a new commands in sequence:
 * `dh_virtualenv_build`: Create virtualenv and install software in it.  
 * `dh_virtualenv_install`: Copy virtualenv in the good place
-* `dh_virtualenv_clean`: Suppress temporary files
 
 Have a look to [this file](debhelper/python_virtualenv.pm) for more details about order.
 
@@ -71,14 +70,14 @@ Have a look to [this file](debhelper/python_virtualenv.pm) for more details abou
 export DH_ALWAYS_EXCLUDE := .pyc
 
 %:
-	dh $@ --with dh-virtualenv
+	dh $@ --buildsystem python_virtualenv
 
-override_dh_virtualenv_build:
-	dh_virtualenv_build --no-test --extra-index-url https://pypi.fury.io/myrepo/
+override_dh_auto_build:
+	dh_auto_build  -- --no-test --extra-index-url https://pypi.fury.io/myrepo/
 
-override_dh_virtualenv_install:
+override_dh_auto_install:
 	myCommandToUse.py
-	dh_virtualenv_install --package=myPackage
+	dh_auto_install -- --package=myPackage
 ```
 
 ## Running tests
@@ -99,7 +98,7 @@ override_dh_virtualenv:
 	dh_virtualenv {options}
 ```
 
-This is deprecated in favor of current 3 separate steps.
+This is deprecated in favor of buildsystem.
 
 ## License
 

@@ -22,7 +22,7 @@ import shutil
 import subprocess
 import tempfile
 
-DEFAULT_BUILD_DIR = 'debian/dh_virtualenv'
+DEFAULT_BUILD_DIR = 'build'
 
 
 class Build(object):

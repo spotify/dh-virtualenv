@@ -29,29 +29,33 @@ DEFAULT_INSTALL_DIR = '/usr/share/python/'
 
 
 class Install(object):
-    def __init__(self, package, destination=None, package_dir=None, build_dir=None):
-        self.package = package
+    def __init__(self, package=None, destination=None,
+                 package_dir=None, build_dir=None):
         self.build_dir = build_dir if build_dir is not None else DEFAULT_BUILD_DIR
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
         if destination is not None:
             self.virtualenv_install_dir = destination
+        elif package is not None:
+            self.virtualenv_install_dir = os.path.join(install_root, package)
         else:
-            self.virtualenv_install_dir = os.path.join(install_root, self.package)
+            raise ValueError('No destination or package specified!')
 
-        self.debian_root = os.path.join('debian',
-                                        package,
-                                        install_root.lstrip('/'))
         if package_dir is not None:
             self.package_dir = package_dir
+        elif package is not None:
+            self.package_dir = os.path.join('debian', package)
         else:
-            self.package_dir = os.path.join(self.debian_root, package)
-        self.bin_dir = os.path.join(self.package_dir, 'bin')
-        self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
+            raise ValueError('No package_dir or package specified!')
+
+        self.local_dir = os.path.join(self.package_dir,
+                                      self.virtualenv_install_dir.lstrip('/'))
+        self.bin_dir = os.path.join(self.local_dir, 'bin')
+        self.local_bin_dir = os.path.join(self.local_dir, 'local', 'bin')
 
     def relocate(self):
         if not os.path.exists(self.build_dir):
             return
-        shutil.copytree(self.build_dir, self.package_dir, symlinks=True)
+        shutil.copytree(self.build_dir, self.local_dir, symlinks=True)
         self.fix_activate_path()
         self.fix_shebangs()
 
