@@ -1,4 +1,4 @@
-dh-virtualenv (0.8-1) unstable; urgency=low
+dh-virtualenv (0.8-1) experimental; urgency=low
 
   * New upstream release
 
