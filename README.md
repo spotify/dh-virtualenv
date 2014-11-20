@@ -17,7 +17,7 @@ operating system.
 
 Using dh-virtualenv is fairly straightforward. First, you need to
 define the requirements of your package in `requirements.txt` file, in
-[the format defined by pip](http://www.pip-installer.org/en/latest/cookbook.html#requirements-files).
+[the format defined by pip](https://pip.pypa.io/en/latest/user_guide.html#requirements-files).
 
 To build a package using dh-virtualenv, you need to add dh-virtualenv
 in to your build dependencies and write following `debian/rules` file:
