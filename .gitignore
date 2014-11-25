@@ -19,8 +19,6 @@ doc/_build
 doc/dh_virtualenv.1
 
 # virtualenv
-bin/
-lib/
 local/
 include/
 man/
