@@ -8,8 +8,8 @@ needs.
 
 By default, *dh-virtualenv* installs your packages under
 ``/usr/share/python/<packagename>``. The package name is provided by
-the ``debian/control`` file. Exporting the variable ``DH_VIRTUALENV_INSTALL_ROOT=</your/custom/install/dir>`` 
-will set the install path for your package if you don't wish to use 
+the ``debian/control`` file. Exporting the variable ``DH_VIRTUALENV_INSTALL_ROOT=</your/custom/install/dir>``
+will set the install path for your package if you don't wish to use
 the default path.
 
 Simple usecase
@@ -141,3 +141,57 @@ additional Python Package Index URI:
 
   override_dh_virtualenv:
   	dh_virtualenv --extra-index-url http://example.com
+
+
+Experimental buildsystem support
+================================
+
+**Important**: Following chapters describe a completely experimental
+functionality of dh-virtualenv.
+
+Latest HEAD of the dh-virtualenv has a buildsystem alterantive. The
+main difference in use is that instead of the ``--with
+python-virtualenv``, the ``debian rules`` file should look like this:
+
+.. code-block:: make
+
+                #!/usr/bin/make -f
+
+                %:
+                	dh $@ --buildsystem=dh_virtualenv
+
+Using the buildsystem instead of the part of the sequence (in other
+words, instead of the ``--with python-virtualenv``) one can get more
+flexibility into the build process.
+
+Flexibility comes from the fact that buildsystem will have individual
+steps for configure, build, test and install and those can be
+overridden by adding ``override_dh_auto_<STEP>`` target into the
+``debian/rules`` file. For example:
+
+.. code-block:: make
+
+                #!/usr/bin/make -f
+
+                %:
+                	dh $@ --buildsystem=dh_virtualenv
+
+                override_dh_auto_test:
+                	py.test test/
+
+In addition the separation of build and install steps makes it
+possible to use ``debian/install`` files to include built files into
+the Debian package. This is not possible with the sequencer addition.
+
+Known incompabilities of the buildsystem
+----------------------------------------
+
+This section defines the known incompabilities with the sequencer
+approach. There are no guarantees that these all get addressed, but
+most of them, if not all, probably will.
+
+* No custom Python interpreter supported
+* ``Pyvenv`` of Python 3.x is not supported
+* No custom arguments outside requirements.txt can be passed to
+  ``pip``
+* Not possible to specify custom install or build directories
