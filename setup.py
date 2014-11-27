@@ -22,7 +22,7 @@
 from setuptools import setup
 
 setup(name='dh_virtualenv',
-      version='0.8',
+      version='0.8.99',
       author=u'Jyrki Pulliainen',
       author_email='jyrki@spotify.com',
       url='https://github.com/spotify/dh-virtualenv',
