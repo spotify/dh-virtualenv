@@ -1,2 +1,2 @@
-lib usr/share/perl5
+lib/* usr/share/perl5
 autoscripts/*-dh-virtualenv /usr/share/debhelper/autoscripts
