@@ -239,6 +239,20 @@ def test_create_venv_with_setuptools(callmock):
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 @patch('subprocess.check_call')
+def test_create_venv_with_system_packages(callmock):
+    d = Deployment('test', use_system_packages=True)
+    d.create_virtualenv()
+    eq_('debian/test/usr/share/python/test', d.package_dir)
+    callmock.assert_called_with(['virtualenv', '--system-site-packages',
+                                 'debian/test/usr/share/python/test'])
+    eq_([PY_CMD,
+         PIP_CMD,
+         'install',
+         '--log=' + os.path.abspath('foo')], d.pip_prefix)
+
+
+@patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
+@patch('subprocess.check_call')
 def test_venv_with_custom_python(callmock):
     d = Deployment('test', python='/tmp/python')
     d.create_virtualenv()
