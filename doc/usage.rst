@@ -122,6 +122,11 @@ few command line options:
    virtualenvs created with Python 3.3 are not bootstrapped with
    setuptools or pip.)
 
+.. cmdoption:: -S, --use-system-packages
+
+   Enable the use of system site-packages in the created virtualenv
+   by passing the ``--system-site-packages`` flag to ``virtualenv``.
+
 
 Advanced usage
 ==============

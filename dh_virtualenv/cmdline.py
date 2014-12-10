@@ -75,6 +75,11 @@ def get_default_parser():
     parser.add_option('-n', '--noscripts', action='store_false', dest='autoscripts',
                       help="Do not modify postinst and similar scripts.",
                       default=True)
+    parser.add_option('-S', '--use-system-packages', action='store_true',
+                      dest='use_system_packages',
+                      help="Set the --system-site-packages flag in virtualenv "
+                           "creation, allowing you to use system packages.",
+                      default=False)
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)

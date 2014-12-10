@@ -67,3 +67,15 @@ def test_that_test_option_can_be_false():
     parser = cmdline.get_default_parser()
     opts, args = parser.parse_args(['--no-test'])
     eq_(False, opts.test)
+
+
+def test_that_default_use_system_packages_option_should_be_false():
+    parser = cmdline.get_default_parser()
+    opts, args = parser.parse_args()
+    eq_(False, opts.use_system_packages)
+
+
+def test_that_use_system_packages_option_can_be_true():
+    parser = cmdline.get_default_parser()
+    opts, args = parser.parse_args(['--use-system-packages'])
+    eq_(True, opts.use_system_packages)

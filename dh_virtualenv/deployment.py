@@ -31,7 +31,7 @@ class Deployment(object):
     def __init__(self, package, extra_urls=[], preinstall=[],
                  pypi_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None, verbose=False,
-                 extra_pip_arg=[]):
+                 extra_pip_arg=[], use_system_packages=False):
 
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
@@ -52,6 +52,7 @@ class Deployment(object):
         self.python = python
         self.builtin_venv = builtin_venv
         self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
+        self.use_system_packages = use_system_packages
 
     @classmethod
     def from_options(cls, package, options):
@@ -74,7 +75,12 @@ class Deployment(object):
         if self.builtin_venv:
             virtualenv = [self.python, '-m', 'venv']
         else:
-            virtualenv = ['virtualenv', '--no-site-packages']
+            virtualenv = ['virtualenv']
+
+            if self.use_system_packages:
+                virtualenv.append('--system-site-packages')
+            else:
+                virtualenv.append('--no-site-packages')
 
             if self.setuptools:
                 virtualenv.append('--setuptools')
