@@ -66,7 +66,8 @@ class Deployment(object):
                    builtin_venv=options.builtin_venv,
                    sourcedirectory=options.sourcedirectory,
                    verbose=verbose,
-                   extra_pip_arg=options.extra_pip_arg)
+                   extra_pip_arg=options.extra_pip_arg,
+                   use_system_packages=options.use_system_packages)
 
     def clean(self):
         shutil.rmtree(self.debian_root)
