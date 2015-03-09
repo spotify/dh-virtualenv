@@ -49,6 +49,7 @@ To do the packaging, the package extends debhelper's sequence by
 providing a new command in sequence, `dh_virtualenv`, which
 effectively replaces following commands from the sequence:
 
+* `dh_auto_clean`
 * `dh_auto_install`
 * `dh_python2`
 * `dh_pycentral`
