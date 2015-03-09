@@ -38,18 +38,23 @@ log = logging.getLogger(__name__)
 def _shell_vars(**kwargs):
     """Convert the given values into the equivalent shell snippet defining them."""
     return '\n'.join("dh_venv_{0}='{1}'".format(k, v.replace("'", r"'\''"))
-        for k, v in sorted(kwargs.iteritems()))
+                     for k, v in sorted(kwargs.iteritems()))
 
 
 def main():
     parser = get_default_parser()
     options, args = parser.parse_args()
-    options.compile_all = False # for DebHelper.save()
+    options.compile_all = False  # for DebHelper.save()
 
     # TODO: Reduce redundancy with this and the Deployment.from_options
     verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
     if verbose:
         log.setLevel(logging.DEBUG)
+
+    if 'nocheck' in os.environ.get('DEB_BUILD_OPTIONS', ''):
+        do_test = False
+    else:
+        do_test = options.test
 
     # Older DebHelpers, like the one on Debian Squeeze, expect to be
     # passed the packages keyword argument. Newer (like Ubuntu
@@ -70,8 +75,8 @@ def main():
         if options.autoscripts:
             _info('Adding autoscripts...')
             dh.autoscript(package, 'postinst', 'postinst-dh-virtualenv', _shell_vars(
-                package = package,
-                install_dir = deploy.virtualenv_install_dir,
+                package=package,
+                install_dir=deploy.virtualenv_install_dir,
             ))
 
         _info('Creating virtualenv')
@@ -82,7 +87,7 @@ def main():
 
         _info('Installing package')
         deploy.install_package()
-        if options.test:
+        if do_test:
             _info('Running tests')
             deploy.run_tests()
         else:
