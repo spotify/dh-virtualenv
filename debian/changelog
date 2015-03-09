@@ -1,8 +1,8 @@
-dh-virtualenv (0.9-1~dev) experimental; urgency=low
+dh-virtualenv (0.9-1) experimental; urgency=low
 
-  * Development release
+  * New upstream release
 
- -- Jyrki Pulliainen <jyrki@spotify.com>  Wed, 26 Nov 2014 16:54:34 +0100
+ -- Jyrki Pulliainen <jyrki@spotify.com>  Mon, 09 Mar 2015 09:59:26 +0100
 
 dh-virtualenv (0.8-1) experimental; urgency=low
 

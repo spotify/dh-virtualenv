@@ -24,6 +24,16 @@ In the sequence the ``dh_virtualenv`` is inserted right after
 Following list contains most notable changes by version. For full list
 consult the git history of the project.
 
+0.9
+===
+
+* Support using system packages via a command line flag
+  ``--use-system-packages``. Thanks to `Wes Mason
+  <https://github.com/1stvamp>`_ for implementing this feature!
+* Introduce a new, experimental, more modular build system. See the
+  :doc:`usage` for documentation.
+* Respect the ``DEB_NO_CHECK`` environment variable.
+
 0.8
 ===
 
