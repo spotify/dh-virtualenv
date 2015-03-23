@@ -1,3 +1,13 @@
+dh-virtualenv (0.9-1.1) UNRELEASED; urgency=medium
+
+  * Non-maintainer upload.
+  * Add dh-python to Build-Depends, it might not always be available on the
+    build machine and that causes a warning:
+        W: dh_python2:479: Please add dh-python package to Build-Depends
+  * debian/rules now have a standard clean target.
+
+ -- Antoine Musso <hashar@free.fr>  Mon, 23 Mar 2015 13:34:41 +0100
+
 dh-virtualenv (0.9-1) experimental; urgency=low
 
   * New upstream release

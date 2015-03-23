@@ -3,6 +3,13 @@
 %:
 	dh $@ --with python2 --with sphinxdoc
 
+# Work around dh-python/sphinxdoc helpers which might not be available on the
+# build machine since clean is executed outside of pbuilder chroot.
+clean:
+	dh_testdir
+	dh_auto_clean
+	dh_clean
+
 override_dh_auto_clean:
 	rm -rf doc/_build
 	rm -f doc/dh_virtualenv.1
