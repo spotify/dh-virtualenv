@@ -89,7 +89,10 @@ interpreter in case of updates, create a file named
 ``debian/«pkgname».triggers``, where ``«pkgname»`` is what you
 named your package in the ``control`` file. It triggers a special script
 whenever the Python binary changes; don't worry, that script is provided
-by ``dh-virtualenv`` automatically.
+by ``dh-virtualenv`` automatically. Your ``«pkgname».triggers`` file 
+should end with a newline, otherwise you might get this error from dpkg:
+``too-long line or missing newline in `/var/lib/dpkg/tmp.ci/triggers'``
+when installing your package.
 
 .. code-block:: «pkgname».triggers
 
