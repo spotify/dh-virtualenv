@@ -8,9 +8,17 @@ needs.
 
 By default, *dh-virtualenv* installs your packages under
 ``/usr/share/python/<packagename>``. The package name is provided by
-the ``debian/control`` file. Exporting the variable ``DH_VIRTUALENV_INSTALL_ROOT=</your/custom/install/dir>``
-will set the install path for your package if you don't wish to use
-the default path.
+the ``debian/control`` file.
+
+To use an alternative install path, add a line like
+
+.. code-block:: make
+
+  export DH_VIRTUALENV_INSTALL_ROOT=</your/custom/install/dir>
+
+to the top of your ``debian/rules`` file. dh_virtualenv will use
+DH_VIRTUALENV_INSTALL_ROOT instead of ``/usr/share/python`` when it
+constructs the install path.
 
 Simple usecase
 ==============
