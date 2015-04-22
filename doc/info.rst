@@ -24,7 +24,7 @@ In the sequence the ``dh_virtualenv`` is inserted right after
 Following list contains most notable changes by version. For full list
 consult the git history of the project.
 
-1.0
+0.10
 ===
 
  * **Backwards incompatible** Changed install location to
