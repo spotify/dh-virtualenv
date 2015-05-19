@@ -162,9 +162,10 @@ Experimental buildsystem support
 **Important**: Following chapters describe a completely experimental
 functionality of dh-virtualenv.
 
-Latest HEAD of the dh-virtualenv has a buildsystem alterantive. The
-main difference in use is that instead of the ``--with
-python-virtualenv``, the ``debian rules`` file should look like this:
+Starting with version 0.9 of dh-virtualenv, there is a buildsystem alternative.
+The main difference in use is that instead of the ``--with python-virtualenv``
+option, ``--buildsystem=dh_virtualenv`` is passed to debhelper. The ``debian rules``
+file should look like this:
 
 .. code-block:: make
 
