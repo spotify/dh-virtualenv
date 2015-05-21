@@ -31,7 +31,7 @@ sub get_venv_builddir {
     my $this = shift;
     my $builddir = $this->get_builddir();
     my $sourcepackage = $this->sourcepackage();
-    return "$builddir/usr/share/python/$sourcepackage";
+    return "$builddir/opt/$sourcepackage";
 }
 
 sub get_exec {
@@ -106,11 +106,11 @@ sub install {
     $this->doit_in_builddir('mkdir', '-p', $destdir);
     $this->doit_in_builddir('cp', '-r', '-T', '.', $destdir);
 
-    my $new_python = "/usr/share/python/$sourcepackage/bin/python";
+    my $new_python = "/opt/$sourcepackage/bin/python";
 
     # Fix shebangs so that we use the Python in the final localtion
     # instead of the Python in the build directory
-    my @binaries = <"$destdir/usr/share/python/$sourcepackage/bin/*">;
+    my @binaries = <"$destdir/opt/$sourcepackage/bin/*">;
     {
         local $^I = q{};
         local @ARGV = grep { -T } @binaries;
