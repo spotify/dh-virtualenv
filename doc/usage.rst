@@ -197,6 +197,16 @@ In addition the separation of build and install steps makes it
 possible to use ``debian/install`` files to include built files into
 the Debian package. This is not possible with the sequencer addition.
 
+The build system honors the ``DH_VIRTUALENV_INSTALL_ROOT`` environment
+variable. Arguments can be passed to virtualenv by setting
+``DH_VIRTUALENV_ARGUMENTS``. For example:
+
+.. code-block:: make
+
+  export DH_VIRTUALENV_ARGUMENTS=--no-site-packages --always-copy
+
+The default is to create the virtual environment with ``--no-site-packages``.
+
 Known incompabilities of the buildsystem
 ----------------------------------------
 
@@ -208,4 +218,3 @@ most of them, if not all, probably will.
 * ``Pyvenv`` of Python 3.x is not supported
 * No custom arguments outside requirements.txt can be passed to
   ``pip``
-* Not possible to specify custom install or build directories
