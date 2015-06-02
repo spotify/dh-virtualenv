@@ -48,23 +48,23 @@ consult the git history of the project.
 ===
 
  * Support for running triggers upon host interpreter update. This new
-   feature makes it possible to upgrade the host Python interpreter
-   and avoid breakage of all the virtualenvs installed with
-   virtualenv. For usage, see the the :doc:`tutorial`. Huge thanks to
-   `Jürgen Hermann <https://github.com/jhermann>`_ for implementing
-   this long wanted feature!
+  feature makes it possible to upgrade the host Python interpreter
+  and avoid breakage of all the virtualenvs installed with
+  virtualenv. For usage, see the the :doc:`tutorial`. Huge thanks to
+  `Jürgen Hermann <https://github.com/jhermann>`_ for implementing
+  this long wanted feature!
  * Add support for the built-in ``venv`` module. Thanks to `Petri
-   Lehtinen <https://github.com/akheron>`_!
+  Lehtinen <https://github.com/akheron>`_!
  * Allow custom ``pip`` flags to be passed via the
-   ``--extra-pip-args`` flag. Thanks to `@labeneator
-   <https://github.com/labeneator>`_ for the feature.
+  ``--extra-pip-args`` flag. Thanks to `@labeneator
+  <https://github.com/labeneator>`_ for the feature.
 
 0.7
 ===
 
  * **Backwards incompatible** Support running tests. This change
-   breaks builds that use distutils. For those cases a flag
-   ``--no-test`` needs to be passed.
+  breaks builds that use distutils. For those cases a flag
+  ``--no-test`` needs to be passed.
  * Add tutorial to documentation
  * Don't crash on debbuild parameters ``-i`` and ``-a``
  * Support custom source directory (debhelper's flag ``-D``)
