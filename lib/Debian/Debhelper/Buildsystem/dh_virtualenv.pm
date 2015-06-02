@@ -27,11 +27,20 @@ sub new {
     return $this;
 }
 
+sub get_install_root {
+    my $prefix = "/usr/share/python";
+    if (defined $ENV{DH_VIRTUALENV_INSTALL_ROOT}) {
+        $prefix = $ENV{DH_VIRTUALENV_INSTALL_ROOT};
+    }
+    return $prefix;
+}
+
 sub get_venv_builddir {
     my $this = shift;
     my $builddir = $this->get_builddir();
     my $sourcepackage = $this->sourcepackage();
-    return "$builddir/usr/share/python/$sourcepackage";
+    my $prefix = $this->get_install_root();
+    return "$builddir$prefix/$sourcepackage";
 }
 
 sub get_exec {
@@ -60,9 +69,14 @@ sub build {
     my $this = shift;
     my $sourcedir = $this->get_sourcedir();
     my $builddir = $this->get_venv_builddir();
+    my @params = ('--no-site-packages');
+
+    if (defined $ENV{DH_VIRTUALENV_ARGUMENTS}) {
+        @params = split(' ', $ENV{DH_VIRTUALENV_ARGUMENTS});
+    }
 
     $this->doit_in_builddir(
-        'virtualenv', '--no-site-packages', Cwd::abs_path($builddir));
+        'virtualenv', @params, Cwd::abs_path($builddir));
 
     my $python = $this->get_python();
     my $pip = $this->get_pip();
@@ -89,6 +103,7 @@ sub install {
     my $python = $this->get_python();
     my $sourcepackage = $this->sourcepackage();
     my $venv = $this->get_venv_builddir();
+    my $prefix = $this->get_install_root();
 
     # Before we copy files, let's make the symlinks in the 'usr/local'
     # relative to the build path.
@@ -106,11 +121,11 @@ sub install {
     $this->doit_in_builddir('mkdir', '-p', $destdir);
     $this->doit_in_builddir('cp', '-r', '-T', '.', $destdir);
 
-    my $new_python = "/usr/share/python/$sourcepackage/bin/python";
+    my $new_python = "$prefix/$sourcepackage/bin/python";
 
-    # Fix shebangs so that we use the Python in the final localtion
+    # Fix shebangs so that we use the Python in the final location
     # instead of the Python in the build directory
-    my @binaries = <"$destdir/usr/share/python/$sourcepackage/bin/*">;
+    my @binaries = <"$destdir$prefix/$sourcepackage/bin/*">;
     {
         local $^I = q{};
         local @ARGV = grep { -T } @binaries;

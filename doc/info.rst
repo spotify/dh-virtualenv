@@ -24,6 +24,13 @@ In the sequence the ``dh_virtualenv`` is inserted right after
 Following list contains most notable changes by version. For full list
 consult the git history of the project.
 
+0.10
+====
+
+* Honor ``DH_VIRTUALENV_INSTALL_ROOT`` in build system
+* Allow overriding virtualenv arguments by using the
+  ``DH_VIRTUALENV_ARGUMENTS`` environment variable when using the build system
+
 0.9
 ===
 
