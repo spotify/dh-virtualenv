@@ -34,7 +34,8 @@ class Deployment(object):
                  builtin_venv=False, sourcedirectory=None, verbose=False,
                  extra_pip_arg=[], use_system_packages=False):
 
-        self.package = os.environ.get(ENV_PATH_KEY, package)
+        package = os.environ.get(ENV_PATH_KEY, package)
+        self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
         self.virtualenv_install_dir = os.path.join(install_root, self.package)
         self.debian_root = os.path.join(
