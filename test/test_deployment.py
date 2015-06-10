@@ -379,7 +379,7 @@ def test_deployment_from_options_with_verbose_from_env(env_mock):
         env_mock.return_value = '1'
         options, _ = get_default_parser().parse_args([])
         d = Deployment.from_options('foo', options)
-        eq_(d.package, 'foo')
+        eq_(d.package, '1')
         eq_(d.verbose, True)
 
 
