@@ -25,6 +25,7 @@ import tempfile
 
 ROOT_ENV_KEY = 'DH_VIRTUALENV_INSTALL_ROOT'
 DEFAULT_INSTALL_DIR = '/usr/share/python/'
+ENV_PATH_KEY = 'DH_VIRTUALENV_ENV_PATH'
 
 
 class Deployment(object):
@@ -33,12 +34,13 @@ class Deployment(object):
                  builtin_venv=False, sourcedirectory=None, verbose=False,
                  extra_pip_arg=[], use_system_packages=False):
 
+        self.virtualenv_name = os.environ.get(ENV_PATH_KEY, package)
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
-        self.virtualenv_install_dir = os.path.join(install_root, self.package)
+        self.virtualenv_install_dir = os.path.join(install_root, self.virtualenv_name)
         self.debian_root = os.path.join(
             'debian', package, install_root.lstrip('/'))
-        self.package_dir = os.path.join(self.debian_root, package)
+        self.package_dir = os.path.join(self.debian_root, self.virtualenv_name)
         self.bin_dir = os.path.join(self.package_dir, 'bin')
         self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
 
