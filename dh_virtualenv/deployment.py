@@ -31,7 +31,8 @@ class Deployment(object):
     def __init__(self, package, extra_urls=[], preinstall=[],
                  pypi_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None, verbose=False,
-                 extra_pip_arg=[], use_system_packages=False):
+                 extra_pip_arg=[], use_system_packages=False, 
+                 dependencies_only=False):
 
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
@@ -53,7 +54,8 @@ class Deployment(object):
         self.builtin_venv = builtin_venv
         self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
         self.use_system_packages = use_system_packages
-
+        self.dependencies_only = dependencies_only
+        
     @classmethod
     def from_options(cls, package, options):
         verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
@@ -67,7 +69,8 @@ class Deployment(object):
                    sourcedirectory=options.sourcedirectory,
                    verbose=verbose,
                    extra_pip_arg=options.extra_pip_arg,
-                   use_system_packages=options.use_system_packages)
+                   use_system_packages=options.use_system_packages,
+                   dependencies_only=options.dependencies_only)
 
     def clean(self):
         shutil.rmtree(self.debian_root)
@@ -179,7 +182,8 @@ class Deployment(object):
             fh.write(content)
 
     def install_package(self):
-        subprocess.check_call(self.pip('.'), cwd=os.path.abspath(self.sourcedirectory))
+        if self.dependencies_only is not True:
+            subprocess.check_call(self.pip('.'), cwd=os.path.abspath(self.sourcedirectory))
 
     def fix_local_symlinks(self):
         # The virtualenv might end up with a local folder that points outside the package

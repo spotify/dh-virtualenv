@@ -80,7 +80,11 @@ def get_default_parser():
                       help="Set the --system-site-packages flag in virtualenv "
                            "creation, allowing you to use system packages.",
                       default=False)
-
+    parser.add_option('--dependencies-only', action='store_true',
+                      default=False, 
+                      dest='dependencies_only',
+                      help="Install dependencies only");
+    
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
     parser.add_option('-a', '--arch', dest="arch",
