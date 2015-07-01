@@ -77,7 +77,6 @@ class Deployment(object):
                    verbose=verbose,
                    extra_pip_arg=options.extra_pip_arg,
                    use_system_packages=options.use_system_packages,
-                   dependencies_only=options.dependencies_only,
                    install_suffix=options.install_suffix)
 
     def clean(self):
