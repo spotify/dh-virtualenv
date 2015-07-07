@@ -20,6 +20,10 @@ you can install *dh-virtualenv* simply with *apt-get*:
 
    sudo apt-get install dh-virtualenv
 
+For more recent packages there is [an unofficial PPA
+maintained](https://launchpad.net/~spotify-jyrki/+archive/ubuntu/dh-virtualenv)
+by the author.
+
 For other systems the only way is to build and install it yourself.
 Steps to do that, after you have cloned the repository are:
 
