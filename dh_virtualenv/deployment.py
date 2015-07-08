@@ -32,6 +32,7 @@ class Deployment(object):
                  pypi_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None, verbose=False,
                  extra_pip_arg=[], use_system_packages=False, 
+                 skip_install=False,
                  install_suffix=None):
 
         self.package = package
@@ -62,7 +63,8 @@ class Deployment(object):
         self.builtin_venv = builtin_venv
         self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
         self.use_system_packages = use_system_packages
-
+        self.skip_install = skip_install
+        
     @classmethod
     def from_options(cls, package, options):
         verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
@@ -77,6 +79,7 @@ class Deployment(object):
                    verbose=verbose,
                    extra_pip_arg=options.extra_pip_arg,
                    use_system_packages=options.use_system_packages,
+                   skip_install=options.skip_install,
                    install_suffix=options.install_suffix)
 
     def clean(self):
@@ -189,7 +192,8 @@ class Deployment(object):
             fh.write(content)
 
     def install_package(self):
-        subprocess.check_call(self.pip('.'), cwd=os.path.abspath(self.sourcedirectory))
+        if not self.skip_install:
+            subprocess.check_call(self.pip('.'), cwd=os.path.abspath(self.sourcedirectory))
 
     def fix_local_symlinks(self):
         # The virtualenv might end up with a local folder that points outside the package

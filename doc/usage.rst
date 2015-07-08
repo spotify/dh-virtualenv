@@ -147,6 +147,22 @@ few command line options:
    Enable the use of system site-packages in the created virtualenv
    by passing the ``--system-site-packages`` flag to ``virtualenv``.
 
+.. cmdoption:: --skip-install
+
+   Skip running ``pip install .`` after dependencies have been
+   installed. This will result in anything specified in setup.py being
+   ignored. If this package is intended to install a virtualenv
+   and a program that uses the supplied virtualenv, it is up to
+   the user to ensure that if setup.py exists, any installation logic
+   or dependencies contained therein are handled.
+
+   This option is useful for web application deployments where the
+   package is expected contain the virtual environment to support
+   an application which itself may be installed via some other means
+   -- typically, by the packages ``./debian/<packagename>.install``
+   file, possibly into a directory structure unrelated to the location
+   of the virtual environment.
+
 
 Advanced usage
 ==============

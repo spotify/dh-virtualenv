@@ -80,6 +80,10 @@ def get_default_parser():
                       help="Set the --system-site-packages flag in virtualenv "
                            "creation, allowing you to use system packages.",
                       default=False)
+    parser.add_option('--skip-install', action='store_true',
+                      default=False, 
+                      dest='skip_install',
+                      help="Skip running pip install within the source directory.");
     parser.add_option('--install-suffix', 
                       dest='install_suffix',
                       help="Override installation path suffix");
