@@ -84,7 +84,10 @@ def get_default_parser():
                       default=False, 
                       dest='skip_install',
                       help="Skip running pip install within the source directory.");
-    
+    parser.add_option('--install-suffix', 
+                      dest='install_suffix',
+                      help="Override installation path suffix");
+
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
     parser.add_option('-a', '--arch', dest="arch",
