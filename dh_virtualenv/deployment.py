@@ -32,7 +32,7 @@ class Deployment(object):
                  pypi_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None, verbose=False,
                  extra_pip_arg=[], use_system_packages=False, 
-                 dependencies_only=False):
+                 skip_install=False):
 
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
@@ -54,7 +54,7 @@ class Deployment(object):
         self.builtin_venv = builtin_venv
         self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
         self.use_system_packages = use_system_packages
-        self.dependencies_only = dependencies_only
+        self.skip_install = skip_install
         
     @classmethod
     def from_options(cls, package, options):
@@ -70,7 +70,7 @@ class Deployment(object):
                    verbose=verbose,
                    extra_pip_arg=options.extra_pip_arg,
                    use_system_packages=options.use_system_packages,
-                   dependencies_only=options.dependencies_only)
+                   skip_install=options.skip_install)
 
     def clean(self):
         shutil.rmtree(self.debian_root)
@@ -182,7 +182,7 @@ class Deployment(object):
             fh.write(content)
 
     def install_package(self):
-        if self.dependencies_only is not True:
+        if not self.skip_install:
             subprocess.check_call(self.pip('.'), cwd=os.path.abspath(self.sourcedirectory))
 
     def fix_local_symlinks(self):
