@@ -80,6 +80,9 @@ def get_default_parser():
                       help="Set the --system-site-packages flag in virtualenv "
                            "creation, allowing you to use system packages.",
                       default=False)
+    parser.add_option('--install-suffix', 
+                      dest='install_suffix',
+                      help="Override installation path suffix");
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)

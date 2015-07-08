@@ -31,14 +31,23 @@ class Deployment(object):
     def __init__(self, package, extra_urls=[], preinstall=[],
                  pypi_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None, verbose=False,
-                 extra_pip_arg=[], use_system_packages=False):
+                 extra_pip_arg=[], use_system_packages=False, 
+                 install_suffix=None):
 
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
-        self.virtualenv_install_dir = os.path.join(install_root, self.package)
+        self.install_suffix = install_suffix
+
         self.debian_root = os.path.join(
             'debian', package, install_root.lstrip('/'))
-        self.package_dir = os.path.join(self.debian_root, package)
+
+        if install_suffix is None:
+            self.virtualenv_install_dir = os.path.join(install_root, self.package)
+            self.package_dir = os.path.join(self.debian_root, package)
+        else:
+            self.virtualenv_install_dir = os.path.join(install_root, install_suffix)
+            self.package_dir = os.path.join(self.debian_root, install_suffix)
+            
         self.bin_dir = os.path.join(self.package_dir, 'bin')
         self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
 
@@ -67,7 +76,8 @@ class Deployment(object):
                    sourcedirectory=options.sourcedirectory,
                    verbose=verbose,
                    extra_pip_arg=options.extra_pip_arg,
-                   use_system_packages=options.use_system_packages)
+                   use_system_packages=options.use_system_packages,
+                   install_suffix=options.install_suffix)
 
     def clean(self):
         shutil.rmtree(self.debian_root)
