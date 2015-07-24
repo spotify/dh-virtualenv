@@ -46,7 +46,7 @@ Step 2: Setup the Debian packaging
 Grab your favourite Python project you want to use *dh-virtualenv*
 with and set it up. Only requirement is that your project has a
 somewhat sane ``setup.py`` and requirements listed in a
-``requirements.txt`` file. Note however that the defining requirements
+``requirements.txt`` file. Note however that defining any requirements
 is not mandatory.
 
 Next you need to define the Debian packaging for your software. To do
