@@ -108,17 +108,13 @@ class Deployment(object):
         virtualenv.append(self.package_dir)
         subprocess.check_call(virtualenv)
 
-        if self.builtin_venv:
-            # When using the venv module, pip is in local/bin
-            self.pip_prefix = [os.path.abspath(os.path.join(self.local_bin_dir, 'pip'))]
-        else:
-            # We need to prefix the pip run with the location of python
-            # executable. Otherwise it would just blow up due to too long
-            # shebang-line.
-            self.pip_prefix = [
-                os.path.abspath(os.path.join(self.bin_dir, 'python')),
-                os.path.abspath(os.path.join(self.bin_dir, 'pip')),
-            ]
+        # We need to prefix the pip run with the location of python
+        # executable. Otherwise it would just blow up due to too long
+        # shebang-line.
+        self.pip_prefix = [
+            os.path.abspath(os.path.join(self.bin_dir, 'python')),
+            os.path.abspath(os.path.join(self.bin_dir, 'pip')),
+        ]
 
         if self.verbose:
             self.pip_prefix.append('-v')
