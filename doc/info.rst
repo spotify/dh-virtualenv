@@ -24,15 +24,27 @@ In the sequence the ``dh_virtualenv`` is inserted right after
 Following list contains most notable changes by version. For full list
 consult the git history of the project.
 
-0.10 (unreleased)
-=================
+0.10
+====
 
-* Honor ``DH_VIRTUALENV_INSTALL_ROOT`` in build system. Thanks to 
+* **Backwards incompatible** Fix installation using the built-in
+  virtual environment on 3.4. This might break installation on Python
+  versions prior to 3.4 when using `--builtin-venv` flag. Thanks to
+  `Elonen <https://github.com/elonen>`_ for fixing!
+* Honor ``DH_VIRTUALENV_INSTALL_ROOT`` in build system. Thanks to
   `Ludwig Hähne <https://github.com/Pankrat>`_ for implementing!
 * Allow overriding virtualenv arguments by using the
-  ``DH_VIRTUALENV_ARGUMENTS`` environment variable when using the 
+  ``DH_VIRTUALENV_ARGUMENTS`` environment variable when using the
   build system. Thanks to `Ludwig Hähne <https://github.com/Pankrat>`_
   for implementing!
+* Add option to skip installation of the actual project. In other
+  words using ``--skip-install`` installs only the dependencies of the
+  project found in requirements.txt. Thanks to `Phillip
+  O'Donnell <https://github.com/phillipod>`_ for implementing!
+* Support custom installation suffix instead of the package name via
+  ``--install-suffix``. Thanks to `Phillip
+  O'Donnell <https://github.com/phillipod>`_ for implementing!
+
 
 0.9
 ===
