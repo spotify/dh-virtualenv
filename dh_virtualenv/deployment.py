@@ -177,15 +177,35 @@ class Deployment(object):
         """Replace the `VIRTUAL_ENV` path in bin/activate to reflect the
         post-install path of the virtualenv.
         """
-        virtualenv_path = 'VIRTUAL_ENV="{0}"'.format(
-            self.virtualenv_install_dir)
-        pattern = re.compile(r'^VIRTUAL_ENV=.*$', flags=re.M)
+        activate_settings = [
+            [
+                'VIRTUAL_ENV="{0}"'.format(self.virtualenv_install_dir),
+                r'^VIRTUAL_ENV=.*$',
+                "activate"
+            ],
+            [
+                'setenv VIRTUAL_ENV "{0}"'.format(self.virtualenv_install_dir),
+                r'^setenv VIRTUAL_ENV.*$',
+                "activate.csh"
+            ],
+            [
+                'set -gx VIRTUAL_ENV "{0}"'.format(self.virtualenv_install_dir),
+                r'^set -gx VIRTUAL_ENV.*$',
+                "activate.fish"
+            ],
+        ]
 
-        with open(os.path.join(self.bin_dir, 'activate'), 'r+') as fh:
-            content = pattern.sub(virtualenv_path, fh.read())
-            fh.seek(0)
-            fh.truncate()
-            fh.write(content)
+        for activate_args in activate_settings:
+            virtualenv_path = activate_args[0]
+            pattern = re.compile(activate_args[1], flags=re.M)
+            activate_file = activate_args[2]
+
+            with open(os.path.join(self.bin_dir, activate_file), 'r+') as fh:
+                content = pattern.sub(virtualenv_path, fh.read())
+                fh.seek(0)
+                fh.truncate()
+                fh.write(content)
+
 
     def install_package(self):
         if not self.skip_install:
