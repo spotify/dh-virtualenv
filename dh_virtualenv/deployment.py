@@ -33,7 +33,8 @@ class Deployment(object):
                  builtin_venv=False, sourcedirectory=None, verbose=False,
                  extra_pip_arg=[], use_system_packages=False,
                  skip_install=False,
-                 install_suffix=None):
+                 install_suffix=None,
+                 requirements_filename='requirements.txt'):
 
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
@@ -64,6 +65,7 @@ class Deployment(object):
         self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
         self.use_system_packages = use_system_packages
         self.skip_install = skip_install
+        self.requirements_filename = requirements_filename
 
     @classmethod
     def from_options(cls, package, options):
@@ -80,7 +82,8 @@ class Deployment(object):
                    extra_pip_arg=options.extra_pip_arg,
                    use_system_packages=options.use_system_packages,
                    skip_install=options.skip_install,
-                   install_suffix=options.install_suffix)
+                   install_suffix=options.install_suffix,
+                   requirements_filename=options.requirements_filename)
 
     def clean(self):
         shutil.rmtree(self.debian_root)
@@ -142,7 +145,7 @@ class Deployment(object):
         if self.preinstall:
             subprocess.check_call(self.pip(*self.preinstall))
 
-        requirements_path = os.path.join(self.sourcedirectory, 'requirements.txt')
+        requirements_path = os.path.join(self.sourcedirectory, self.requirements_filename)
         if os.path.exists(requirements_path):
             subprocess.check_call(self.pip('-r', requirements_path))
 

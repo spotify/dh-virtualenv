@@ -81,12 +81,16 @@ def get_default_parser():
                            "creation, allowing you to use system packages.",
                       default=False)
     parser.add_option('--skip-install', action='store_true',
-                      default=False, 
+                      default=False,
                       dest='skip_install',
                       help="Skip running pip install within the source directory.");
-    parser.add_option('--install-suffix', 
+    parser.add_option('--install-suffix',
                       dest='install_suffix',
                       help="Override installation path suffix");
+    parser.add_option('--requirements',
+                      dest='requirements_filename',
+                      help='Specify the filename for requirementst.txt',
+                      default='requirements.txt')
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
