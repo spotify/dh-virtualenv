@@ -31,7 +31,7 @@ class Deployment(object):
     def __init__(self, package, extra_urls=[], preinstall=[],
                  pypi_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None, verbose=False,
-                 extra_pip_arg=[], use_system_packages=False, 
+                 extra_pip_arg=[], use_system_packages=False,
                  skip_install=False,
                  install_suffix=None):
 
@@ -48,7 +48,7 @@ class Deployment(object):
         else:
             self.virtualenv_install_dir = os.path.join(install_root, install_suffix)
             self.package_dir = os.path.join(self.debian_root, install_suffix)
-            
+
         self.bin_dir = os.path.join(self.package_dir, 'bin')
         self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
 
@@ -64,7 +64,7 @@ class Deployment(object):
         self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
         self.use_system_packages = use_system_packages
         self.skip_install = skip_install
-        
+
     @classmethod
     def from_options(cls, package, options):
         verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
@@ -205,7 +205,6 @@ class Deployment(object):
                 fh.seek(0)
                 fh.truncate()
                 fh.write(content)
-
 
     def install_package(self):
         if not self.skip_install:
