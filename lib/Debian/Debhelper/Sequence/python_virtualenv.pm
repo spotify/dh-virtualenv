@@ -23,7 +23,7 @@ use warnings;
 use strict;
 use Debian::Debhelper::Dh_Lib;
 
-insert_after("dh_perl", "dh_virtualenv");
+insert_before("dh_installinit", "dh_virtualenv");
 
 # dh_auto_test can cause system python to run 'python setup.py test',
 # which will break due missing dependencies.
