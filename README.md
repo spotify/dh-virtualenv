@@ -3,7 +3,9 @@
 [![Build Status](https://travis-ci.org/spotify/dh-virtualenv.png)](https://travis-ci.org/spotify/dh-virtualenv)
 
 dh-virtualenv is a tool that aims to combine Debian packaging with
-self-contained virtualenv based Python deployments.
+self-contained virtualenv based Python deployments. (The abbreviation "dh"
+stands for "debhelper" from
+[Debian build toolchain](https://en.wikipedia.org/wiki/Debian_build_toolchain).)
 
 The idea behind the dh-virtualenv is to be able to combine power of
 Debian packaging with the sandboxed nature of virtualenvs. In addition
@@ -15,9 +17,26 @@ operating system.
 
 ## Using dh-virtualenv
 
+### Starting from scratch
+
 Using dh-virtualenv is fairly straightforward. First, you need to
 define the requirements of your package in `requirements.txt` file, in
 [the format defined by pip](https://pip.pypa.io/en/latest/user_guide.html#requirements-files).
+
+Then, assuming your setup script is called setup.py, try:
+
+	dh_virtualenv_helper setup.py generate
+
+This should set up the full debian/ directory contents automatically.
+
+Once the package is built, you have a virtualenv contained in a Debian
+package and upon installation it gets placed, by default, under
+`/usr/share/python/<packagename>`.
+
+If the this fails for some reason, you're encouraged to contribute to make it
+work for you, or read the following section for in-depth essentials.
+
+### Configuring dh-virtualenv in a preexisting Debian packaged project
 
 To build a package using dh-virtualenv, you need to add dh-virtualenv
 in to your build dependencies and write following `debian/rules` file:
@@ -35,10 +54,6 @@ Also, you are able to define the root path for your source directory using
               dh $@ --with python-virtualenv --sourcedirectory=root/srv/application
 
 NOTE: Be aware that the configuration in debian/rules expects tabs instead of spaces!
-
-Once the package is built, you have a virtualenv contained in a Debian
-package and upon installation it gets placed, by default, under
-`/usr/share/python/<packagename>`.
 
 For more information and usage documentation, check the accompanying
 documentation in the `doc` folder.
