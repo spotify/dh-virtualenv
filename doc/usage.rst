@@ -116,6 +116,15 @@ few command line options:
    override_dh_virtualenv section of the debian/rules file will
    disable the generation of pyc files.
 
+.. cmdoption:: --requirements <REQUIREMENTS FILE>
+
+   Use a different requirements file when installing. Some packages
+   such as `pbr <http://docs.openstack.org/developer/pbr/>`_ expect
+   the ``requirements.txt`` file to be a simple list of requirements
+   that can be copied verbatim into the ``install_requires``
+   list. This command option allows specifying a different
+   ``requirements.txt`` file that may include pip specific flags such
+   as ``-i``, ``-r-`` and ``-e``.
 
 .. cmdoption:: --setuptools
 
