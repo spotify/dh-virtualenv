@@ -108,10 +108,6 @@ sub build {
     }
     $this->doit_in_sourcedir(
         $python, $pip, 'install', '-r', $reqfile, @pipargs);
-
-    $this->doit_in_sourcedir(
-        $python, $pip, 'install', '.');
-
 }
 
 sub test {
@@ -129,6 +125,9 @@ sub install {
     my $sourcepackage = $this->sourcepackage();
     my $venv = $this->get_venv_builddir();
     my $prefix = $this->get_install_root();
+
+    $this->doit_in_sourcedir(
+        $python, $pip, 'install', '.');
 
     # Before we copy files, let's make the symlinks in the 'usr/local'
     # relative to the build path.
