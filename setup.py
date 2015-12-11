@@ -28,7 +28,10 @@ setup(name='dh_virtualenv',
       url='https://github.com/spotify/dh-virtualenv',
       description='Debian packaging sequence for Python virtualenvs.',
       license='GNU General Public License v2 or later',
-      scripts=['bin/dh_virtualenv'],
+      scripts=[
+          'bin/dh_virtualenv',
+          'bin/dh_virtualenv_helper',
+      ],
       packages=['dh_virtualenv'],
       classifiers=[
           'Intended Audience :: Developers',
