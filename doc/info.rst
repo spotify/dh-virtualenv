@@ -24,6 +24,18 @@ In the sequence the ``dh_virtualenv`` is inserted right after
 Following list contains most notable changes by version. For full list
 consult the git history of the project.
 
+0.11
+====
+
+* Allow passing explicit filename for `requirements.txt` using
+  `--requirements` option. Thanks to `Eric Larson
+  <https://github.com/ionrock>`_ for implementing!
+* Ensure that venv is configured before starting any daemons. Thanks
+  to `Chris Lamb <https://github.com/lamby>`_ for fixing this!
+* Make sure `fix_activate_path` updates all activate scripts. Thanks
+  to `walrusVision <https://github.com/walrusVision>`_ for fixing
+  this!
+
 0.10
 ====
 
