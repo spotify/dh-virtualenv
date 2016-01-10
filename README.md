@@ -1,6 +1,5 @@
-# dh-virtualenv
-
-[![Build Status](https://travis-ci.org/spotify/dh-virtualenv.png)](https://travis-ci.org/spotify/dh-virtualenv)
+dh-virtualenv [![Build Status](https://travis-ci.org/spotify/dh-virtualenv.png)](https://travis-ci.org/spotify/dh-virtualenv) [![Coverage Status](https://coveralls.io/repos/spotify/dh-virtualenv/badge.svg?branch=unittesting-improvements&service=github)](https://coveralls.io/github/spotify/dh-virtualenv?branch=unittesting-improvements)
+==========
 
 dh-virtualenv is a tool that aims to combine Debian packaging with
 self-contained virtualenv based Python deployments.
