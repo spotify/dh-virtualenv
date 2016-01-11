@@ -243,15 +243,3 @@ variable. Arguments can be passed to virtualenv by setting
   export DH_VIRTUALENV_ARGUMENTS=--no-site-packages --always-copy
 
 The default is to create the virtual environment with ``--no-site-packages``.
-
-Known incompabilities of the buildsystem
-----------------------------------------
-
-This section defines the known incompabilities with the sequencer
-approach. There are no guarantees that these all get addressed, but
-most of them, if not all, probably will.
-
-* No custom Python interpreter supported
-* ``Pyvenv`` of Python 3.x is not supported
-* No custom arguments outside requirements.txt can be passed to
-  ``pip``
