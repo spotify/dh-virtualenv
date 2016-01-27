@@ -70,9 +70,19 @@ sub build {
     my $sourcedir = $this->get_sourcedir();
     my $builddir = $this->get_venv_builddir();
     my @params = ('--no-site-packages');
+    my $reqfile = ('requirements.txt');
+    my @pipargs = ();
 
     if (defined $ENV{DH_VIRTUALENV_ARGUMENTS}) {
         @params = split(' ', $ENV{DH_VIRTUALENV_ARGUMENTS});
+    }
+
+    if (defined $ENV{DH_REQUIREMENTS_FILE}) {
+        $reqfile = $ENV{DH_REQUIREMENTS_FILE};
+    }
+
+    if (defined $ENV{DH_PIP_EXTRA_ARGS}) {
+        @pipargs = split(' ', $ENV{DH_PIP_EXTRA_ARGS});
     }
 
     $this->doit_in_builddir(
@@ -82,7 +92,7 @@ sub build {
     my $pip = $this->get_pip();
 
     $this->doit_in_sourcedir(
-        $python, $pip, 'install', '-r', 'requirements.txt');
+        $python, $pip, 'install', '-r', $reqfile, @pipargs);
 
     $this->doit_in_sourcedir(
         $python, $pip, 'install', '.');

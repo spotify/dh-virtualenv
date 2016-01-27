@@ -243,3 +243,17 @@ variable. Arguments can be passed to virtualenv by setting
   export DH_VIRTUALENV_ARGUMENTS=--no-site-packages --always-copy
 
 The default is to create the virtual environment with ``--no-site-packages``.
+
+Overriding the requirements file can be done with the ``DH_REQUIREMENTS_FILE`` environment
+variable. For example:
+
+.. code-block:: make
+
+  export DH_REQUIREMENTS_FILE="requirements-deploy.txt"
+
+Additional parameters to ``pip`` can be defined in the ``DH_PIP_EXTRA_ARGS`` environment
+variable. For example:
+
+.. code-block:: make
+
+  export DH_PIP_EXTRA_ARGS="--no-index --find-links=./requirements/wheels"
