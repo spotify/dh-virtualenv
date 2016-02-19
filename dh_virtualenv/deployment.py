@@ -25,6 +25,8 @@ import tempfile
 
 ROOT_ENV_KEY = 'DH_VIRTUALENV_INSTALL_ROOT'
 DEFAULT_INSTALL_DIR = '/usr/share/python/'
+PYTHON_INTERPRETERS = ['python', 'pypy', 'ipy', 'jython']
+_PYTHON_INTERPRETERS_REGEX = r'\(' + r'\|'.join(PYTHON_INTERPRETERS) + r'\)'
 
 
 class Deployment(object):
@@ -155,26 +157,24 @@ class Deployment(object):
         if os.path.exists(setup_py):
             subprocess.check_call([python, 'setup.py', 'test'], cwd=self.sourcedirectory)
 
+    def find_script_files(self):
+        """Find list of files containing python shebangs in the bin directory"""
+        command = ['grep', '-l', '-r', '-e',
+                   r'^#!.*bin/\(env \)\?{0}'.format(_PYTHON_INTERPRETERS_REGEX),
+                   self.bin_dir]
+        grep_proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+        files, stderr = grep_proc.communicate()
+        return files.strip().split('\n')
+
     def fix_shebangs(self):
         """Translate /usr/bin/python and /usr/bin/env python sheband
         lines to point to our virtualenv python.
         """
-        grep_proc = subprocess.Popen(
-            ['grep', '-l', '-r', '-e', r'^#!.*bin/\(env \)\?python',
-             self.bin_dir],
-            stdout=subprocess.PIPE
-        )
-        files, stderr = grep_proc.communicate()
-        files = files.strip()
-        if not files:
-            return
-
         pythonpath = os.path.join(self.virtualenv_install_dir, 'bin/python')
-        for f in files.split('\n'):
-            subprocess.check_call(
-                ['sed', '-i', r's|^#!.*bin/\(env \)\?python|#!{0}|'.format(
-                    pythonpath),
-                 f])
+        for f in self.find_script_files():
+            regex = r's-^#!.*bin/\(env \)\?{names}-#!{pythonpath}-'\
+                .format(names=_PYTHON_INTERPRETERS_REGEX, pythonpath=pythonpath)
+            subprocess.check_call(['sed', '-i', regex, f])
 
     def fix_activate_path(self):
         """Replace the `VIRTUAL_ENV` path in bin/activate to reflect the

@@ -22,6 +22,7 @@ import os
 import shutil
 import tempfile
 import textwrap
+import contextlib
 
 from mock import patch, call
 
@@ -53,54 +54,62 @@ def temporary_dir(fn):
     return _inner
 
 
+@contextlib.contextmanager
+def override_envvar(name, value):
+    """Set environment variable only during the test"""
+    def set_or_unset_envvar(name, value):
+        """Sets name to value. Unset name when value is None"""
+        if value is None:
+            del os.environ[name]
+        else:
+            os.environ[name] = value
+
+    previous = os.getenv(name)
+    set_or_unset_envvar(name, value)
+    try:
+        yield
+    finally:
+        set_or_unset_envvar(name, previous)
+
+
 def test_shebangs_fix():
-    deployment = Deployment('test')
-    temp = tempfile.NamedTemporaryFile()
-    # We cheat here a little. The fix_shebangs walks through the
-    # project directory, however we can just point to a single
-    # file, as the underlying mechanism is just grep -r.
-    deployment.bin_dir = temp.name
-
-    with open(temp.name, 'w') as f:
-        f.write('#!/usr/bin/python\n')
-
-    deployment.fix_shebangs()
-
-    with open(temp.name) as f:
-        eq_('#!/usr/share/python/test/bin/python\n', f.read())
-
-    with open(temp.name, 'w') as f:
-        f.write('#!/usr/bin/env python\n')
-
-    deployment.fix_shebangs()
-    with open(temp.name) as f:
-        eq_('#!/usr/share/python/test/bin/python\n', f.readline())
+    """Generate a test for each possible interpreter"""
+    for interpreter in ('python', 'pypy', 'ipy', 'jython'):
+        yield check_shebangs_fix, interpreter, '/usr/share/python/test'
 
 
 def test_shebangs_fix_overridden_root():
-    os.environ['DH_VIRTUALENV_INSTALL_ROOT'] = 'foo'
+    """Generate a test for each possible interpreter while overriding root"""
+    with override_envvar('DH_VIRTUALENV_INSTALL_ROOT', 'foo'):
+        for interpreter in ('python', 'pypy', 'ipy', 'jython'):
+            yield check_shebangs_fix, interpreter, 'foo/test'
+
+
+def check_shebangs_fix(interpreter, path):
+    """Checks shebang substitution for the given interpreter"""
     deployment = Deployment('test')
     temp = tempfile.NamedTemporaryFile()
     # We cheat here a little. The fix_shebangs walks through the
     # project directory, however we can just point to a single
     # file, as the underlying mechanism is just grep -r.
     deployment.bin_dir = temp.name
+    expected_shebang = '#!' + os.path.join(path, 'bin/python') + '\n'
 
     with open(temp.name, 'w') as f:
-        f.write('#!/usr/bin/python\n')
+        f.write('#!/usr/bin/{}\n'.format(interpreter))
 
     deployment.fix_shebangs()
 
     with open(temp.name) as f:
-        eq_('#!foo/test/bin/python\n', f.read())
+        eq_(f.read(), expected_shebang)
 
     with open(temp.name, 'w') as f:
-        f.write('#!/usr/bin/env python\n')
+        f.write('#!/usr/bin/env {}\n'.format(interpreter))
 
     deployment.fix_shebangs()
+
     with open(temp.name) as f:
-        eq_('#!foo/test/bin/python\n', f.readline())
-    del os.environ['DH_VIRTUALENV_INSTALL_ROOT']
+        eq_(f.readline(), expected_shebang)
 
 
 @patch('os.path.exists', lambda x: False)
