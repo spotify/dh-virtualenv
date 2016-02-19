@@ -96,7 +96,7 @@ def check_shebangs_fix(interpreter, path):
     expected_shebang = '#!' + os.path.join(path, 'bin/python') + '\n'
 
     with open(temp.name, 'w') as f:
-        f.write('#!/usr/bin/{}\n'.format(interpreter))
+        f.write('#!/usr/bin/{0}\n'.format(interpreter))
 
     deployment.fix_shebangs()
 
@@ -104,7 +104,7 @@ def check_shebangs_fix(interpreter, path):
         eq_(f.read(), expected_shebang)
 
     with open(temp.name, 'w') as f:
-        f.write('#!/usr/bin/env {}\n'.format(interpreter))
+        f.write('#!/usr/bin/env {0}\n'.format(interpreter))
 
     deployment.fix_shebangs()
 
