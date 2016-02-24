@@ -93,8 +93,8 @@ def test_shebangs_fix_special_chars_in_path():
     with override_envvar('DH_VIRTUALENV_INSTALL_ROOT',
                          'some-directory:with/special_chars'):
         for interpreter in ('python', 'pypy', 'ipy', 'jython'):
-            yield check_shebangs_fix, interpreter,
-            'some-directory:with/special_chars/test'
+            yield (check_shebangs_fix, interpreter,
+                   'some-directory:with/special_chars/test')
 
 
 def check_shebangs_fix(interpreter, path):
