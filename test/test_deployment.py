@@ -85,6 +85,13 @@ def test_shebangs_fix_overridden_root():
             yield check_shebangs_fix, interpreter, 'foo/test'
 
 
+def test_shebangs_fix_special_chars_in_path():
+    """Generate a test for each possible interpreter while overriding root"""
+    with override_envvar('DH_VIRTUALENV_INSTALL_ROOT', 'some-directory:with/special_chars'):
+        for interpreter in ('python', 'pypy', 'ipy', 'jython'):
+            yield check_shebangs_fix, interpreter, 'some-directory:with/special_chars/test'
+
+
 def check_shebangs_fix(interpreter, path):
     """Checks shebang substitution for the given interpreter"""
     deployment = Deployment('test')
