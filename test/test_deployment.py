@@ -86,7 +86,7 @@ def test_shebangs_fix_overridden_root():
 
 
 def test_shebangs_fix_special_chars_in_path():
-    """Generate a test for each possible interpreter while overriding root"""
+    """Generate a test for each possible interpreter while overriding root to contain special characters"""
     with override_envvar('DH_VIRTUALENV_INSTALL_ROOT', 'some-directory:with/special_chars'):
         for interpreter in ('python', 'pypy', 'ipy', 'jython'):
             yield check_shebangs_fix, interpreter, 'some-directory:with/special_chars/test'
