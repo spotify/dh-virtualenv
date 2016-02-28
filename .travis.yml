@@ -1,6 +1,16 @@
 language: python
+sudo: false
+cache: pip
+
 python:
   - "2.6"
   - "2.7"
-install: "pip install -r travis-requirements.txt"
+
+install:
+  - cp .noserc $HOME/
+  - pip install -r travis-requirements.txt
+
 script: nosetests
+
+after_success:
+  - coveralls
