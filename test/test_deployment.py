@@ -213,7 +213,7 @@ def test_create_venv_with_extra_urls(callmock):
 @patch('subprocess.check_call')
 def test_create_venv_with_custom_index_url(callmock):
     d = Deployment('test', extra_urls=['foo', 'bar'],
-                   pypi_url='http://example.com/simple')
+                   index_url='http://example.com/simple')
     d.create_virtualenv()
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
@@ -221,7 +221,7 @@ def test_create_venv_with_custom_index_url(callmock):
     eq_([PY_CMD,
          PIP_CMD,
          'install',
-         '--pypi-url=http://example.com/simple',
+         '--index-url=http://example.com/simple',
          '--extra-index-url=foo',
          '--extra-index-url=bar',
          '--log=' + os.path.abspath('foo')], d.pip_prefix)
@@ -382,7 +382,7 @@ def test_deployment_from_options():
         ])
         d = Deployment.from_options('foo', options)
         eq_(d.package, 'foo')
-        eq_(d.pypi_url, 'http://example.org')
+        eq_(d.index_url, 'http://example.org')
         eq_(d.extra_urls, ['http://example.com'])
 
 

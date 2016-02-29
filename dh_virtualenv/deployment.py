@@ -31,7 +31,7 @@ _PYTHON_INTERPRETERS_REGEX = r'\(' + r'\|'.join(PYTHON_INTERPRETERS) + r'\)'
 
 class Deployment(object):
     def __init__(self, package, extra_urls=[], preinstall=[],
-                 pypi_url=None, setuptools=False, python=None,
+                 index_url=None, setuptools=False, python=None,
                  builtin_venv=False, sourcedirectory=None, verbose=False,
                  extra_pip_arg=[], use_system_packages=False,
                  skip_install=False,
@@ -58,7 +58,7 @@ class Deployment(object):
         self.extra_urls = extra_urls
         self.preinstall = preinstall
         self.extra_pip_arg = extra_pip_arg
-        self.pypi_url = pypi_url
+        self.index_url = index_url
         self.log_file = tempfile.NamedTemporaryFile()
         self.verbose = verbose
         self.setuptools = setuptools
@@ -75,7 +75,7 @@ class Deployment(object):
         return cls(package,
                    extra_urls=options.extra_index_url,
                    preinstall=options.preinstall,
-                   pypi_url=options.pypi_url,
+                   index_url=options.index_url,
                    setuptools=options.setuptools,
                    python=options.python,
                    builtin_venv=options.builtin_venv,
@@ -126,8 +126,8 @@ class Deployment(object):
 
         self.pip_prefix.append('install')
 
-        if self.pypi_url:
-            self.pip_prefix.append('--pypi-url={0}'.format(self.pypi_url))
+        if self.index_url:
+            self.pip_prefix.append('--index-url={0}'.format(self.index_url))
         self.pip_prefix.extend([
             '--extra-index-url={0}'.format(url) for url in self.extra_urls
         ])

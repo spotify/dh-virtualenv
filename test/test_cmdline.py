@@ -18,10 +18,13 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 import os
+import warnings
+
+from StringIO import StringIO
 
 from dh_virtualenv import cmdline
 from mock import patch
-from nose.tools import eq_
+from nose.tools import eq_, ok_
 
 
 @patch.object(cmdline.DebhelperOptionParser, 'error')
@@ -55,6 +58,35 @@ def test_get_default_parser():
     ])
     eq_('/tmp/foo', opts.sourcedirectory)
     eq_(['http://example.com'], opts.extra_index_url)
+
+
+def test_pypi_url_creates_deprecation_warning():
+    # This test needs to be the first one that uses '--pypi-url' flag.
+    # Otherwise the 'default' for warnings.simplefilter will exclude
+    # the subsequent warnings. Another option would be to use 'always'
+    # in cmdline.py, but that's quite wide cannon to shoot with.
+    parser = cmdline.get_default_parser()
+    with warnings.catch_warnings(record=True) as w:
+        parser.parse_args([
+            '--pypi-url=http://example.com',
+        ])
+    eq_(len(w), 1)
+    ok_(issubclass(w[-1].category, DeprecationWarning))
+    eq_(str(w[-1].message), 'Use of --pypi-url is deprecated. Use --index-url intead')
+
+
+@patch('sys.exit')
+def test_pypi_url_index_url_conflict(exit_):
+    parser = cmdline.get_default_parser()
+    f = StringIO()
+    with patch('sys.stderr', f):
+        parser.parse_args([
+            '--pypi-url=http://example.com',
+            '--index-url=http://example.org']
+        )
+    ok_('Deprecated --pypi-url and the new --index-url are mutually exclusive'
+        in f.getvalue())
+    exit_.assert_called_once_with(2)
 
 
 def test_that_default_test_option_should_be_true():

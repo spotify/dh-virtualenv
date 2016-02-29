@@ -20,8 +20,9 @@
 """Helpers to handle debhelper command line options."""
 
 import os
+import warnings
 
-from optparse import OptionParser, SUPPRESS_HELP
+from optparse import OptionParser, SUPPRESS_HELP, OptionValueError
 
 
 class DebhelperOptionParser(OptionParser):
@@ -37,6 +38,21 @@ class DebhelperOptionParser(OptionParser):
         args.extend(os.environ.get('DH_OPTIONS', '').split())
         # Unfortunately OptionParser is an old style class :(
         return OptionParser.parse_args(self, args, values)
+
+
+def _check_index_url(option, opt_str, value, parser, *args, **kwargs):
+    if opt_str == '--pypi-url':
+        # Work around 2.7 hiding the DeprecationWarning
+        with warnings.catch_warnings():
+            warnings.simplefilter('default')
+            warnings.warn('Use of --pypi-url is deprecated. Use --index-url intead',
+                          DeprecationWarning)
+    if parser.values.index_url:
+        # We've already set the index_url, which means that we have both
+        # --index-url and --pypi-url passed in.
+        raise OptionValueError('Deprecated --pypi-url and the new '
+                               '--index-url are mutually exclusive')
+    parser.values.index_url = value
 
 
 def get_default_parser():
@@ -61,7 +77,19 @@ def get_default_parser():
                       help='Extra args for the pip binary.'
                       'You can use this flag multiple times to pass in'
                       ' parameters to pip.', default=[])
-    parser.add_option('--pypi-url', help='Base URL of the PyPI server')
+    parser.add_option('--pypi-url',
+                      help=('!!DEPRECATED, use --index-url instead!! '
+                            'Base URL of the PyPI server'),
+                      action='callback',
+                      dest='index_url',
+                      type='string',
+                      callback=_check_index_url)
+    parser.add_option('--index-url',
+                      help='Base URL of the PyPI server',
+                      action='callback',
+                      type='string',
+                      dest='index_url',
+                      callback=_check_index_url)
     parser.add_option('--python', help='The Python to use')
     parser.add_option('--builtin-venv', action='store_true',
                       help='Use the built-in venv module. Only works on '

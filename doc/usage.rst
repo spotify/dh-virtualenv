@@ -98,7 +98,7 @@ few command line options:
    to parse ``setup.py``. This flag can be provided multiple times to
    pass multiple packages for pre-install.
 
-.. cmdoption:: --pypi-url <URL>
+.. cmdoption:: --index-url <URL>
 
    Base URL of the PyPI server. This flag can be used to pass in a
    custom URL to a PyPI mirror. It's useful if you for example have an
@@ -171,6 +171,11 @@ few command line options:
    -- typically, by the packages ``./debian/<packagename>.install``
    file, possibly into a directory structure unrelated to the location
    of the virtual environment.
+
+.. cmdoption:: --pypi-url <URL>
+
+   .. deprecated:: 0.12
+      Use :option:`--index-url` instead.
 
 
 Advanced usage
