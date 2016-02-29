@@ -18,3 +18,6 @@
 # <http://www.gnu.org/licenses/>.
 
 from .deployment import Deployment
+
+# Make Flake8 happy
+assert Deployment
