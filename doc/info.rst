@@ -24,6 +24,11 @@ In the sequence the ``dh_virtualenv`` is inserted right after
 Following list contains most notable changes by version. For full list
 consult the git history of the project.
 
+0.12 (unreleased)
+=================
+
+* Deprecate ``--pypi-url`` in favour of ``--index-url``
+
 0.11
 ====
 
