@@ -11,6 +11,7 @@
 # Build files
 build/
 dh_virtualenv.egg-info/
+.tox
 
 # Sphinx build
 doc/_build
