@@ -28,6 +28,8 @@ consult the git history of the project.
 =================
 
 * Deprecate ``--pypi-url`` in favour of ``--index-url``
+* Support upgrading pip to the latest release with ``--upgrade-pip``
+  flag.
 
 0.11
 ====

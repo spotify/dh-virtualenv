@@ -98,6 +98,11 @@ few command line options:
    to parse ``setup.py``. This flag can be provided multiple times to
    pass multiple packages for pre-install.
 
+.. cmdoption:: --upgrade-pip <package>
+
+   Force upgrading pip to the latest available release. *Note:* This
+   can produce non-repeatable builds.
+
 .. cmdoption:: --index-url <URL>
 
    Base URL of the PyPI server. This flag can be used to pass in a

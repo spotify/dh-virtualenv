@@ -30,10 +30,19 @@ _PYTHON_INTERPRETERS_REGEX = r'\(' + r'\|'.join(PYTHON_INTERPRETERS) + r'\)'
 
 
 class Deployment(object):
-    def __init__(self, package, extra_urls=[], preinstall=[],
-                 index_url=None, setuptools=False, python=None,
-                 builtin_venv=False, sourcedirectory=None, verbose=False,
-                 extra_pip_arg=[], use_system_packages=False,
+    def __init__(self,
+                 package,
+                 extra_urls=[],
+                 preinstall=[],
+                 upgrade_pip=False,
+                 index_url=None,
+                 setuptools=False,
+                 python=None,
+                 builtin_venv=False,
+                 sourcedirectory=None,
+                 verbose=False,
+                 extra_pip_arg=[],
+                 use_system_packages=False,
                  skip_install=False,
                  install_suffix=None,
                  requirements_filename='requirements.txt'):
@@ -57,6 +66,7 @@ class Deployment(object):
 
         self.extra_urls = extra_urls
         self.preinstall = preinstall
+        self.upgrade_pip = upgrade_pip
         self.extra_pip_arg = extra_pip_arg
         self.index_url = index_url
         self.log_file = tempfile.NamedTemporaryFile()
@@ -75,6 +85,7 @@ class Deployment(object):
         return cls(package,
                    extra_urls=options.extra_index_url,
                    preinstall=options.preinstall,
+                   upgrade_pip=options.upgrade_pip,
                    index_url=options.index_url,
                    setuptools=options.setuptools,
                    python=options.python,
@@ -144,6 +155,8 @@ class Deployment(object):
         # a custom package to install dependencies (think something
         # along lines of setuptools), but that does not get installed
         # by default virtualenv.
+        if self.upgrade_pip:
+            subprocess.check_call(self.pip('-U', 'pip'))
         if self.preinstall:
             subprocess.check_call(self.pip(*self.preinstall))
 

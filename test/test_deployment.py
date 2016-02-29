@@ -152,6 +152,25 @@ def test_install_dependencies_with_preinstall(callmock):
         ['pip', 'install', 'foobar'])
 
 
+@patch('subprocess.check_call')
+def test_upgrade_pip(callmock):
+    d = Deployment('test', upgrade_pip=True)
+    d.pip_prefix = ['pip', 'install']
+    d.install_dependencies()
+    callmock.assert_called_with(
+        ['pip', 'install', '-U', 'pip'])
+
+
+@patch('subprocess.check_call')
+def test_upgrade_pip_with_preinstall(callmock):
+    d = Deployment('test', upgrade_pip=True, preinstall=['foobar'])
+    d.pip_prefix = ['pip', 'install']
+    d.install_dependencies()
+    callmock.assert_has_calls([
+        call(['pip', 'install', '-U', 'pip']),
+        call(['pip', 'install', 'foobar'])])
+
+
 @patch('os.path.exists', lambda x: True)
 @patch('subprocess.check_call')
 def test_install_dependencies_with_preinstall_with_requirements(callmock):
