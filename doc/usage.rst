@@ -121,6 +121,12 @@ few command line options:
    override_dh_virtualenv section of the debian/rules file will
    disable the generation of pyc files.
 
+.. cmdoption:: --extra-virtualenv-arg <VIRTUALENV ARG>
+
+   Extra parameters to pass to the virtualenv executable. This is useful if
+   you need to change the behaviour of virtualenv during the packaging process.
+   You can use this flag multiple times to pass in different virtualenv flags.
+
 .. cmdoption:: --requirements <REQUIREMENTS FILE>
 
    Use a different requirements file when installing. Some packages

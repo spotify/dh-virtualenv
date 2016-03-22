@@ -45,6 +45,7 @@ OPTIONS
 --preinstall=PACKAGE			Preinstall a PACKAGE before
 					running pip.
 --extra-pip-arg				Extra arg for the pip executable.
+--extra-virtualenv-arg      Extra arg for the virtualenv executable.
 --pypi-url				Base URL for PyPI server.
 --setuptools				Use setuptools instead of
 					distribute.

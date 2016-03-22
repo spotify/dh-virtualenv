@@ -230,6 +230,17 @@ def test_create_venv_with_extra_urls(callmock):
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 @patch('subprocess.check_call')
+def test_create_venv_with_extra_virtualenv(callmock):
+    d = Deployment('test', extra_virtualenv_arg=["--never-download"])
+    d.create_virtualenv()
+    eq_('debian/test/usr/share/python/test', d.package_dir)
+    callmock.assert_called_with(['virtualenv', '--no-site-packages',
+                                 '--never-download',
+                                 'debian/test/usr/share/python/test'])
+
+
+@patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
+@patch('subprocess.check_call')
 def test_create_venv_with_custom_index_url(callmock):
     d = Deployment('test', extra_urls=['foo', 'bar'],
                    index_url='http://example.com/simple')
