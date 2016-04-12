@@ -40,14 +40,13 @@ OPTIONS
 
 -p PACKAGE, --package=PACKAGE		Act on the package named PACKAGE
 -N PACKAGE, --no-package=PACKAGE	Do not act on the specified PACKAGE
--v, --verbose				Turn on verbose mode.
---extra-index-url			Pass extra index URL to pip
---preinstall=PACKAGE			Preinstall a PACKAGE before
-					running pip.
---extra-pip-arg				Extra arg for the pip executable.
---pypi-url				Base URL for PyPI server.
---setuptools				Use setuptools instead of
-					distribute.
+-v, --verbose				        Turn on verbose mode.
+--extra-index-url			        Pass extra index URL to pip
+--preinstall=PACKAGE			    Preinstall a PACKAGE before running pip.
+--extra-pip-arg				        Extra arg for the pip executable.
+--extra-virtualenv-arg              Extra arg for the virtualenv executable.
+--pypi-url				            Base URL for PyPI server.
+--setuptools				        Use setuptools instead of distribute.
 
 QUICK GUIDE FOR MAINTAINERS
 ===========================

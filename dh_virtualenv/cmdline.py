@@ -79,6 +79,10 @@ def get_default_parser():
                       help='Extra args for the pip binary.'
                       'You can use this flag multiple times to pass in'
                       ' parameters to pip.', default=[])
+    parser.add_option('--extra-virtualenv-arg', action='append',
+                      help='Extra args for the virtualenv binary.'
+                      'You can use this flag multiple times to pass in'
+                      ' parameters to the virtualenv binary.', default=[])
     parser.add_option('--pypi-url',
                       help=('!!DEPRECATED, use --index-url instead!! '
                             'Base URL of the PyPI server'),

@@ -42,6 +42,7 @@ class Deployment(object):
                  sourcedirectory=None,
                  verbose=False,
                  extra_pip_arg=[],
+                 extra_virtualenv_arg=[],
                  use_system_packages=False,
                  skip_install=False,
                  install_suffix=None,
@@ -68,6 +69,7 @@ class Deployment(object):
         self.preinstall = preinstall
         self.upgrade_pip = upgrade_pip
         self.extra_pip_arg = extra_pip_arg
+        self.extra_virtualenv_arg = extra_virtualenv_arg
         self.index_url = index_url
         self.log_file = tempfile.NamedTemporaryFile()
         self.verbose = verbose
@@ -93,6 +95,7 @@ class Deployment(object):
                    sourcedirectory=options.sourcedirectory,
                    verbose=verbose,
                    extra_pip_arg=options.extra_pip_arg,
+                   extra_virtualenv_arg=options.extra_virtualenv_arg,
                    use_system_packages=options.use_system_packages,
                    skip_install=options.skip_install,
                    install_suffix=options.install_suffix,
@@ -120,6 +123,10 @@ class Deployment(object):
 
             if self.python:
                 virtualenv.extend(('--python', self.python))
+
+            # Add in any user supplied pip args
+            if self.extra_virtualenv_arg:
+                virtualenv.extend(self.extra_virtualenv_arg)
 
         virtualenv.append(self.package_dir)
         subprocess.check_call(virtualenv)
