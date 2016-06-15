@@ -4,7 +4,7 @@ Tutorial
 
 This tutorial will guide you through setting up your first project
 using *dh-virtualenv*. Having some knowledge on how Debian packages
-work won't hurt, but it is not necessary a mandatory requirement. You
+work might help, but it is not a mandatory requirement. You
 also need some basic build tools, so it is recommended to install
 `build-essential` and `devscripts` packages.
 
