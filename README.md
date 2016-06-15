@@ -14,7 +14,7 @@ factor is that you have to run the same Python interpreter as the
 operating system.
 
 For complete online documentation, see
-[the documentation online](https://dh-virtualenv.readthedocs.org/en/latest/).
+[the documentation online](https://dh-virtualenv.readthedocs.io/en/latest/).
 
 ## Using dh-virtualenv
 

@@ -66,7 +66,7 @@ SEE ALSO
 ========
 
 Online documentation can be found at
-http://dh-virtualenv.readthedocs.org/en/latest.
+https://dh-virtualenv.readthedocs.io/en/latest.
 
 This package should also ship with documentation under
 `/usr/share/doc/dh-virtualenv`.
