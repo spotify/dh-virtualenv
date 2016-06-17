@@ -91,6 +91,10 @@ sub build {
     my $python = $this->get_python();
     my $pip = $this->get_pip();
 
+    if (defined $ENV{DH_UPGRADE_PIP}) {
+        $this->doit_in_sourcedir(
+            $python, $pip, 'install', '-U', 'pip=='. $ENV{DH_UPGRADE_PIP}, 'setuptools');
+    }
     $this->doit_in_sourcedir(
         $python, $pip, 'install', '-r', $reqfile, @pipargs);
 
