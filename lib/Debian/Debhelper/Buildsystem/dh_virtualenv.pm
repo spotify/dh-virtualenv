@@ -101,6 +101,11 @@ sub build {
         $this->doit_in_sourcedir(
             $python, $pip, 'install', '-U', 'setuptools' . $version');
     }
+    if (defined $ENV{DH_UPGRADE_WHEEL}) {
+        my $version = length $ENV{DH_UPGRADE_WHEEL} && '=='.$ENV{DH_UPGRADE_WHEEL} || '';
+        $this->doit_in_sourcedir(
+            $python, $pip, 'install', '-U', 'wheel' . $version');
+    }
     $this->doit_in_sourcedir(
         $python, $pip, 'install', '-r', $reqfile, @pipargs);
 

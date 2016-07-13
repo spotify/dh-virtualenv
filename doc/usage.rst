@@ -274,10 +274,15 @@ Upgrade pip  by setting ``DH_UPGRADE_PIP`` to empty (latest version) or  specifi
   export DH_UPGRADE_PIP=8.1.2
 
 
-Upgrade setup  by setting ``DH_UPGRADE_SETUPTOOLS`` to empty (latest version) or  specific version. For example:
+Upgrade setuptools  by setting ``DH_UPGRADE_SETUPTOOLS`` to empty (latest version) or  specific version. For example:
 
 .. code-block::make
   export DH_UPGRADE_SETUPTOOLS=
+
+Upgrade wheel  by setting ``DH_UPGRADE_WHEEL`` to empty (latest version) or  specific version. For example:
+
+.. code-block::make
+  export DH_UPGRADE_WHEEL=
 
 
 Additional parameters to ``pip`` can be defined in the ``DH_PIP_EXTRA_ARGS`` environment
