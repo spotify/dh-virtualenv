@@ -92,8 +92,14 @@ sub build {
     my $pip = $this->get_pip();
 
     if (defined $ENV{DH_UPGRADE_PIP}) {
+        my $version = length $ENV{DH_UPGRADE_PIP} && '=='.$ENV{DH_UPGRADE_PIP} || '';
         $this->doit_in_sourcedir(
-            $python, $pip, 'install', '-U', 'pip=='. $ENV{DH_UPGRADE_PIP}, 'setuptools');
+            $python, $pip, 'install', '-U', 'pip' . $version);
+    }
+    if (defined $ENV{DH_UPGRADE_SETUPTOOLS}) {
+        my $version = length $ENV{DH_UPGRADE_SETUPTOOLS} && '=='.$ENV{DH_UPGRADE_SETUPTOOLS} || '';
+        $this->doit_in_sourcedir(
+            $python, $pip, 'install', '-U', 'setuptools' . $version');
     }
     $this->doit_in_sourcedir(
         $python, $pip, 'install', '-r', $reqfile, @pipargs);

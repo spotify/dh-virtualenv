@@ -20,8 +20,8 @@ to the top of your ``debian/rules`` file. dh_virtualenv will use
 DH_VIRTUALENV_INSTALL_ROOT instead of ``/usr/share/python`` when it
 constructs the install path.
 
-To use an install suffix other than the package name, call the 
-``dh_virtualenv`` command using with the ``--install-suffix`` 
+To use an install suffix other than the package name, call the
+``dh_virtualenv`` command using with the ``--install-suffix``
 command line option. See Advanced Usage for further information
 on passing options.
 
@@ -266,6 +266,19 @@ variable. For example:
 .. code-block:: make
 
   export DH_REQUIREMENTS_FILE="requirements-deploy.txt"
+
+
+Upgrade pip  by setting ``DH_UPGRADE_PIP`` to empty (latest version) or  specific version. For example:
+
+.. code-block::make
+  export DH_UPGRADE_PIP=8.1.2
+
+
+Upgrade setup  by setting ``DH_UPGRADE_SETUPTOOLS`` to empty (latest version) or  specific version. For example:
+
+.. code-block::make
+  export DH_UPGRADE_SETUPTOOLS=
+
 
 Additional parameters to ``pip`` can be defined in the ``DH_PIP_EXTRA_ARGS`` environment
 variable. For example:
