@@ -7,7 +7,7 @@ with but it also supports lot of customization to fit in your general
 needs.
 
 By default, *dh-virtualenv* installs your packages under
-``/usr/share/python/<packagename>``. The package name is provided by
+``/opt/venvs/<packagename>``. The package name is provided by
 the ``debian/control`` file.
 
 To use an alternative install prefix, add a line like
@@ -17,7 +17,7 @@ To use an alternative install prefix, add a line like
   export DH_VIRTUALENV_INSTALL_ROOT=</your/custom/install/dir>
 
 to the top of your ``debian/rules`` file. dh_virtualenv will use
-:envvar:`DH_VIRTUALENV_INSTALL_ROOT` instead of ``/usr/share/python``
+:envvar:`DH_VIRTUALENV_INSTALL_ROOT` instead of ``/opt/venvs``
 when it constructs the install path.
 
 To use an install suffix other than the package name, call the
@@ -92,7 +92,7 @@ few command line options:
 .. cmdoption:: --install-suffix <suffix>
 
    Override virtualenv installation suffix. The suffix is appended to
-   ``/usr/share/python``, or the :envvar:`DH_VIRTUALENV_INSTALL_ROOT`
+   ``/opt/venvs``, or the :envvar:`DH_VIRTUALENV_INSTALL_ROOT`
    environment variable if specified, to construct the installation
    path.
 

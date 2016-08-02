@@ -27,6 +27,12 @@ consult the git history of the project.
 1.0 (unreleased)
 =================
 
+* **Backwards incompatible** Change the default install root to
+  ``/opt/venvs``. This is due to the old installation root
+  (``/usr/share/python``) clashing with Debian provided Python
+  utilities. To maintain the old install location, use
+  :envvar:`DH_VIRTUALENV_INSTALL_ROOT` and point it to
+  ``/usr/share/python``.
 * **Backwards incompatible** By default, do not run `setup.py test`
   upon building. The :option:`--no-test` flag has no longer any effect. To
   get the old behaviour, use :option:`--setuptools-test` flag instead.
@@ -38,7 +44,7 @@ consult the git history of the project.
   to `Kris Kvilekval <https://github.com/kkvilekval>`_ for the
   implementation!
 * Buildsystem: Add support for custom requirements file location
-  using :envvar:`DH_REQUIREMENTS_FILE` and for custom :program:`pip` command
+  using :envvar:`DH_REQUIREMENTS_FILE` and for custom ``pip`` command
   line arguments using :envvar:`DH_PIP_EXTRA_ARGS`. Thanks to `Einar
   Forselv <https://github.com/einarf>`_ for implementing!
 * Fixing shebangs now supports multiple interpreters. Thanks `Javier

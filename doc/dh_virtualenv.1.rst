@@ -51,7 +51,7 @@ OPTIONS
 --install-suffix=SUFFIX			Override virttualenv installation suffix
 --upgrage-pip				Force upgrade pip in virtualenv
 --requirements=FILE			Use FILE for requirements
---no-test				Skip tests
+--setuptools-test			Run `setup.py test` upon build.
 --python=PATH				Use Python interpreter at PATH
 --builtin-venv				Use built-in venv of Python 3
 --skip-install				Don't run ``pip install .``
@@ -69,5 +69,5 @@ SEE ALSO
 Online documentation can be found at
 https://dh-virtualenv.readthedocs.io/en/latest.
 
-This package should also ship with documentation under
+This package should also ship with the complete documentation under
 `/usr/share/doc/dh-virtualenv`.
