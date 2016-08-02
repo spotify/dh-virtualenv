@@ -27,9 +27,21 @@ consult the git history of the project.
 1.0 (unreleased)
 =================
 
-* Deprecate ``--pypi-url`` in favour of ``--index-url``
-* Support upgrading pip to the latest release with ``--upgrade-pip``
+* **Backwards incompatible** By default, do not run `setup.py test`
+  upon building. The :option:`--no-test` flag has no longer any effect. To
+  get the old behaviour, use :option:`--setuptools-test` flag instead.
+* Deprecate :option:`--pypi-url` in favour of :option:`--index-url`
+* Support upgrading pip to the latest release with :option:`--upgrade-pip`
   flag.
+* Buildsystem: Add support for :envvar:`DH_UPGRADE_PIP` and
+  :envvar:`DH_UPGRADE_WHEEL`. Thanks to `Kris Kvilekval
+  <https://github.com/kkvilekval>`_ for the implementation!
+* Buildsystem: Add support for custom requirements file location
+  using :envvar:`DH_REQUIREMENTS_FILE` and for custom `pip` command
+  line arguments using :envvar:`DH_PIP_EXTRA_ARGS`. Thanks to `Einar
+  Forselv <https://github.com/einarf>`_ for implementing!
+* Fixing shebangs now supports multiple interpreters. Thanks `Javier
+  Santacruz <https://github.com/jvrsantacruz>`_!
 
 0.11
 ====
