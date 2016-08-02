@@ -40,7 +40,7 @@ class DebhelperOptionParser(OptionParser):
         return OptionParser.parse_args(self, args, values)
 
 
-def _check_for_depreacted_options(
+def _check_for_deprecated_options(
         option, opt_str, value, parser, *args, **kwargs):
     # TODO: If more deprectaed options pop up, refactor this method to
     # handle them in more generic way (or actually remove the
@@ -113,7 +113,7 @@ def get_default_parser():
                       action='callback',
                       type='string',
                       dest='index_url',
-                      callback=_check_for_depreacted_options)
+                      callback=_check_for_deprecated_options)
     parser.add_option('--python', help='The Python to use')
     parser.add_option('--builtin-venv', action='store_true',
                       help='Use the built-in venv module. Only works on '
@@ -144,7 +144,7 @@ def get_default_parser():
                       default=False,
                       action='callback',
                       help='Run `setup.py test` when building the package',
-                      callback=_check_for_depreacted_options)
+                      callback=_check_for_deprecated_options)
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
@@ -166,12 +166,12 @@ def get_default_parser():
                       action='callback',
                       dest='index_url',
                       type='string',
-                      callback=_check_for_depreacted_options)
+                      callback=_check_for_deprecated_options)
     parser.add_option('--no-test',
                       help="!!DEPRECATED, this command has no effect. "
                       "See --setuptools-test!! "
                       "Don't run tests for the package. Useful "
                       "for example when you have packaged with distutils.",
                       action='callback',
-                      callback=_check_for_depreacted_options)
+                      callback=_check_for_deprecated_options)
     return parser
