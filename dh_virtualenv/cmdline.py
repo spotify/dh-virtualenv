@@ -42,12 +42,16 @@ class DebhelperOptionParser(OptionParser):
 
 def _check_for_depreacted_options(
         option, opt_str, value, parser, *args, **kwargs):
+    # TODO: If more deprectaed options pop up, refactor this method to
+    # handle them in more generic way (or actually remove the
+    # deprecated options)
     if opt_str in ('--pypi-url', '--index-url'):
         if opt_str == '--pypi-url':
             # Work around 2.7 hiding the DeprecationWarning
             with warnings.catch_warnings():
                 warnings.simplefilter('default')
-                warnings.warn('Use of --pypi-url is deprecated. Use --index-url instead',
+                warnings.warn('Use of --pypi-url is deprecated. Use '
+                              '--index-url instead',
                               DeprecationWarning)
         if parser.values.index_url:
             # We've already set the index_url, which means that we have both
@@ -55,6 +59,19 @@ def _check_for_depreacted_options(
             raise OptionValueError('Deprecated --pypi-url and the new '
                                    '--index-url are mutually exclusive')
         parser.values.index_url = value
+    elif opt_str in ('--no-test', '--setuptools-test'):
+        if opt_str == '--no-test':
+            with warnings.catch_warnings():
+                warnings.simplefilter('default')
+                warnings.warn('Use of --no-test is deprecated and has now '
+                              'effect. Use --setuptools-test if you want to '
+                              'execute `setup.py test` during package build.',
+                              DeprecationWarning)
+        if getattr(parser.values, '_test_flag_seen', None):
+            raise OptionValueError('Deprecated --no-test and the new '
+                                   '--setuptools-test are mutually exclusive')
+        parser.values.setuptools_test = opt_str != '--no-test'
+        setattr(parser.values, '_test_flag_seen', True)
 
 
 def get_default_parser():
@@ -103,10 +120,6 @@ def get_default_parser():
                       'Python 3.4 and later.')
     parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
                       help='The source directory')
-    parser.add_option('--no-test', action='store_false', dest='test',
-                      help="Don't run tests for the package. Useful "
-                      "for example when you have packaged with distutils.",
-                      default=True)
     parser.add_option('-n', '--noscripts', action='store_false', dest='autoscripts',
                       help="Do not modify postinst and similar scripts.",
                       default=True)
@@ -126,6 +139,12 @@ def get_default_parser():
                       dest='requirements_filename',
                       help='Specify the filename for requirementst.txt',
                       default='requirements.txt')
+    parser.add_option('--setuptools-test',
+                      dest='setuptools_test',
+                      default=False,
+                      action='callback',
+                      help='Run `setup.py test` when building the package',
+                      callback=_check_for_depreacted_options)
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
@@ -147,5 +166,12 @@ def get_default_parser():
                       action='callback',
                       dest='index_url',
                       type='string',
+                      callback=_check_for_depreacted_options)
+    parser.add_option('--no-test',
+                      help="!!DEPRECATED, this command has no effect. "
+                      "See --setuptools-test!! "
+                      "Don't run tests for the package. Useful "
+                      "for example when you have packaged with distutils.",
+                      action='callback',
                       callback=_check_for_depreacted_options)
     return parser
