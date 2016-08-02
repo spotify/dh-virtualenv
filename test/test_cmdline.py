@@ -71,7 +71,7 @@ def test_pypi_url_creates_deprecation_warning():
         ])
     eq_(len(w), 1)
     ok_(issubclass(w[-1].category, DeprecationWarning))
-    eq_(str(w[-1].message), 'Use of --pypi-url is deprecated. Use --index-url intead')
+    eq_(str(w[-1].message), 'Use of --pypi-url is deprecated. Use --index-url instead')
 
 
 @patch('sys.exit')
@@ -82,6 +82,20 @@ def test_pypi_url_index_url_conflict(exit_):
         parser.parse_args([
             '--pypi-url=http://example.com',
             '--index-url=http://example.org']
+        )
+    ok_('Deprecated --pypi-url and the new --index-url are mutually exclusive'
+        in f.getvalue())
+    exit_.assert_called_once_with(2)
+
+
+@patch('sys.exit')
+def test_pypi_url_index_url_conflict_independent_from_order(exit_):
+    parser = cmdline.get_default_parser()
+    f = StringIO()
+    with patch('sys.stderr', f):
+        parser.parse_args([
+            '--index-url=http://example.org',
+            '--pypi-url=http://example.com']
         )
     ok_('Deprecated --pypi-url and the new --index-url are mutually exclusive'
         in f.getvalue())
