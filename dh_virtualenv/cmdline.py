@@ -63,7 +63,7 @@ def _check_for_deprecated_options(
         if opt_str == '--no-test':
             with warnings.catch_warnings():
                 warnings.simplefilter('default')
-                warnings.warn('Use of --no-test is deprecated and has now '
+                warnings.warn('Use of --no-test is deprecated and has no '
                               'effect. Use --setuptools-test if you want to '
                               'execute `setup.py test` during package build.',
                               DeprecationWarning)

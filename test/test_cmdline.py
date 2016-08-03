@@ -83,7 +83,7 @@ def test_no_test_creates_deprecation_warning():
     eq_(len(w), 1)
     ok_(issubclass(w[0].category, DeprecationWarning))
     eq_(str(w[0].message),
-        'Use of --no-test is deprecated and has now effect. '
+        'Use of --no-test is deprecated and has no effect. '
         'Use --setuptools-test if you want to execute '
         '`setup.py test` during package build.')
 

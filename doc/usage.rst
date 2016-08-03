@@ -21,9 +21,9 @@ to the top of your ``debian/rules`` file. dh_virtualenv will use
 when it constructs the install path.
 
 To use an install suffix other than the package name, call the
-``dh_virtualenv`` command using with the :option:`--install-suffix`
-command line option. See Advanced Usage for further information
-on passing options.
+``dh_virtualenv`` command using the :option:`--install-suffix` command
+line option. See Advanced Usage for further information on passing
+options.
 
 Simple usecase
 ==============
@@ -54,10 +54,10 @@ However, the tool makes a few assumptions of your project's structure:
 After these are place, you can just build the package with your
 favorite tool!
 
-Environmental variables
-=======================
+Environment variables
+=====================
 
-Certain environmental variables can be used to customise the behaviour
+Certain environment variables can be used to customise the behaviour
 of the debhelper sequencer in addition to the standard debhelper
 variables.
 
@@ -168,9 +168,9 @@ few command line options:
 
    .. versionadded:: 1.0
 
-   Force running ``python setup.py test`` when building the package.
-   This was the old default behaviour before version 1.0. This option
-   is incompatible with the deprecated :option:`--no-test`.
+   Run ``python setup.py test`` when building the package. This was
+   the old default behaviour before version 1.0. This option is
+   incompatible with the deprecated :option:`--no-test`.
 
 .. cmdoption:: --python <path>
 
@@ -281,7 +281,7 @@ possible to use ``debian/install`` files to include built files into
 the Debian package. This is not possible with the sequencer addition.
 
 The build system honors the :envvar:`DH_VIRTUALENV_INSTALL_ROOT`
-environment variable. Following other environmental variables can be
+environment variable. Following other environment variables can be
 used to customise the functionality:
 
 .. envvar:: DH_VIRTUALENV_ARGUMENTS

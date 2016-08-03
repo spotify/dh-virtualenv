@@ -34,8 +34,9 @@ consult the git history of the project.
   :envvar:`DH_VIRTUALENV_INSTALL_ROOT` and point it to
   ``/usr/share/python``.
 * **Backwards incompatible** By default, do not run `setup.py test`
-  upon building. The :option:`--no-test` flag has no longer any effect. To
-  get the old behaviour, use :option:`--setuptools-test` flag instead.
+  upon building. The :option:`--no-test` flag has no longer has any
+  effect. To get the old behaviour, use the
+  :option:`--setuptools-test` flag instead.
 * Deprecate :option:`--pypi-url` in favour of :option:`--index-url`
 * Support upgrading pip to the latest release with :option:`--upgrade-pip`
   flag.
