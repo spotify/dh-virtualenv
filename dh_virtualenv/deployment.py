@@ -34,6 +34,7 @@ class Deployment(object):
                  package,
                  extra_urls=[],
                  preinstall=[],
+                 pip_tool='pip',
                  upgrade_pip=False,
                  index_url=None,
                  setuptools=False,
@@ -81,7 +82,9 @@ class Deployment(object):
         # We need to prefix the pip run with the location of python
         # executable. Otherwise it would just blow up due to too long
         # shebang-line.
-        self.pip_prefix = [self.venv_bin('python'), self.venv_bin('pip')]
+        python = self.venv_bin('python')
+        self.pip_preinstall_prefix = [python, self.venv_bin('pip')]
+        self.pip_prefix = [python, self.venv_bin(pip_tool)]
         self.pip_args = ['install']
 
         if self.verbose:
@@ -102,6 +105,7 @@ class Deployment(object):
         return cls(package,
                    extra_urls=options.extra_index_url,
                    preinstall=options.preinstall,
+                   pip_tool=options.pip_tool,
                    upgrade_pip=options.upgrade_pip,
                    index_url=options.index_url,
                    setuptools=options.setuptools,
@@ -149,6 +153,9 @@ class Deployment(object):
     def venv_bin(self, binary_name):
         return os.path.abspath(os.path.join(self.bin_dir, binary_name))
 
+    def pip_preinstall(self, *args):
+        return self.pip_preinstall_prefix + self.pip_args + list(args)
+
     def pip(self, *args):
         return self.pip_prefix + self.pip_args + list(args)
 
@@ -158,9 +165,9 @@ class Deployment(object):
         # along lines of setuptools), but that does not get installed
         # by default virtualenv.
         if self.upgrade_pip:
-            subprocess.check_call(self.pip('-U', 'pip'))
+            subprocess.check_call(self.pip_preinstall('-U', 'pip'))
         if self.preinstall:
-            subprocess.check_call(self.pip(*self.preinstall))
+            subprocess.check_call(self.pip_preinstall(*self.preinstall))
 
         requirements_path = os.path.join(self.sourcedirectory, self.requirements_filename)
         if os.path.exists(requirements_path):

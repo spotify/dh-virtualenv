@@ -35,8 +35,15 @@ class FakeTemporaryFile(object):
     name = 'foo'
 
 
-PY_CMD = os.path.abspath('debian/test/usr/share/python/test/bin/python')
-PIP_CMD = os.path.abspath('debian/test/usr/share/python/test/bin/pip')
+def _test_bin(name):
+    return os.path.abspath(os.path.join(
+        'debian/test/usr/share/python/test/bin', name,
+    ))
+
+
+PY_CMD = _test_bin('python')
+PIP_CMD = _test_bin('pip')
+CUSTOM_PIP_CMD = _test_bin('pip-custom-platform')
 LOG_ARG = '--log=' + os.path.abspath(FakeTemporaryFile.name)
 
 
@@ -148,7 +155,7 @@ def test_install_dependencies_with_requirements(callmock):
 @patch('subprocess.check_call')
 def test_install_dependencies_with_preinstall(callmock):
     d = Deployment('test', preinstall=['foobar'])
-    d.pip_prefix = ['pip']
+    d.pip_prefix = d.pip_preinstall_prefix = ['pip']
     d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_called_with(
@@ -158,7 +165,7 @@ def test_install_dependencies_with_preinstall(callmock):
 @patch('subprocess.check_call')
 def test_upgrade_pip(callmock):
     d = Deployment('test', upgrade_pip=True)
-    d.pip_prefix = ['pip']
+    d.pip_prefix = d.pip_preinstall_prefix = ['pip']
     d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_called_with(
@@ -168,7 +175,7 @@ def test_upgrade_pip(callmock):
 @patch('subprocess.check_call')
 def test_upgrade_pip_with_preinstall(callmock):
     d = Deployment('test', upgrade_pip=True, preinstall=['foobar'])
-    d.pip_prefix = ['pip']
+    d.pip_prefix = d.pip_preinstall_prefix = ['pip']
     d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_has_calls([
@@ -180,12 +187,29 @@ def test_upgrade_pip_with_preinstall(callmock):
 @patch('subprocess.check_call')
 def test_install_dependencies_with_preinstall_with_requirements(callmock):
     d = Deployment('test', preinstall=['foobar'])
-    d.pip_prefix = ['pip']
+    d.pip_prefix = d.pip_preinstall_prefix = ['pip']
     d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_has_calls([
         call(['pip', 'install', 'foobar']),
         call(['pip', 'install', '-r', './requirements.txt'])
+    ])
+
+
+@patch('os.path.exists', return_value=True)
+@patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
+@patch('subprocess.check_call')
+def test_custom_pip_tool_used_for_installation(callmock, _):
+    d = Deployment(
+        'test', preinstall=['pip-custom-platform'],
+        pip_tool='pip-custom-platform',
+    )
+    d.install_dependencies()
+    d.install_package()
+    callmock.assert_has_calls([
+        call([PY_CMD, PIP_CMD, 'install', LOG_ARG, 'pip-custom-platform']),
+        call([PY_CMD, CUSTOM_PIP_CMD, 'install', LOG_ARG, '-r', './requirements.txt']),
+        call([PY_CMD, CUSTOM_PIP_CMD, 'install', LOG_ARG, '.'], cwd=os.path.abspath('.')),
     ])
 
 
