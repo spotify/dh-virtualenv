@@ -43,11 +43,10 @@ def test_test_debhelper_option_parsing():
 
 
 def test_parser_picks_up_DH_OPTIONS_from_environ():
-    os.environ['DH_OPTIONS'] = '--sourcedirectory=/tmp/'
-    parser = cmdline.get_default_parser()
-    opts, args = parser.parse_args()
-    eq_('/tmp/', opts.sourcedirectory)
-    del os.environ['DH_OPTIONS']
+    with patch.dict(os.environ, {'DH_OPTIONS': '--sourcedirectory=/tmp/'}):
+        parser = cmdline.get_default_parser()
+        opts, args = parser.parse_args()
+        eq_('/tmp/', opts.sourcedirectory)
 
 
 def test_get_default_parser():

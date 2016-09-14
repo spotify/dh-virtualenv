@@ -54,24 +54,6 @@ def temporary_dir(fn):
     return _inner
 
 
-@contextlib.contextmanager
-def override_envvar(name, value):
-    """Set environment variable only during the test"""
-    def set_or_unset_envvar(name, value):
-        """Sets name to value. Unset name when value is None"""
-        if value is None:
-            del os.environ[name]
-        else:
-            os.environ[name] = value
-
-    previous = os.getenv(name)
-    set_or_unset_envvar(name, value)
-    try:
-        yield
-    finally:
-        set_or_unset_envvar(name, previous)
-
-
 def test_shebangs_fix():
     """Generate a test for each possible interpreter"""
     for interpreter in ('python', 'pypy', 'ipy', 'jython'):
@@ -80,7 +62,7 @@ def test_shebangs_fix():
 
 def test_shebangs_fix_overridden_root():
     """Generate a test for each possible interpreter while overriding root"""
-    with override_envvar('DH_VIRTUALENV_INSTALL_ROOT', 'foo'):
+    with patch.dict(os.environ, {'DH_VIRTUALENV_INSTALL_ROOT': 'foo'}):
         for interpreter in ('python', 'pypy', 'ipy', 'jython'):
             yield check_shebangs_fix, interpreter, 'foo/test'
 
@@ -90,8 +72,9 @@ def test_shebangs_fix_special_chars_in_path():
     Generate a test for each possible interpreter
     while overriding root to contain special characters
     """
-    with override_envvar('DH_VIRTUALENV_INSTALL_ROOT',
-                         'some-directory:with/special_chars'):
+    with patch.dict(
+        os.environ,
+        {'DH_VIRTUALENV_INSTALL_ROOT': 'some-directory:with/special_chars'}):
         for interpreter in ('python', 'pypy', 'ipy', 'jython'):
             yield (check_shebangs_fix, interpreter,
                    'some-directory:with/special_chars/test')
