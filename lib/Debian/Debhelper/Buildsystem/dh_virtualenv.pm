@@ -99,12 +99,12 @@ sub build {
     if (defined $ENV{DH_UPGRADE_SETUPTOOLS}) {
         my $version = length $ENV{DH_UPGRADE_SETUPTOOLS} && '=='.$ENV{DH_UPGRADE_SETUPTOOLS} || '';
         $this->doit_in_sourcedir(
-            $python, $pip, 'install', '-U', 'setuptools' . $version');
+            $python, $pip, 'install', '-U', 'setuptools' . $version);
     }
     if (defined $ENV{DH_UPGRADE_WHEEL}) {
         my $version = length $ENV{DH_UPGRADE_WHEEL} && '=='.$ENV{DH_UPGRADE_WHEEL} || '';
         $this->doit_in_sourcedir(
-            $python, $pip, 'install', '-U', 'wheel' . $version');
+            $python, $pip, 'install', '-U', 'wheel' . $version);
     }
     $this->doit_in_sourcedir(
         $python, $pip, 'install', '-r', $reqfile, @pipargs);
