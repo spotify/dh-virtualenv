@@ -43,6 +43,7 @@ OPTIONS
 -v, --verbose				Turn on verbose mode.
 --extra-index-url			Pass extra index URL to pip
 --preinstall=PACKAGE			Preinstall a PACKAGE before running pip.
+--pip-tool=PIP_TOOL			Tool used to install requirements.
 --extra-pip-arg				Extra arg for the pip executable.
 --extra-virtualenv-arg			Extra arg for the virtualenv executable.
 --index-url				Base URL for PyPI server.

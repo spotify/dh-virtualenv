@@ -31,12 +31,20 @@ from dh_virtualenv import Deployment
 from dh_virtualenv.cmdline import get_default_parser
 
 
-PY_CMD = os.path.abspath('debian/test/usr/share/python/test/bin/python')
-PIP_CMD = os.path.abspath('debian/test/usr/share/python/test/bin/pip')
-
-
 class FakeTemporaryFile(object):
     name = 'foo'
+
+
+def _test_bin(name):
+    return os.path.abspath(os.path.join(
+        'debian/test/usr/share/python/test/bin', name,
+    ))
+
+
+PY_CMD = _test_bin('python')
+PIP_CMD = _test_bin('pip')
+CUSTOM_PIP_CMD = _test_bin('pip-custom-platform')
+LOG_ARG = '--log=' + os.path.abspath(FakeTemporaryFile.name)
 
 
 def temporary_dir(fn):
@@ -126,7 +134,7 @@ def check_shebangs_fix(interpreter, path):
 @patch('subprocess.check_call')
 def test_install_dependencies_with_no_requirements(callmock):
     d = Deployment('test')
-    d.pip_prefix = ['pip', 'install']
+    d.pip_prefix = ['pip']
     d.install_dependencies()
     callmock.assert_has_calls([])
 
@@ -135,7 +143,8 @@ def test_install_dependencies_with_no_requirements(callmock):
 @patch('subprocess.check_call')
 def test_install_dependencies_with_requirements(callmock):
     d = Deployment('test')
-    d.pip_prefix = ['pip', 'install']
+    d.pip_prefix = ['pip']
+    d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_called_with(
         ['pip', 'install', '-r', './requirements.txt'])
@@ -144,7 +153,8 @@ def test_install_dependencies_with_requirements(callmock):
 @patch('subprocess.check_call')
 def test_install_dependencies_with_preinstall(callmock):
     d = Deployment('test', preinstall=['foobar'])
-    d.pip_prefix = ['pip', 'install']
+    d.pip_prefix = d.pip_preinstall_prefix = ['pip']
+    d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_called_with(
         ['pip', 'install', 'foobar'])
@@ -153,7 +163,8 @@ def test_install_dependencies_with_preinstall(callmock):
 @patch('subprocess.check_call')
 def test_upgrade_pip(callmock):
     d = Deployment('test', upgrade_pip=True)
-    d.pip_prefix = ['pip', 'install']
+    d.pip_prefix = d.pip_preinstall_prefix = ['pip']
+    d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_called_with(
         ['pip', 'install', '-U', 'pip'])
@@ -162,7 +173,8 @@ def test_upgrade_pip(callmock):
 @patch('subprocess.check_call')
 def test_upgrade_pip_with_preinstall(callmock):
     d = Deployment('test', upgrade_pip=True, preinstall=['foobar'])
-    d.pip_prefix = ['pip', 'install']
+    d.pip_prefix = d.pip_preinstall_prefix = ['pip']
+    d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_has_calls([
         call(['pip', 'install', '-U', 'pip']),
@@ -173,11 +185,29 @@ def test_upgrade_pip_with_preinstall(callmock):
 @patch('subprocess.check_call')
 def test_install_dependencies_with_preinstall_with_requirements(callmock):
     d = Deployment('test', preinstall=['foobar'])
-    d.pip_prefix = ['pip', 'install']
+    d.pip_prefix = d.pip_preinstall_prefix = ['pip']
+    d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_has_calls([
         call(['pip', 'install', 'foobar']),
         call(['pip', 'install', '-r', './requirements.txt'])
+    ])
+
+
+@patch('os.path.exists', return_value=True)
+@patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
+@patch('subprocess.check_call')
+def test_custom_pip_tool_used_for_installation(callmock, _):
+    d = Deployment(
+        'test', preinstall=['pip-custom-platform'],
+        pip_tool='pip-custom-platform',
+    )
+    d.install_dependencies()
+    d.install_package()
+    callmock.assert_has_calls([
+        call([PY_CMD, PIP_CMD, 'install', LOG_ARG, 'pip-custom-platform']),
+        call([PY_CMD, CUSTOM_PIP_CMD, 'install', LOG_ARG, '-r', './requirements.txt']),
+        call([PY_CMD, CUSTOM_PIP_CMD, 'install', LOG_ARG, '.'], cwd=os.path.abspath('.')),
     ])
 
 
@@ -189,10 +219,8 @@ def test_create_venv(callmock):
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
                                  'debian/test/usr/share/python/test'])
-    eq_([PY_CMD,
-         PIP_CMD,
-         'install',
-         '--log=' + os.path.abspath('foo')], d.pip_prefix)
+    eq_([PY_CMD, PIP_CMD], d.pip_prefix)
+    eq_(['install', LOG_ARG], d.pip_args)
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -204,11 +232,8 @@ def test_create_venv_with_verbose(callmock):
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
                                  '--verbose',
                                  'debian/test/usr/share/python/test'])
-    eq_([PY_CMD,
-         PIP_CMD,
-         '-v',
-         'install',
-         '--log=' + os.path.abspath('foo')], d.pip_prefix)
+    eq_([PY_CMD, PIP_CMD], d.pip_prefix)
+    eq_(['install', '-v', LOG_ARG], d.pip_args)
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -219,11 +244,10 @@ def test_create_venv_with_extra_urls(callmock):
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
                                  'debian/test/usr/share/python/test'])
-    eq_([PY_CMD,
-         PIP_CMD,
-         'install', '--extra-index-url=foo',
+    eq_([PY_CMD, PIP_CMD], d.pip_prefix)
+    eq_(['install', '--extra-index-url=foo',
          '--extra-index-url=bar',
-         '--log=' + os.path.abspath('foo')], d.pip_prefix)
+         LOG_ARG], d.pip_args)
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -246,13 +270,12 @@ def test_create_venv_with_custom_index_url(callmock):
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
                                  'debian/test/usr/share/python/test'])
-    eq_([PY_CMD,
-         PIP_CMD,
-         'install',
+    eq_([PY_CMD, PIP_CMD], d.pip_prefix)
+    eq_(['install',
          '--index-url=http://example.com/simple',
          '--extra-index-url=foo',
          '--extra-index-url=bar',
-         '--log=' + os.path.abspath('foo')], d.pip_prefix)
+         LOG_ARG], d.pip_args)
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -264,11 +287,8 @@ def test_create_venv_with_extra_pip_arg(callmock):
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
                                  'debian/test/usr/share/python/test'])
-    eq_([PY_CMD,
-         PIP_CMD,
-         'install',
-         '--log=' + os.path.abspath('foo'),
-         '--no-compile'], d.pip_prefix)
+    eq_([PY_CMD, PIP_CMD], d.pip_prefix)
+    eq_(['install', LOG_ARG, '--no-compile'], d.pip_args)
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -280,10 +300,8 @@ def test_create_venv_with_setuptools(callmock):
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
                                  '--setuptools',
                                  'debian/test/usr/share/python/test'])
-    eq_([PY_CMD,
-         PIP_CMD,
-         'install',
-         '--log=' + os.path.abspath('foo')], d.pip_prefix)
+    eq_([PY_CMD, PIP_CMD], d.pip_prefix)
+    eq_(['install', LOG_ARG], d.pip_args)
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -294,10 +312,8 @@ def test_create_venv_with_system_packages(callmock):
     eq_('debian/test/usr/share/python/test', d.package_dir)
     callmock.assert_called_with(['virtualenv', '--system-site-packages',
                                  'debian/test/usr/share/python/test'])
-    eq_([PY_CMD,
-         PIP_CMD,
-         'install',
-         '--log=' + os.path.abspath('foo')], d.pip_prefix)
+    eq_([PY_CMD, PIP_CMD], d.pip_prefix)
+    eq_(['install', LOG_ARG], d.pip_args)
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -309,10 +325,8 @@ def test_venv_with_custom_python(callmock):
     callmock.assert_called_with(['virtualenv', '--no-site-packages',
                                  '--python', '/tmp/python',
                                  'debian/test/usr/share/python/test'])
-    eq_([PY_CMD,
-         PIP_CMD,
-         'install',
-         '--log=' + os.path.abspath('foo')], d.pip_prefix)
+    eq_([PY_CMD, PIP_CMD], d.pip_prefix)
+    eq_(['install', LOG_ARG], d.pip_args)
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -321,9 +335,10 @@ def test_install_package(callmock):
     d = Deployment('test')
     d.bin_dir = 'derp'
     d.pip_prefix = ['derp/python', 'derp/pip']
+    d.pip_args = ['install']
     d.install_package()
     callmock.assert_called_with([
-        'derp/python', 'derp/pip', '.',
+        'derp/python', 'derp/pip', 'install', '.',
     ], cwd=os.getcwd())
 
 
@@ -361,7 +376,6 @@ def test_fix_activate_path():
 @patch('subprocess.check_call')
 def test_custom_src_dir(callmock):
     d = Deployment('test')
-    d.pip_prefix = ['pip', 'install']
     d.sourcedirectory = 'root/srv/application'
     d.create_virtualenv()
     d.install_dependencies()
@@ -369,7 +383,7 @@ def test_custom_src_dir(callmock):
         PY_CMD,
         PIP_CMD,
         'install',
-        '--log=' + os.path.abspath('foo'),
+        LOG_ARG,
         '-r',
         'root/srv/application/requirements.txt'],
     )
@@ -378,7 +392,7 @@ def test_custom_src_dir(callmock):
         PY_CMD,
         PIP_CMD,
         'install',
-        '--log=' + os.path.abspath('foo'),
+        LOG_ARG,
         '.',
     ], cwd=os.path.abspath('root/srv/application'))
 
@@ -403,6 +417,7 @@ def test_testrunner_setuppy_not_found(callmock):
     eq_(callmock.call_count, 0)
 
 
+@patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 def test_deployment_from_options():
         options, _ = get_default_parser().parse_args([
             '--extra-index-url', 'http://example.com',
@@ -410,8 +425,9 @@ def test_deployment_from_options():
         ])
         d = Deployment.from_options('foo', options)
         eq_(d.package, 'foo')
-        eq_(d.index_url, 'http://example.org')
-        eq_(d.extra_urls, ['http://example.com'])
+        eq_(d.pip_args,
+            ['install', '--index-url=http://example.org',
+             '--extra-index-url=http://example.com', LOG_ARG])
 
 
 def test_deployment_from_options_with_verbose():

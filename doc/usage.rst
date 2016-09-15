@@ -98,6 +98,13 @@ few command line options:
    to parse ``setup.py``. This flag can be provided multiple times to
    pass multiple packages for pre-install.
 
+.. cmdoption:: --pip-tool <exename>
+
+   Executable that will be used to install requirements after the
+   preinstall stage.  Usually you'll install this program by using the
+   ``--preinstall`` argument. The replacement is expected to be found
+   in the virtualenv's bin/ directory.
+
 .. cmdoption:: --upgrade-pip <package>
 
    Force upgrading pip to the latest available release. *Note:* This

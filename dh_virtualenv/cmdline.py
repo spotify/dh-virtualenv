@@ -73,6 +73,12 @@ def get_default_parser():
                       help=('package to install before processing '
                             'requirements.txt.'),
                       default=[])
+    parser.add_option('--pip-tool', default='pip',
+                      help="Executable that will be used to install "
+                      "requirements after the preinstall stage. Usually "
+                      "you'll install this program by using the --preinstall "
+                      "argument. The replacement is expected to be found in "
+                      "the virtualenv's bin/ directory.")
     parser.add_option('--upgrade-pip', action='store_true', default=False,
                       help='Upgrade pip to the latest available version')
     parser.add_option('--extra-pip-arg', action='append',

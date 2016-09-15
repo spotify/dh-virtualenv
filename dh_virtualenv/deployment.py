@@ -34,6 +34,7 @@ class Deployment(object):
                  package,
                  extra_urls=[],
                  preinstall=[],
+                 pip_tool='pip',
                  upgrade_pip=False,
                  index_url=None,
                  setuptools=False,
@@ -65,12 +66,9 @@ class Deployment(object):
         self.bin_dir = os.path.join(self.package_dir, 'bin')
         self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
 
-        self.extra_urls = extra_urls
         self.preinstall = preinstall
         self.upgrade_pip = upgrade_pip
-        self.extra_pip_arg = extra_pip_arg
         self.extra_virtualenv_arg = extra_virtualenv_arg
-        self.index_url = index_url
         self.log_file = tempfile.NamedTemporaryFile()
         self.verbose = verbose
         self.setuptools = setuptools
@@ -81,12 +79,33 @@ class Deployment(object):
         self.skip_install = skip_install
         self.requirements_filename = requirements_filename
 
+        # We need to prefix the pip run with the location of python
+        # executable. Otherwise it would just blow up due to too long
+        # shebang-line.
+        python = self.venv_bin('python')
+        self.pip_preinstall_prefix = [python, self.venv_bin('pip')]
+        self.pip_prefix = [python, self.venv_bin(pip_tool)]
+        self.pip_args = ['install']
+
+        if self.verbose:
+            self.pip_args.append('-v')
+
+        if index_url:
+            self.pip_args.append('--index-url={0}'.format(index_url))
+        self.pip_args.extend([
+            '--extra-index-url={0}'.format(url) for url in extra_urls
+        ])
+        self.pip_args.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
+        # Add in any user supplied pip args
+        self.pip_args.extend(extra_pip_arg)
+
     @classmethod
     def from_options(cls, package, options):
         verbose = options.verbose or os.environ.get('DH_VERBOSE') == '1'
         return cls(package,
                    extra_urls=options.extra_index_url,
                    preinstall=options.preinstall,
+                   pip_tool=options.pip_tool,
                    upgrade_pip=options.upgrade_pip,
                    index_url=options.index_url,
                    setuptools=options.setuptools,
@@ -131,31 +150,14 @@ class Deployment(object):
         virtualenv.append(self.package_dir)
         subprocess.check_call(virtualenv)
 
-        # We need to prefix the pip run with the location of python
-        # executable. Otherwise it would just blow up due to too long
-        # shebang-line.
-        self.pip_prefix = [
-            os.path.abspath(os.path.join(self.bin_dir, 'python')),
-            os.path.abspath(os.path.join(self.bin_dir, 'pip')),
-        ]
+    def venv_bin(self, binary_name):
+        return os.path.abspath(os.path.join(self.bin_dir, binary_name))
 
-        if self.verbose:
-            self.pip_prefix.append('-v')
-
-        self.pip_prefix.append('install')
-
-        if self.index_url:
-            self.pip_prefix.append('--index-url={0}'.format(self.index_url))
-        self.pip_prefix.extend([
-            '--extra-index-url={0}'.format(url) for url in self.extra_urls
-        ])
-        self.pip_prefix.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
-        # Add in any user supplied pip args
-        if self.extra_pip_arg:
-            self.pip_prefix.extend(self.extra_pip_arg)
+    def pip_preinstall(self, *args):
+        return self.pip_preinstall_prefix + self.pip_args + list(args)
 
     def pip(self, *args):
-        return self.pip_prefix + list(args)
+        return self.pip_prefix + self.pip_args + list(args)
 
     def install_dependencies(self):
         # Install preinstall stage packages. This is handy if you need
@@ -163,16 +165,16 @@ class Deployment(object):
         # along lines of setuptools), but that does not get installed
         # by default virtualenv.
         if self.upgrade_pip:
-            subprocess.check_call(self.pip('-U', 'pip'))
+            subprocess.check_call(self.pip_preinstall('-U', 'pip'))
         if self.preinstall:
-            subprocess.check_call(self.pip(*self.preinstall))
+            subprocess.check_call(self.pip_preinstall(*self.preinstall))
 
         requirements_path = os.path.join(self.sourcedirectory, self.requirements_filename)
         if os.path.exists(requirements_path):
             subprocess.check_call(self.pip('-r', requirements_path))
 
     def run_tests(self):
-        python = os.path.abspath(os.path.join(self.bin_dir, 'python'))
+        python = self.venv_bin('python')
         setup_py = os.path.join(self.sourcedirectory, 'setup.py')
         if os.path.exists(setup_py):
             subprocess.check_call([python, 'setup.py', 'test'], cwd=self.sourcedirectory)
@@ -223,7 +225,7 @@ class Deployment(object):
             pattern = re.compile(activate_args[1], flags=re.M)
             activate_file = activate_args[2]
 
-            with open(os.path.join(self.bin_dir, activate_file), 'r+') as fh:
+            with open(self.venv_bin(activate_file), 'r+') as fh:
                 content = pattern.sub(virtualenv_path, fh.read())
                 fh.seek(0)
                 fh.truncate()
