@@ -7,7 +7,7 @@ with but it also supports lot of customization to fit in your general
 needs.
 
 By default, *dh-virtualenv* installs your packages under
-``/usr/share/python/<packagename>``. The package name is provided by
+``/opt/venvs/<packagename>``. The package name is provided by
 the ``debian/control`` file.
 
 To use an alternative install prefix, add a line like
@@ -17,13 +17,13 @@ To use an alternative install prefix, add a line like
   export DH_VIRTUALENV_INSTALL_ROOT=</your/custom/install/dir>
 
 to the top of your ``debian/rules`` file. dh_virtualenv will use
-DH_VIRTUALENV_INSTALL_ROOT instead of ``/usr/share/python`` when it
-constructs the install path.
+:envvar:`DH_VIRTUALENV_INSTALL_ROOT` instead of ``/opt/venvs``
+when it constructs the install path.
 
 To use an install suffix other than the package name, call the
-``dh_virtualenv`` command using with the ``--install-suffix``
-command line option. See Advanced Usage for further information
-on passing options.
+``dh_virtualenv`` command using the :option:`--install-suffix` command
+line option. See Advanced Usage for further information on passing
+options.
 
 Simple usecase
 ==============
@@ -54,6 +54,20 @@ However, the tool makes a few assumptions of your project's structure:
 After these are place, you can just build the package with your
 favorite tool!
 
+Environment variables
+=====================
+
+Certain environment variables can be used to customise the behaviour
+of the debhelper sequencer in addition to the standard debhelper
+variables.
+
+.. envvar:: DH_VIRTUALENV_INSTALL_ROOT
+
+   Define a custom root location to install your package(s). The
+   resulting location for a specific package will be
+   ``/path/to/install/root/<packagename>` unless
+   :option:`--install-suffix` is used.
+
 Command line options
 ====================
 
@@ -78,7 +92,7 @@ few command line options:
 .. cmdoption:: --install-suffix <suffix>
 
    Override virtualenv installation suffix. The suffix is appended to
-   ``/usr/share/python``, or the ``DH_VIRTUALENV_INSTALL_ROOT``
+   ``/opt/venvs``, or the :envvar:`DH_VIRTUALENV_INSTALL_ROOT`
    environment variable if specified, to construct the installation
    path.
 
@@ -107,6 +121,8 @@ few command line options:
 
 .. cmdoption:: --upgrade-pip <package>
 
+   .. versionadded:: 1.0
+
    Force upgrading pip to the latest available release. *Note:* This
    can produce non-repeatable builds.
 
@@ -124,7 +140,7 @@ few command line options:
    Extra parameters to pass to the pip executable. This is useful if
    you need to change the behaviour of pip during the packaging process.
    You can use this flag multiple times to pass in different pip flags.
-   As an example passing in --extra-pip-arg "--no-compile" to the
+   As an example passing in :option:`--extra-pip-arg` "--no-compile" to the
    override_dh_virtualenv section of the debian/rules file will
    disable the generation of pyc files.
 
@@ -148,11 +164,13 @@ few command line options:
 
    Use setuptools instead of distribute in the virtualenv
 
-.. cmdoption:: --no-test
+.. cmdoption:: --setuptools-test
 
-   Skip running ``python setup.py test`` after dependencies and the
-   package is installed. This is useful if the Python code is packaged
-   using distutils and not setuptools.
+   .. versionadded:: 1.0
+
+   Run ``python setup.py test`` when building the package. This was
+   the old default behaviour before version 1.0. This option is
+   incompatible with the deprecated :option:`--no-test`.
 
 .. cmdoption:: --python <path>
 
@@ -164,10 +182,10 @@ few command line options:
 
    Enable the use of the build-in ``venv`` module, i.e. use ``python
    -m venv`` to create the virtualenv. For this to work, requires
-   Python 3.4 or later to be used, e.g. by using the option ``--python
-   /usr/bin/python3.4``. (Python 3.3 has the ``venv`` module, but
-   virtualenvs created with Python 3.3 are not bootstrapped with
-   setuptools or pip.)
+   Python 3.4 or later to be used, e.g. by using the option
+   :option:`--python` ``/usr/bin/python3.4``. (Python 3.3 has the
+   ``venv`` module, but virtualenvs created with Python 3.3 are not
+   bootstrapped with setuptools or pip.)
 
 .. cmdoption:: -S, --use-system-packages
 
@@ -192,8 +210,13 @@ few command line options:
 
 .. cmdoption:: --pypi-url <URL>
 
-   .. deprecated:: 0.12
+   .. deprecated:: 1.0
       Use :option:`--index-url` instead.
+
+.. cmdoption:: --no-test
+
+   .. deprecated:: 1.0
+      This option has no effect. See :option:`--setuptools-test`.
 
 
 Advanced usage
@@ -257,44 +280,62 @@ In addition the separation of build and install steps makes it
 possible to use ``debian/install`` files to include built files into
 the Debian package. This is not possible with the sequencer addition.
 
-The build system honors the ``DH_VIRTUALENV_INSTALL_ROOT`` environment
-variable. Arguments can be passed to virtualenv by setting
-``DH_VIRTUALENV_ARGUMENTS``. For example:
+The build system honors the :envvar:`DH_VIRTUALENV_INSTALL_ROOT`
+environment variable. Following other environment variables can be
+used to customise the functionality:
 
-.. code-block:: make
+.. envvar:: DH_VIRTUALENV_ARGUMENTS
 
-  export DH_VIRTUALENV_ARGUMENTS=--no-site-packages --always-copy
+   Pass given extra arguments to the ``virtualenv`` command
 
-The default is to create the virtual environment with ``--no-site-packages``.
+   For example:
 
-Overriding the requirements file can be done with the ``DH_REQUIREMENTS_FILE`` environment
-variable. For example:
+   .. code-block:: make
 
-.. code-block:: make
+      export DH_VIRTUALENV_ARGUMENTS="--no-site-packages --always-copy"
 
-  export DH_REQUIREMENTS_FILE="requirements-deploy.txt"
-
-
-Upgrade pip  by setting ``DH_UPGRADE_PIP`` to empty (latest version) or  specific version. For example:
-
-.. code-block::make
-  export DH_UPGRADE_PIP=8.1.2
+   The default is to create the virtual environment with
+   :option:`--no-site-packages`.
 
 
-Upgrade setuptools  by setting ``DH_UPGRADE_SETUPTOOLS`` to empty (latest version) or  specific version. For example:
+.. envvar:: DH_REQUIREMENTS_FILE
 
-.. code-block::make
-  export DH_UPGRADE_SETUPTOOLS=
+   .. versionadded:: 1.0
 
-Upgrade wheel  by setting ``DH_UPGRADE_WHEEL`` to empty (latest version) or  specific version. For example:
+   Override the location of requirements file. See :option:`--requirements`.
 
-.. code-block::make
-  export DH_UPGRADE_WHEEL=
+.. envvar:: DH_UPGRADE_PIP
 
+   .. versionadded:: 1.0
 
-Additional parameters to ``pip`` can be defined in the ``DH_PIP_EXTRA_ARGS`` environment
-variable. For example:
+   Force upgrade of the ``pip`` tool by setting
+   :envvar:`DH_UPGRADE_PIP` to empty (latest version) or specific
+   version. For example:
 
-.. code-block:: make
+   .. code-block::make
+      export DH_UPGRADE_PIP=8.1.2
 
-  export DH_PIP_EXTRA_ARGS="--no-index --find-links=./requirements/wheels"
+.. envvar:: DH_UPGRADE_SETUPTOOLS
+
+   .. versionadded:: 1.0
+
+   Force upgrade of setuptools by setting
+   :envvar:`DH_UPGRADE_SETUPTOOLS` to empty (latest version) or
+   specific version.
+
+.. envvar:: DH_UPGRADE_WHEEL
+
+   .. versionadded:: 1.0
+
+   Force upgrade of wheel by setting ``DH_UPGRADE_WHEEL`` to empty
+   (latest version) or specific version.
+
+.. envvar:: DH_PIP_EXTRA_ARGS
+
+   .. versionadded:: 1.0
+
+   Pass additional parameters to the ``pip`` command. For example:
+
+   .. code-block:: make
+
+      export DH_PIP_EXTRA_ARGS="--no-index --find-links=./requirements/wheels"

@@ -24,7 +24,7 @@ import subprocess
 import tempfile
 
 ROOT_ENV_KEY = 'DH_VIRTUALENV_INSTALL_ROOT'
-DEFAULT_INSTALL_DIR = '/usr/share/python/'
+DEFAULT_INSTALL_DIR = '/opt/venvs/'
 PYTHON_INTERPRETERS = ['python', 'pypy', 'ipy', 'jython']
 _PYTHON_INTERPRETERS_REGEX = r'\(' + r'\|'.join(PYTHON_INTERPRETERS) + r'\)'
 

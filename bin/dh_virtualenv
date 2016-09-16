@@ -54,7 +54,7 @@ def main():
     if 'nocheck' in os.environ.get('DEB_BUILD_OPTIONS', ''):
         do_test = False
     else:
-        do_test = options.test
+        do_test = options.setuptools_test
 
     # Older DebHelpers, like the one on Debian Squeeze, expect to be
     # passed the packages keyword argument. Newer (like Ubuntu

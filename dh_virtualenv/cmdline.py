@@ -40,19 +40,38 @@ class DebhelperOptionParser(OptionParser):
         return OptionParser.parse_args(self, args, values)
 
 
-def _check_index_url(option, opt_str, value, parser, *args, **kwargs):
-    if opt_str == '--pypi-url':
-        # Work around 2.7 hiding the DeprecationWarning
-        with warnings.catch_warnings():
-            warnings.simplefilter('default')
-            warnings.warn('Use of --pypi-url is deprecated. Use --index-url intead',
-                          DeprecationWarning)
-    if parser.values.index_url:
-        # We've already set the index_url, which means that we have both
-        # --index-url and --pypi-url passed in.
-        raise OptionValueError('Deprecated --pypi-url and the new '
-                               '--index-url are mutually exclusive')
-    parser.values.index_url = value
+def _check_for_deprecated_options(
+        option, opt_str, value, parser, *args, **kwargs):
+    # TODO: If more deprectaed options pop up, refactor this method to
+    # handle them in more generic way (or actually remove the
+    # deprecated options)
+    if opt_str in ('--pypi-url', '--index-url'):
+        if opt_str == '--pypi-url':
+            # Work around 2.7 hiding the DeprecationWarning
+            with warnings.catch_warnings():
+                warnings.simplefilter('default')
+                warnings.warn('Use of --pypi-url is deprecated. Use '
+                              '--index-url instead',
+                              DeprecationWarning)
+        if parser.values.index_url:
+            # We've already set the index_url, which means that we have both
+            # --index-url and --pypi-url passed in.
+            raise OptionValueError('Deprecated --pypi-url and the new '
+                                   '--index-url are mutually exclusive')
+        parser.values.index_url = value
+    elif opt_str in ('--no-test', '--setuptools-test'):
+        if opt_str == '--no-test':
+            with warnings.catch_warnings():
+                warnings.simplefilter('default')
+                warnings.warn('Use of --no-test is deprecated and has no '
+                              'effect. Use --setuptools-test if you want to '
+                              'execute `setup.py test` during package build.',
+                              DeprecationWarning)
+        if getattr(parser.values, '_test_flag_seen', None):
+            raise OptionValueError('Deprecated --no-test and the new '
+                                   '--setuptools-test are mutually exclusive')
+        parser.values.setuptools_test = opt_str != '--no-test'
+        setattr(parser.values, '_test_flag_seen', True)
 
 
 def get_default_parser():
@@ -89,29 +108,18 @@ def get_default_parser():
                       help='Extra args for the virtualenv binary.'
                       'You can use this flag multiple times to pass in'
                       ' parameters to the virtualenv binary.', default=[])
-    parser.add_option('--pypi-url',
-                      help=('!!DEPRECATED, use --index-url instead!! '
-                            'Base URL of the PyPI server'),
-                      action='callback',
-                      dest='index_url',
-                      type='string',
-                      callback=_check_index_url)
     parser.add_option('--index-url',
                       help='Base URL of the PyPI server',
                       action='callback',
                       type='string',
                       dest='index_url',
-                      callback=_check_index_url)
+                      callback=_check_for_deprecated_options)
     parser.add_option('--python', help='The Python to use')
     parser.add_option('--builtin-venv', action='store_true',
                       help='Use the built-in venv module. Only works on '
                       'Python 3.4 and later.')
     parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
                       help='The source directory')
-    parser.add_option('--no-test', action='store_false', dest='test',
-                      help="Don't run tests for the package. Useful "
-                      "for example when you have packaged with distutils.",
-                      default=True)
     parser.add_option('-n', '--noscripts', action='store_false', dest='autoscripts',
                       help="Do not modify postinst and similar scripts.",
                       default=True)
@@ -131,6 +139,12 @@ def get_default_parser():
                       dest='requirements_filename',
                       help='Specify the filename for requirementst.txt',
                       default='requirements.txt')
+    parser.add_option('--setuptools-test',
+                      dest='setuptools_test',
+                      default=False,
+                      action='callback',
+                      help='Run `setup.py test` when building the package',
+                      callback=_check_for_deprecated_options)
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
@@ -144,4 +158,20 @@ def get_default_parser():
                       help=("Act on all architecture independent packages. "
                             "This option is ignored"),
                       action="store_true")
+
+    # Deprecated options
+    parser.add_option('--pypi-url',
+                      help=('!!DEPRECATED, use --index-url instead!! '
+                            'Base URL of the PyPI server'),
+                      action='callback',
+                      dest='index_url',
+                      type='string',
+                      callback=_check_for_deprecated_options)
+    parser.add_option('--no-test',
+                      help="!!DEPRECATED, this command has no effect. "
+                      "See --setuptools-test!! "
+                      "Don't run tests for the package. Useful "
+                      "for example when you have packaged with distutils.",
+                      action='callback',
+                      callback=_check_for_deprecated_options)
     return parser
