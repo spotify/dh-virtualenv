@@ -189,7 +189,7 @@ class Deployment(object):
         return files.strip().split('\n')
 
     def fix_shebangs(self):
-        """Translate /usr/bin/python and /usr/bin/env python sheband
+        """Translate /usr/bin/python and /usr/bin/env python shebang
         lines to point to our virtualenv python.
         """
         pythonpath = os.path.join(self.virtualenv_install_dir, 'bin/python')
