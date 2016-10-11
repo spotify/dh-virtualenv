@@ -76,7 +76,7 @@ def _check_for_deprecated_options(
 
 def get_default_parser():
     usage = '%prog [options]'
-    parser = DebhelperOptionParser(usage, version='%prog 0.11')
+    parser = DebhelperOptionParser(usage, version='%prog 1.0')
     parser.add_option('-p', '--package', action='append',
                       help='act on the package named PACKAGE')
     parser.add_option('-N', '--no-package', action='append',

@@ -24,8 +24,8 @@ In the sequence the ``dh_virtualenv`` is inserted right after
 Following list contains most notable changes by version. For full list
 consult the git history of the project.
 
-1.0 (unreleased)
-=================
+1.0
+===
 
 * **Backwards incompatible** Change the default install root to
   ``/opt/venvs``. This is due to the old installation root
@@ -37,6 +37,9 @@ consult the git history of the project.
   upon building. The :option:`--no-test` flag has no longer has any
   effect. To get the old behaviour, use the
   :option:`--setuptools-test` flag instead.
+* **Backwards incompatible** Buildsystem: Move files into build folder
+  in install step instead of build step. Thanks to `Ludwig Hähne
+  <https://github.com/Pankrat>`_ for the patch!
 * Deprecate :option:`--pypi-url` in favour of :option:`--index-url`
 * Support upgrading pip to the latest release with :option:`--upgrade-pip`
   flag.
@@ -50,6 +53,15 @@ consult the git history of the project.
   Forselv <https://github.com/einarf>`_ for implementing!
 * Fixing shebangs now supports multiple interpreters. Thanks `Javier
   Santacruz <https://github.com/jvrsantacruz>`_!
+* Allow a custom pip executable via :option:`--pip-tool` flag. Thanks
+  `Anthony Sottile <https://github.com/asottile>`_ for the
+  implementation!
+* Fix handling of shebang lines for cases where interpreter was
+  wrapped in quotes. Thanks to `Kamil Niechajewicz
+  <https://github.com/noizex>`_ for fixing!
+* Support extra arguments to be passed at virtualenv using
+  :option:`--extra-virtualenv-arg`. Thanks to `Julien Duponchelle
+  <https://github.com/noplay>`_ for the fix.
 
 0.11
 ====
