@@ -38,9 +38,9 @@ sub get_install_root {
 sub get_venv_builddir {
     my $this = shift;
     my $builddir = $this->get_builddir();
-    my $sourcepackage = $this->sourcepackage();
+    my $virtualenv_name = $ENV{DH_VIRTUALENV_INSTALL_SUFFIX} || $this->sourcepackage();
     my $prefix = $this->get_install_root();
-    return "$builddir$prefix/$sourcepackage";
+    return "$builddir$prefix/$virtualenv_name";
 }
 
 sub get_exec {

@@ -297,6 +297,14 @@ used to customise the functionality:
    The default is to create the virtual environment with
    :option:`--no-site-packages`.
 
+.. envvar:: DH_VIRTUALENV_INSTALL_SUFFIX
+
+   Override the default virtualenv name, instead of source package name.
+
+   For example:
+
+   .. code-block::make
+      export DH_VIRTUALENV_INSTALL_SUFFIX=venv
 
 .. envvar:: DH_REQUIREMENTS_FILE
 
