@@ -145,7 +145,13 @@ sub install {
     $this->doit_in_builddir('mkdir', '-p', $destdir);
     $this->doit_in_builddir('cp', '-r', '-T', '.', $destdir);
 
-    my $new_python = "$prefix/$sourcepackage/bin/python";
+    my $new_python = undef;
+    if (defined $ENV{DH_VIRTUALENV_INSTALL_SUFFIX}) {
+        $new_python = "$prefix/" . $ENV{DH_VIRTUALENV_INSTALL_SUFFIX} . "/bin/python";
+
+    } else {
+        $new_python = "$prefix/$sourcepackage/bin/python";
+    }
 
     # Fix shebangs so that we use the Python in the final location
     # instead of the Python in the build directory
