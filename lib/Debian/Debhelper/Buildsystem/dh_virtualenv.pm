@@ -106,8 +106,13 @@ sub build {
         $this->doit_in_sourcedir(
             $python, $pip, 'install', '-U', 'wheel' . $version);
     }
-    $this->doit_in_sourcedir(
-        $python, $pip, 'install', '-r', $reqfile, @pipargs);
+    if (!$reqfile) {
+        $this->doit_in_sourcedir(
+            $python, $pip, 'install', '.', @pipargs);
+    } else {
+        $this->doit_in_sourcedir(
+            $python, $pip, 'install', '-r', $reqfile, @pipargs);
+    }
 }
 
 sub test {
