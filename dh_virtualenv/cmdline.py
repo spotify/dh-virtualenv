@@ -145,6 +145,13 @@ def get_default_parser():
                       action='callback',
                       help='Run `setup.py test` when building the package',
                       callback=_check_for_deprecated_options)
+    parser.add_option('-T', '--use-tmp-builddir', action='store_true',
+                      dest='use_tmp_builddir',
+                      help="Whether a virtualenv should be created under "
+                      "/tmp/ direcotry, and then be moved into debian/ "
+                      "before packaging.  Use this if you experience "
+                      "problems with pip because of too lengthy paths.",
+                      default=False)
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)

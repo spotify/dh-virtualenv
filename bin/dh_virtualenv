@@ -98,6 +98,10 @@ def main():
         deploy.fix_shebangs()
         deploy.fix_local_symlinks()
 
+        if deploy.use_tmp_builddir:
+            _info('Moving virtualenv to debian/')
+            deploy.move_to_debian()
+
         _info('dh-virtualenv: All done!')
 
     dh.save()

@@ -20,6 +20,7 @@
 import os
 import re
 import shutil
+import glob
 import subprocess
 import tempfile
 
@@ -47,7 +48,8 @@ class Deployment(object):
                  use_system_packages=False,
                  skip_install=False,
                  install_suffix=None,
-                 requirements_filename='requirements.txt'):
+                 requirements_filename='requirements.txt',
+                 use_tmp_builddir=False):
 
         self.package = package
         install_root = os.environ.get(ROOT_ENV_KEY, DEFAULT_INSTALL_DIR)
@@ -63,8 +65,14 @@ class Deployment(object):
             self.virtualenv_install_dir = os.path.join(install_root, install_suffix)
             self.package_dir = os.path.join(self.debian_root, install_suffix)
 
-        self.bin_dir = os.path.join(self.package_dir, 'bin')
-        self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
+        self.use_tmp_builddir = use_tmp_builddir
+        if self.use_tmp_builddir:
+            self.build_dir = tempfile.mkdtemp()
+        else:
+            self.build_dir = self.package_dir
+
+        self.bin_dir = os.path.join(self.build_dir, 'bin')
+        self.local_bin_dir = os.path.join(self.build_dir, 'local', 'bin')
 
         self.preinstall = preinstall
         self.upgrade_pip = upgrade_pip
@@ -118,7 +126,8 @@ class Deployment(object):
                    use_system_packages=options.use_system_packages,
                    skip_install=options.skip_install,
                    install_suffix=options.install_suffix,
-                   requirements_filename=options.requirements_filename)
+                   requirements_filename=options.requirements_filename,
+                   use_tmp_builddir=options.use_tmp_builddir)
 
     def clean(self):
         shutil.rmtree(self.debian_root)
@@ -147,7 +156,7 @@ class Deployment(object):
             if self.extra_virtualenv_arg:
                 virtualenv.extend(self.extra_virtualenv_arg)
 
-        virtualenv.append(self.package_dir)
+        virtualenv.append(self.build_dir)
         subprocess.check_call(virtualenv)
 
     def venv_bin(self, binary_name):
@@ -240,10 +249,10 @@ class Deployment(object):
         # Specifically it might point at the build environment that created it!
         # Make those links relative
         # See https://github.com/pypa/virtualenv/commit/5cb7cd652953441a6696c15bdac3c4f9746dfaa1
-        local_dir = os.path.join(self.package_dir, "local")
+        local_dir = os.path.join(self.build_dir, "local")
         if not os.path.isdir(local_dir):
             return
-        elif os.path.samefile(self.package_dir, local_dir):
+        elif os.path.samefile(self.build_dir, local_dir):
             # "local" points directly to its containing directory
             os.unlink(local_dir)
             os.symlink(".", local_dir)
@@ -263,3 +272,11 @@ class Deployment(object):
             new_target = os.path.relpath(existing_target, local_dir)
             os.unlink(path)
             os.symlink(new_target, path)
+
+    def move_to_debian(self):
+        if not self.use_tmp_builddir:
+            return
+        subprocess.check_call(['mkdir', '-p', self.package_dir])
+        subprocess.check_call(['mv'] + glob.glob(self.build_dir + '/*') +
+                              [self.package_dir])
+        shutil.rmtree(self.build_dir)
