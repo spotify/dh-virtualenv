@@ -452,6 +452,7 @@ def test_deployment_from_options_with_verbose_from_env(env_mock):
 def test_fix_local_symlinks(deployment_dir):
         d = Deployment('testing')
         d.package_dir = deployment_dir
+        d.build_dir = d.package_dir
 
         local = os.path.join(deployment_dir, 'local')
         os.makedirs(local)
