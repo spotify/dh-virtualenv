@@ -17,9 +17,7 @@ dh_venv_safe_interpreter_update() {
 
         # skip any symlinks, and make sure we have an existing target
         test ! -L "$interpreter_path" || continue
-        if [ -f "$interpreter_path" ] && [ ! -x "$interpreter_path" ]; then
-            continue
-        fi
+        test -x "$interpreter_path" || continue
 
         # skip if already identical
         if cmp "/usr/bin/$pythonX_Y" "$interpreter_path" >/dev/null 2>&1; then
@@ -33,9 +31,7 @@ dh_venv_safe_interpreter_update() {
             || true
 
         # make a backup (once)
-        if [ -f "$interpreter_path" ] && [ ! -f "$interpreter_path,orig" ]; then
-            ln "$interpreter_path" "$interpreter_path,orig"
-        fi
+        test -f "$interpreter_path,orig" || ln  "$interpreter_path" "$interpreter_path,orig"
 
         # atomic move
         if test -x "$interpreter_path,new" && mv "$interpreter_path,new" "$interpreter_path"; then
