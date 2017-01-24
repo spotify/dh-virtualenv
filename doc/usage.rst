@@ -239,6 +239,51 @@ additional Python Package Index URI:
   	dh_virtualenv --extra-index-url http://example.com
 
 
+Pbuilder and dh-virtualenv
+==========================
+
+Building your Debian package in a pbuilder_ environment can help to ensure
+proper dependencies and repeatable builds. However, precisely because pbuilder
+creates its own build environment, build failues can be much more difficult to
+understand and troubleshoot. This is especially true when there is a pip error
+inside the pbuilder environment. For that reason, make sure that you can build
+your Debian package successfully outside of a pbuilder environment before
+trying to build it inside.
+
+With those caveats, here are some tips for making pip and dh_virtual work
+inside pbuilder.
+
+If you want pip to retrieve packages from the network, you need to
+add ``USE_NETWORK=yes`` to your /etc/pbuilderrc or ~/.pbuilderrc file.
+
+pip has several options that can be used to make it more compatible
+with pbuilder.
+
+Use ``--no-cache-dir`` to stop creating wheels in your home directory,
+which will fail when running in a pbuilder environment, because
+pbuilder sets the HOME environment variable to "/nonexistent".
+
+Use ``--no-deps`` to make pip builds more repeatable_.
+
+Use ``--ignore-installed`` to ensure that pip installs every package in
+``requirements.txt`` in the virtualenv. This option is especially important if
+you are using the --system-site-packages option in your virtualenv.
+
+Here's an example of how to use these arguments in your ``rules`` file.
+
+.. code-block:: make
+
+                override_dh_virtualenv:
+                	dh_virtualenv \
+                	--use-system-packages \
+                	--extra-pip-arg "--ignore-installed" \
+                	--extra-pip-arg "--no-deps" \
+                	--extra-pip-arg "--no-cache-dir"
+
+.. _pbuilder: https://wiki.ubuntu.com/PbuilderHowto
+
+.. _repeatable: https://pip.readthedocs.org/en/stable/user_guide.html#ensuring-repeatability
+
 Experimental buildsystem support
 ================================
 
