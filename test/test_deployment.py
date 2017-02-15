@@ -24,7 +24,7 @@ import tempfile
 import textwrap
 import contextlib
 
-from mock import patch, call
+from mock import patch, call, ANY
 
 from nose.tools import eq_
 from dh_virtualenv import Deployment
@@ -171,7 +171,7 @@ def test_upgrade_pip(callmock):
     d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_called_with(
-        ['pip', 'install', '-U', 'pip'])
+        ['pip', 'install', ANY, '-U', 'pip'])
 
 
 @patch('subprocess.check_call')
@@ -181,7 +181,7 @@ def test_upgrade_pip_with_preinstall(callmock):
     d.pip_args = ['install']
     d.install_dependencies()
     callmock.assert_has_calls([
-        call(['pip', 'install', '-U', 'pip']),
+        call(['pip', 'install', ANY, '-U', 'pip']),
         call(['pip', 'install', 'foobar'])])
 
 
