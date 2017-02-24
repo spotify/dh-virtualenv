@@ -97,6 +97,7 @@ def main():
         deploy.fix_activate_path()
         deploy.fix_shebangs()
         deploy.fix_local_symlinks()
+        deploy.fix_egg_links()
 
         _info('dh-virtualenv: All done!')
 

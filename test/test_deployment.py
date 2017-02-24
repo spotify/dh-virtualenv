@@ -483,3 +483,22 @@ def test_fix_local_symlinks_does_not_blow_up_on_missing_local(deployment_dir):
         d = Deployment('testing')
         d.package_dir = deployment_dir
         d.fix_local_symlinks()
+
+
+@temporary_dir
+def test_fix_egg_links(deployment_dir):
+    d = Deployment('testing')
+    d.package_dir = deployment_dir
+
+    sitepackages_dir = os.path.join(
+        deployment_dir, 'lib', 'python3.4', 'site-packages')
+    os.makedirs(sitepackages_dir)
+    egg_link = os.path.join(sitepackages_dir, 'foo.egg-link')
+
+    with open(egg_link, 'w') as f:
+        f.write('/the/build/path/opt/venvs/testing/wherever/\n.')
+
+    d.fix_egg_links()
+
+    with open(egg_link, 'r') as f:
+        eq_(f.read(), '/opt/venvs/testing/wherever/\n.')

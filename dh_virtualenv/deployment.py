@@ -17,6 +17,7 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 
+import glob
 import os
 import re
 import shutil
@@ -197,6 +198,27 @@ class Deployment(object):
             regex = r's-^#!.*bin/\(env \)\?{names}\"\?-#!{pythonpath}-'\
                 .format(names=_PYTHON_INTERPRETERS_REGEX, pythonpath=re.escape(pythonpath))
             subprocess.check_call(['sed', '-i', regex, f])
+
+    def find_egg_links(self):
+        """Find list of installed *.egg-link files in the virtualenv"""
+        return glob.glob(os.path.join(self.package_dir, 'lib', 'python*',
+                                      'site-packages', '*.egg-link'))
+
+    def fix_egg_links(self):
+        """Remove the build-time install root from the egg links"""
+        for egg_link in self.find_egg_links():
+            with open(egg_link, 'r') as f:
+                destination = f.read()
+
+            pos = destination.find(self.virtualenv_install_dir)
+
+            if pos < 0:
+                continue
+
+            destination = destination[pos:]
+
+            with open(egg_link, 'w') as f:
+                f.write(destination)
 
     def fix_activate_path(self):
         """Replace the `VIRTUAL_ENV` path in bin/activate to reflect the
