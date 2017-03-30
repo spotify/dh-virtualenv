@@ -58,7 +58,8 @@ effectively replaces following commands from the sequence:
 * `dh_pycentral`
 * `dh_pysupport`
 
-In the sequence the dh_virtualenv is inserted right after dh_perl.
+In the sequence the `dh_virtualenv` is inserted right after 
+`dh_installinit`.
 
 ## Running tests
 
