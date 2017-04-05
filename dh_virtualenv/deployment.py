@@ -96,6 +96,8 @@ class Deployment(object):
             '--extra-index-url={0}'.format(url) for url in extra_urls
         ])
         self.pip_args.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
+        # Keep a copy with well-suported options only (for upgrading pip itself)
+        self.pip_upgrade_args = self.pip_args[:]
         # Add in any user supplied pip args
         self.pip_args.extend(extra_pip_arg)
 
@@ -165,7 +167,8 @@ class Deployment(object):
         # along lines of setuptools), but that does not get installed
         # by default virtualenv.
         if self.upgrade_pip:
-            subprocess.check_call(self.pip_preinstall('-U', 'pip'))
+            # First, bootstrap pip with a reduced option set (well-supported options)
+            subprocess.check_call(self.pip_preinstall_prefix + self.pip_upgrade_args + ['-U', 'pip'])
         if self.preinstall:
             subprocess.check_call(self.pip_preinstall(*self.preinstall))
 

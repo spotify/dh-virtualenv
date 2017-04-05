@@ -119,12 +119,17 @@ few command line options:
    ``--preinstall`` argument. The replacement is expected to be found
    in the virtualenv's bin/ directory.
 
-.. cmdoption:: --upgrade-pip <package>
+.. cmdoption:: --upgrade-pip
 
    .. versionadded:: 1.0
 
-   Force upgrading pip to the latest available release. *Note:* This
-   can produce non-repeatable builds.
+   Force upgrading to the latest available release of ``pip``.
+   This is the first thing done in the preinstall stage,
+   and uses a separate ``pip`` call.
+   Options provided via ``--extra-pip-arg`` are ignored here,
+   since the default ``pip`` of your system might not support them.
+
+   *Note:* This can produce non-repeatable builds.
 
 .. cmdoption:: --index-url <URL>
 
