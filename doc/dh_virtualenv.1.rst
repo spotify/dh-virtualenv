@@ -49,7 +49,7 @@ OPTIONS
 --index-url				Base URL for PyPI server.
 --setuptools				Use setuptools instead of distribute.
 --install-suffix=SUFFIX			Override virttualenv installation suffix
---upgrage-pip				Force upgrade pip in virtualenv
+--upgrade-pip				Force upgrade pip in virtualenv
 --requirements=FILE			Use FILE for requirements
 --setuptools-test			Run `setup.py test` upon build.
 --python=PATH				Use Python interpreter at PATH
