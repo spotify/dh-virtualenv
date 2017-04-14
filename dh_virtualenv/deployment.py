@@ -186,7 +186,7 @@ class Deployment(object):
                    self.bin_dir]
         grep_proc = subprocess.Popen(command, stdout=subprocess.PIPE)
         files, stderr = grep_proc.communicate()
-        return files.strip().split('\n')
+        return files.decode('utf-8').strip().split('\n')
 
     def fix_shebangs(self):
         """Translate /usr/bin/python and /usr/bin/env python shebang
