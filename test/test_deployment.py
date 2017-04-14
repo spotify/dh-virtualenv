@@ -368,7 +368,7 @@ def test_fix_activate_path():
         deployment.fix_activate_path()
 
     with open(temp.name) as fh:
-        eq_(expected, temp.read())
+        eq_(expected, fh.read())
 
 
 @patch('os.path.exists', lambda x: True)
