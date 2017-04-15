@@ -17,14 +17,25 @@
 # You should have received a copy of the GNU General Public License
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
+import io
 import os
 import warnings
-
-from StringIO import StringIO
 
 from dh_virtualenv import cmdline
 from mock import patch
 from nose.tools import eq_, ok_
+
+
+def get_mocked_stderr():
+    # optparse will try to print str(err) to sys.stderr, both on Python 2 and 3
+    # so we need to mock sys.stderr with the right *IO class
+    if str == bytes:
+        # We're on Python 2, where str(foo) is a bytes string
+        return io.BytesIO()
+
+    else:
+        # We're on Python 3, where str(foo) is a unicode string
+        return io.StringIO()
 
 
 @patch.object(cmdline.DebhelperOptionParser, 'error')
@@ -91,7 +102,7 @@ def test_no_test_creates_deprecation_warning():
 @patch('sys.exit')
 def test_pypi_url_index_url_conflict(exit_):
     parser = cmdline.get_default_parser()
-    f = StringIO()
+    f = get_mocked_stderr()
     with patch('sys.stderr', f):
         parser.parse_args([
             '--pypi-url=http://example.com',
@@ -105,7 +116,7 @@ def test_pypi_url_index_url_conflict(exit_):
 @patch('sys.exit')
 def test_test_flag_conflict(exit_):
     parser = cmdline.get_default_parser()
-    f = StringIO()
+    f = get_mocked_stderr()
     with patch('sys.stderr', f):
         parser.parse_args([
             '--no-test',
@@ -120,7 +131,7 @@ def test_test_flag_conflict(exit_):
 @patch('sys.exit')
 def test_pypi_url_index_url_conflict_independent_from_order(exit_):
     parser = cmdline.get_default_parser()
-    f = StringIO()
+    f = get_mocked_stderr()
     with patch('sys.stderr', f):
         parser.parse_args([
             '--index-url=http://example.org',
