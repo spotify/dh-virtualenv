@@ -94,8 +94,7 @@ def main():
             _info('Skipped tests')
 
         _info('Fixing paths')
-        deploy.fix_activate_path()
-        deploy.fix_shebangs()
+        deploy.relocate()
         deploy.fix_local_symlinks()
 
         _info('dh-virtualenv: All done!')
