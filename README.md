@@ -58,7 +58,8 @@ package and upon installation it gets placed, by default, under
 `/opt/venvs/<packagename>`.
 
 For more information and usage documentation, check the accompanying
-documentation in the `doc` folder.
+documentation in the `doc` folder, also available at
+[Read the Docs](https://dh-virtualenv.readthedocs.io/en/latest/).
 
 
 ## How does it work?
