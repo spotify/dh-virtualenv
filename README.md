@@ -9,6 +9,7 @@
   * [Using dh-virtualenv](#using-dh-virtualenv)
   * [How does it work?](#how-does-it-work)
   * [Running tests](#running-tests)
+  * [Building the documentation locally](#building-the-documentation-locally)
   * [Code of conduct](#code-of-conduct)
   * [License](#license)
 
@@ -82,6 +83,21 @@ In the new sequence, `dh_virtualenv` is inserted right before `dh_installinit`.
 ## Running tests
 
     $ nosetests ./test/test_deployment.py
+
+
+## Building the documentation locally
+
+If you execute the following commands in your clone of the repository,
+a virtualenv with all necessary tools is created.
+``invoke docs`` then builds the documentation into ``doc/_build/``.
+
+```sh
+command . .env --yes --develop
+invoke docs
+```
+
+To **start a watchdog that auto-rebuilds documentation** and reloads the opened browser tab on any change,
+call ``invoke docs -w -b`` (stop the watchdog using the ``-k`` option).
 
 
 ## Code of conduct
