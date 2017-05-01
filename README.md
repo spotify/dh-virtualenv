@@ -2,10 +2,23 @@
 
 [![Build Status](https://travis-ci.org/spotify/dh-virtualenv.png)](https://travis-ci.org/spotify/dh-virtualenv)
 
+
+**Contents**
+
+  * [Overview](#overview)
+  * [Using dh-virtualenv](#using-dh-virtualenv)
+  * [How does it work?](#how-does-it-work)
+  * [Running tests](#running-tests)
+  * [Code of conduct](#code-of-conduct)
+  * [License](#license)
+
+
+## Overview
+
 dh-virtualenv is a tool that aims to combine Debian packaging with
 self-contained virtualenv based Python deployments.
 
-The idea behind the dh-virtualenv is to be able to combine power of
+The idea behind dh-virtualenv is to be able to combine the power of
 Debian packaging with the sandboxed nature of virtualenvs. In addition
 to this, using virtualenv enables installing requirements via
 [Python Package Index](http://pypi.python.org) instead of relying on
@@ -15,6 +28,7 @@ operating system.
 
 For complete online documentation, see
 [the documentation online](https://dh-virtualenv.readthedocs.io/en/latest/).
+
 
 ## Using dh-virtualenv
 
@@ -46,20 +60,23 @@ package and upon installation it gets placed, by default, under
 For more information and usage documentation, check the accompanying
 documentation in the `doc` folder.
 
+
 ## How does it work?
 
-To do the packaging, the package extends debhelper's sequence by
-providing a new command in sequence, `dh_virtualenv`, which
-effectively replaces following commands from the sequence:
+To do the packaging, *dh-virtualenv* extends debhelper's sequence by
+inserting a new `dh_virtualenv` command, which effectively replaces
+the following commands in the original sequence:
 
 * `dh_auto_clean`
+* `dh_auto_build`
+* `dh_auto_test`
 * `dh_auto_install`
 * `dh_python2`
 * `dh_pycentral`
 * `dh_pysupport`
 
-In the sequence the `dh_virtualenv` is inserted right after 
-`dh_installinit`.
+In the new sequence, `dh_virtualenv` is inserted right before `dh_installinit`.
+
 
 ## Running tests
 
