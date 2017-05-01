@@ -1,7 +1,7 @@
 # dh-virtualenv
 
 [![Build Status](https://travis-ci.org/spotify/dh-virtualenv.png)](https://travis-ci.org/spotify/dh-virtualenv)
-
+[![Docs](https://readthedocs.org/projects/dh-virtualenv/badge/)](http://dh-virtualenv.readthedocs.io/en/latest/)
 
 **Contents**
 
@@ -26,8 +26,8 @@ the operating system provided Python packages. The only limiting
 factor is that you have to run the same Python interpreter as the
 operating system.
 
-For complete online documentation, see
-[the documentation online](https://dh-virtualenv.readthedocs.io/en/latest/).
+For complete online documentation including installation instructions, see
+[the online documentation](https://dh-virtualenv.readthedocs.io/en/latest/).
 
 
 ## Using dh-virtualenv
@@ -82,13 +82,16 @@ In the new sequence, `dh_virtualenv` is inserted right before `dh_installinit`.
 
     $ nosetests ./test/test_deployment.py
 
+
 ## Code of conduct
+
 This project adheres to the [Open Code of Conduct][code-of-conduct].
 By participating, you are expected to honor this code.
 
+
 ## License
 
-Copyright (c) 2013 Spotify AB
+Copyright (c) 2013-2017 Spotify AB
 
 dh-virtualenv is licensed under GPL v2 or later. Full license is
 available in the `LICENSE` file.
