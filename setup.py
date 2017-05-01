@@ -18,23 +18,35 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 
+import sys
+import json
 
 from setuptools import setup
 
-setup(name='dh_virtualenv',
-      version='1.0',
-      author=u'Jyrki Pulliainen',
-      author_email='jyrki@spotify.com',
-      url='https://github.com/spotify/dh-virtualenv',
-      description='Debian packaging sequence for Python virtualenvs.',
-      license='GNU General Public License v2 or later',
-      scripts=['bin/dh_virtualenv'],
-      packages=['dh_virtualenv'],
-      classifiers=[
-          'Intended Audience :: Developers',
-          'Intended Audience :: System Administrators',
-          'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
-          'Topic :: Software Development :: Build Tools',
-          'Topic :: System :: Installation/Setup',
-          'Topic :: Utilities',
-      ])
+project = dict(
+    name='dh_virtualenv',
+    version='1.0',
+    author=u'Jyrki Pulliainen',
+    author_email='jyrki@spotify.com',
+    url='https://github.com/spotify/dh-virtualenv',
+    description='Debian packaging sequence for Python virtualenvs.',
+    license='GNU General Public License v2 or later',
+    scripts=['bin/dh_virtualenv'],
+    packages=['dh_virtualenv'],
+    classifiers=[
+        'Intended Audience :: Developers',
+        'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
+        'Topic :: Software Development :: Build Tools',
+        'Topic :: System :: Installation/Setup',
+        'Topic :: Utilities',
+    ])
+
+# Ensure "setup.py" is importable by other tools, to access the project's metadata
+__all__ = ['project']
+if __name__ == '__main__':
+    if '--metadata' in sys.argv[:2]:
+        json.dump(project, sys.stdout, default=repr, indent=4, sort_keys=True)
+        sys.stdout.write('\n')
+    else:
+        setup(**project)
