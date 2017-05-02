@@ -12,20 +12,43 @@ also need some basic build tools, so it is recommended to install
 Step 1: Install dh-virtualenv
 =============================
 
-In order to use it, you need to install the *dh-virtualenv*. If you
-run Debian Jessie (testing), Debian Sid (unstable) or Ubuntu 14.04 LTS (Trusty),
-you can install *dh-virtualenv* simply with *apt-get*:
+In order to use it, you need to install *dh-virtualenv* as a debhelper add-on
+on the build host. For Debian and Ubuntu, there are pre-built packages for
+the 1.0 version available – note that some of this info might get outdated over time,
+so take extra care to check the versions numbers you're actually getting.
+
+The following paragraphs describe the various installation options,
+including building from source when your specific environment provides
+no packages or only older versions.
+Using pre-1.0 versions might be possible, but you don't get all features described in this document,
+and not all projects using dh-virtualenv might work with older versions
+(check their documentation).
+
+To install on *Jessie* (Debian stable) from `their package repositories`_, use these commands:
 
 .. code-block:: bash
 
-   sudo apt-get install dh-virtualenv
+    echo "deb http://ftp.debian.org/debian jessie-backports main" \
+        | sudo tee /etc/apt/sources.list.d/jessie-backports.list >/dev/null
+    sudo apt-get update -qq
+    sudo apt-get install -t jessie-backports dh-virtualenv
 
-For more recent packages there is [an unofficial PPA
-maintained](https://launchpad.net/~spotify-jyrki/+archive/ubuntu/dh-virtualenv)
-by the author.
+Note that only ``jessie-backports`` offers the 1.0 version.
+Newer versions (Stretch and Sid) provide 1.0 out-of-the-box.
 
-For other systems the only way is to build and install it yourself.
-Steps to do that, after you have cloned the repository are:
+In the `official Ubuntu repositories`_, *Zesty* provides a package
+that works on older releases too. So on *Zesty* use a standard ``apt-get`` install,
+and on older releases do this:
+
+.. code-block:: bash
+
+    ( cd /tmp && curl -LO "http://mirrors.kernel.org/ubuntu/pool/universe/d/dh-virtualenv/dh-virtualenv_1.0-1_all.deb" )
+    sudo dpkg -i /tmp/dh-virtualenv_1.0-1_all.deb
+
+Another option to check out for *Ubuntu* is `this PPA`_, maintained by the author.
+
+For all other systems you have to build and install the tool yourself.
+Steps to do that, after you have cloned the repository, are:
 
 .. code-block:: bash
 
@@ -38,6 +61,11 @@ Steps to do that, after you have cloned the repository are:
    # and finally, install it (you might have to solve some
    # dependencies when doing this):
    sudo dpkg -i ../dh-virtualenv_<version>.deb
+
+
+.. _`their package repositories`: https://packages.debian.org/source/sid/dh-virtualenv
+.. _`official Ubuntu repositories`: http://packages.ubuntu.com/search?keywords=dh-virtualenv
+.. _`this PPA`: https://launchpad.net/~spotify-jyrki/+archive/ubuntu/dh-virtualenv
 
 
 Step 2: Setup the Debian packaging
