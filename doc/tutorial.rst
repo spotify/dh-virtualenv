@@ -15,7 +15,7 @@ Step 1: Install dh-virtualenv
 In order to use it, you need to install *dh-virtualenv* as a debhelper add-on
 on the build host. For Debian and Ubuntu, there are pre-built packages for
 the 1.0 version available – note that some of this info might get outdated over time,
-so take extra care to check the versions numbers you're actually getting.
+so take extra care to check the version numbers you're actually getting.
 
 The following paragraphs describe the various installation options,
 including building from source when your specific environment provides
