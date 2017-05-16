@@ -104,7 +104,7 @@ project is about, a file called ``control``. Enter a following
    Package: my-awesome-python-software
    Architecture: any
    Pre-Depends: dpkg (>= 1.16.1), python2.7 | python2.6, ${misc:Pre-Depends}
-   Depends: ${python:Depends}, ${misc:Depends}
+   Depends: ${misc:Depends}
    Description: really neat package!
     second line can contain extra information about it.
 
