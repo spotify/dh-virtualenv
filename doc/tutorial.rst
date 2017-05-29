@@ -52,7 +52,7 @@ Steps to do that, after you have cloned the repository, are:
 
 .. code-block:: bash
 
-   sudo apt-get install devscripts python-virtualenv git equivs # Install needed packages
+   sudo apt-get install devscripts python-virtualenv python-sphinx python-sphinx-rtd-theme git equivs # Install needed packages
    git clone https://github.com/spotify/dh-virtualenv.git       # Clone Git repository
    cd dh-virtualenv                                             # Move into the repository
    sudo mk-build-deps -ri                                       # This will install build dependencies
