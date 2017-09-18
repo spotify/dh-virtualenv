@@ -275,7 +275,6 @@ Here's an example of how to use these arguments in your ``rules`` file.
 
                 override_dh_virtualenv:
                 	dh_virtualenv \
-                	--use-system-packages \
                 	--extra-pip-arg "--ignore-installed" \
                 	--extra-pip-arg "--no-deps" \
                 	--extra-pip-arg "--no-cache-dir"
