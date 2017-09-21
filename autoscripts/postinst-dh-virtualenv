@@ -3,7 +3,7 @@ set -e
 #ARGS#
 
 # set to empty to enable verbose output
-test "$DH_VERBOSE" = "1" && DH_VENV_DEBUG="" || DH_VENV_DEBUG=:
+test "${DH_VERBOSE:-0}" = "1" && DH_VENV_DEBUG="" || DH_VENV_DEBUG=:
 $DH_VENV_DEBUG set -x
 
 
