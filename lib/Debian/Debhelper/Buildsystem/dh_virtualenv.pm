@@ -57,7 +57,7 @@ sub get_python {
 
 sub get_pip {
     my $this = shift;
-    return $this->get_exec("pip");
+    return $this->get_exec( $ENV{DH_VIRTUALENV_PIP_EXEC} || "pip");
 }
 
 sub configure {
