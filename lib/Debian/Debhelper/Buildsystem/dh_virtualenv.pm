@@ -57,7 +57,7 @@ sub get_python {
 
 sub get_pip {
     my $this = shift;
-    return $this->get_exec( $ENV{DH_VIRTUALENV_PIP_EXEC} || "pip");
+    return ($this->get_exec("python"), "-m", "pip");
 }
 
 sub configure {
@@ -89,25 +89,25 @@ sub build {
         'virtualenv', @params, Cwd::abs_path($builddir));
 
     my $python = $this->get_python();
-    my $pip = $this->get_pip();
+    my @pip = $this->get_pip();
 
     if (defined $ENV{DH_UPGRADE_PIP}) {
         my $version = length $ENV{DH_UPGRADE_PIP} && '=='.$ENV{DH_UPGRADE_PIP} || '';
         $this->doit_in_sourcedir(
-            $python, $pip, 'install', '-U', 'pip' . $version);
+            @pip, 'install', '-U', 'pip' . $version);
     }
     if (defined $ENV{DH_UPGRADE_SETUPTOOLS}) {
         my $version = length $ENV{DH_UPGRADE_SETUPTOOLS} && '=='.$ENV{DH_UPGRADE_SETUPTOOLS} || '';
         $this->doit_in_sourcedir(
-            $python, $pip, 'install', '-U', 'setuptools' . $version);
+            @pip, 'install', '-U', 'setuptools' . $version);
     }
     if (defined $ENV{DH_UPGRADE_WHEEL}) {
         my $version = length $ENV{DH_UPGRADE_WHEEL} && '=='.$ENV{DH_UPGRADE_WHEEL} || '';
         $this->doit_in_sourcedir(
-            $python, $pip, 'install', '-U', 'wheel' . $version);
+            @pip, 'install', '-U', 'wheel' . $version);
     }
     $this->doit_in_sourcedir(
-        $python, $pip, 'install', '-r', $reqfile, @pipargs);
+        @pip, 'install', '-r', $reqfile, @pipargs);
 }
 
 sub test {
@@ -120,14 +120,14 @@ sub test {
 sub install {
     my $this = shift;
     my $destdir = shift;
-    my $pip = $this->get_pip();
+    my @pip = $this->get_pip();
     my $python = $this->get_python();
     my $sourcepackage = $this->sourcepackage();
     my $venv = $this->get_venv_builddir();
     my $prefix = $this->get_install_root();
 
     $this->doit_in_sourcedir(
-        $python, $pip, 'install', '.');
+        @pip, 'install', '.');
 
     # Before we copy files, let's make the symlinks in the 'usr/local'
     # relative to the build path.

@@ -68,12 +68,6 @@ variables.
    ``/path/to/install/root/<packagename>` unless
    :option:`--install-suffix` is used.
 
-.. envvar:: DH_VIRTUALENV_PIP_EXEC
-
-   Define a custom pip executable. This is useful if you need to
-   use ``pip3`` instead of the default ``pip`` to install
-   dependencies.
-
 Command line options
 ====================
 
