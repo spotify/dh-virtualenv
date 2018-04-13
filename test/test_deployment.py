@@ -117,14 +117,14 @@ def check_shebangs_fix(interpreter, path):
 
     with open(temp.name) as f:
         eq_(f.readline(), expected_shebang)
-        
+
     # Additional test to check for paths wrapped in quotes because they contained space
     # Example:
-    #           #!"/some/local/path/dest/path/bin/python"     
-    # was changed to: 
+    #           #!"/some/local/path/dest/path/bin/python"
+    # was changed to:
     #           #!/dest/path/bin/python"
     # which caused interpreter not found error
-    
+
     with open(temp.name, 'w') as f:
         f.write('#!"/usr/bin/{0}"\n'.format(interpreter))
 
