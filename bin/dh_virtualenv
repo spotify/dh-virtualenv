@@ -65,6 +65,10 @@ def main():
         dh = DebHelper(packages=options.package or None)
     else:
         dh = DebHelper(options)
+    if hasattr(sys, 'real_prefix'):
+        log.error('Already in a virtualenv. This is likely to generate an '
+                  'invalid package (run "deactivate" first?)')
+        return 1
     for package, details in dh.packages.items():
         def _info(msg):
             log.info('{0}: {1}'.format(package, msg))
