@@ -66,6 +66,13 @@ def temporary_dir(fn):
     return _inner
 
 
+def create_new_style_shebang(executable):
+    shebang = '#!/bin/sh\n'
+    shebang += "'''exec' " + executable + ' "$0" "$@"' + '\n'
+    shebang += "' '''\n"
+    return shebang
+
+
 def test_shebangs_fix():
     """Generate a test for each possible interpreter"""
     for interpreter in ('python', 'pypy', 'ipy', 'jython'):
@@ -80,16 +87,21 @@ def test_shebangs_fix_overridden_root():
 
 
 def test_shebangs_fix_special_chars_in_path():
-    """
-    Generate a test for each possible interpreter
-    while overriding root to contain special characters
-    """
+    """Shebang fix: Don't trip on special characters in path"""
     with patch.dict(
         os.environ,
         {'DH_VIRTUALENV_INSTALL_ROOT': 'some-directory:with/special_chars'}):
         for interpreter in ('python', 'pypy', 'ipy', 'jython'):
             yield (check_shebangs_fix, interpreter,
                    'some-directory:with/special_chars/test')
+
+
+def test_shebangs_fix_new_pip_with_over_127_chars():
+    """Shebang fix: Handle new pip with long shebangs"""
+    with patch.dict(
+        os.environ,
+        {'DH_VIRTUALENV_INSTALL_ROOT': 127 * 'p'}):
+        check_shebangs_fix_on_new_pip(127 * 'p' + '/test')
 
 
 def check_shebangs_fix(interpreter, path):
@@ -132,6 +144,29 @@ def check_shebangs_fix(interpreter, path):
 
     with open(temp.name) as f:
         eq_(f.readline(), expected_shebang)
+
+
+def check_shebangs_fix_on_new_pip(path):
+    """Test new pip style shebangs get replaced properly"""
+    deployment = Deployment('test')
+    temp = tempfile.NamedTemporaryFile()
+
+    # We cheat here a little. The fix_shebangs walks through the
+    # project directory, however we can just point to a single
+    # file, as the underlying mechanism is just grep -r.
+    deployment.bin_dir = temp.name
+    build_time_shebang = create_new_style_shebang(os.path.join(
+        deployment.virtualenv_install_dir, 'bin', 'python'))
+    expected_shebang = create_new_style_shebang(os.path.join(
+        path, 'bin/python'))
+
+    with open(temp.name, 'w') as f:
+        f.write(build_time_shebang)
+
+    deployment.fix_shebangs()
+
+    with open(temp.name) as f:
+        eq_(f.read(), expected_shebang)
 
 
 @patch('os.path.exists', lambda x: False)
@@ -483,3 +518,42 @@ def test_fix_local_symlinks_does_not_blow_up_on_missing_local(deployment_dir):
         d = Deployment('testing')
         d.package_dir = deployment_dir
         d.fix_local_symlinks()
+
+
+@temporary_dir
+def test_find_script_files_normal_shebang(bin_dir):
+    d = Deployment('testing')
+    d.bin_dir = bin_dir
+
+    script_files = [os.path.join(bin_dir, s) for s in
+                    ('s1', 's2', 's3')]
+    for script in script_files:
+        with open(os.path.join(bin_dir, script), 'w') as f:
+            f.write('#!/usr/bin/python\n')
+
+    with open(os.path.join(bin_dir, 'n1'), 'w') as f:
+        f.write('#!/bin/bash')
+
+    found_files = sorted(d.find_script_files())
+    eq_(found_files, script_files)
+
+
+@temporary_dir
+def test_find_script_files_long_shebang(bin_dir):
+    d = Deployment('testing')
+    d.bin_dir = bin_dir
+
+    script_files = [os.path.join(bin_dir, s) for s in
+                    ('s1', 's2', 's3')]
+    for script in script_files:
+        with open(os.path.join(bin_dir, script), 'w') as f:
+            # It does not really matter what we write into the
+            # exec statement as executable here
+            f.write(
+                create_new_style_shebang('/usr/bin/python'))
+
+    with open(os.path.join(bin_dir, 'n1'), 'w') as f:
+        f.write('#!/bin/bash')
+
+    found_files = sorted(d.find_script_files())
+    eq_(found_files, script_files)
