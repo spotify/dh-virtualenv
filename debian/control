@@ -3,7 +3,8 @@ Section: python
 Priority: extra
 Maintainer: Jyrki Pulliainen <jyrki@spotify.com>
 Build-Depends: debhelper (>= 9), python(>= 2.6.6-3~),
- python-setuptools, python-sphinx, python-mock
+ python-setuptools, python-sphinx, python-mock, dh-exec,
+ python-sphinx-rtd-theme
 Standards-Version: 3.9.8
 Homepage: http://www.github.com/spotify/dh-virtualenv
 X-Python-Version: >= 2.6
