@@ -1,0 +1,9 @@
+#version: '3'
+test:
+  build: test/docker
+  volumes:
+    - .:/src
+  working_dir: /src
+  command: >
+    bash -c "mk-build-deps -r -i -t 'apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends -y' debian/control
+    && dpkg-buildpackage -us -uc -b -rfakeroot"
