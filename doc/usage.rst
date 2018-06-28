@@ -51,7 +51,7 @@ However, the tool makes a few assumptions of your project's structure:
    project. Sequencer will run ``setup.py install`` to install the
    package inside the virtualenv.
 
-After these are place, you can just build the package with your
+After these are placed, you can just build the package with your
 favorite tool!
 
 Environment variables
