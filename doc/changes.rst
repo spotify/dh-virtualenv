@@ -2,8 +2,11 @@
  Changelog
 ===========
 
-Following list contains most notable changes by version. For full list
-consult the git history of the project.
+Following list contains the most notable changes by version.
+For a full list, consult the `git history`_ of the project.
+
+.. _`git history`: https://github.com/spotify/dh-virtualenv/commits/master
+
 
 1.0
 ===
