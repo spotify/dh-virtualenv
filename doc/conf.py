@@ -77,6 +77,10 @@ today_fmt = '%Y-%m-%d'
 exclude_patterns = [
     '*~',
     '_build',
+    'LICENSE.rst',
+    'README.rst',
+    'modules.rst',
+    'dh_virtualenv.1.rst',
 ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
@@ -133,7 +137,7 @@ if not on_rtd:
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = '_static/img/logo-180px.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
