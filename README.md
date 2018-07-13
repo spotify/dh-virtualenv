@@ -22,7 +22,7 @@ self-contained virtualenv based Python deployments.
 The idea behind dh-virtualenv is to be able to combine the power of
 Debian packaging with the sandboxed nature of virtualenvs. In addition
 to this, using virtualenv enables installing requirements via
-[Python Package Index](http://pypi.python.org) instead of relying on
+[Python Package Index](https://pypi.org) instead of relying on
 the operating system provided Python packages. The only limiting
 factor is that you have to run the same Python interpreter as the
 operating system.
