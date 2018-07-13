@@ -29,7 +29,7 @@ In the debhelper build sequence, ``dh_virtualenv`` is inserted right after ``dh_
 ..
 
 #. :doc:`tutorial` helps you to set up your build machine and then package your first simple project.
-#. :doc:`usage` explains all available feature in more detail.
+#. :doc:`usage` explains all available features in more detail.
 #. The :doc:`howtos` demonstrates specific features and tricks needed for packaging more challenging projects.
 #. The :doc:`trouble-shooting` explains some typical errors you might enounter, and their solution.
 #. To take a look into complete projects, see :doc:`examples`.
