@@ -11,7 +11,7 @@ Overview
 
 ``dh-virtualenv`` is a tool that aims to combine Debian packaging with
 self-contained Python software deployment in a pre-built virtualenv.
-To do this, the package extends debhelper's build sequence by providing
+To do this, the project extends debhelper's build sequence by providing
 the new ``dh_virtualenv`` command.
 
 This new command effectively replaces the following commands in the default sequence:
