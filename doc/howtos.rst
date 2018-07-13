@@ -37,8 +37,8 @@ Adding Node.js to your virtualenv
 
 .. _docker-builds:
 
-Multi-platform builds in Docker containers
-==========================================
+Multi-platform builds in Docker
+===============================
 
 **TODO**
 
