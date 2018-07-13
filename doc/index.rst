@@ -9,7 +9,6 @@ Welcome to dh-virtualenv's documentation!
 Overview
 --------
 
-
 ``dh-virtualenv`` is a tool that aims to combine Debian packaging with
 self-contained Python software deployment in a pre-built virtualenv.
 To do this, the package extends debhelper's build sequence by providing
@@ -42,6 +41,9 @@ Contents of this Manual
    tutorial
    usage
    howtos
+   trouble-shooting
+   examples
+   source
    changes
 
 

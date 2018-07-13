@@ -81,6 +81,7 @@ exclude_patterns = [
     'README.rst',
     'modules.rst',
     'dh_virtualenv.1.rst',
+    'api/modules.rst',
 ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
