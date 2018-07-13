@@ -109,8 +109,8 @@ consult the git history of the project.
   breaks builds that use distutils. For those cases a flag
   :option:`--no-test` needs to be passed.
 * Add tutorial to documentation
-* Don't crash on debbuild parameters :option:`-i` and :option:`-a`
-* Support custom source directory (debhelper's flag :option:`-D`)
+* Don't crash on debbuild parameters ``-i`` and ``-a``
+* Support custom source directory (debhelper's flag ``-D``)
 
 0.6
 ===

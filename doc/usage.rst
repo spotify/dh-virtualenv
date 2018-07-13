@@ -65,7 +65,7 @@ variables.
 
    Define a custom root location to install your package(s). The
    resulting location for a specific package will be
-   ``/path/to/install/root/<packagename>` unless
+   ``/path/to/install/root/<packagename>`` unless
    :option:`--install-suffix` is used.
 
 Command line options
@@ -344,7 +344,7 @@ used to customise the functionality:
       export DH_VIRTUALENV_ARGUMENTS="--no-site-packages --always-copy"
 
    The default is to create the virtual environment with
-   :option:`--no-site-packages`.
+   ``--no-site-packages``.
 
 .. envvar:: DH_VIRTUALENV_INSTALL_SUFFIX
 
