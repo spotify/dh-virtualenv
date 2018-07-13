@@ -4,9 +4,15 @@
 
 This tutorial will guide you through setting up your first project
 using *dh-virtualenv*. Having some knowledge on how Debian packages
-work might help, but it is not a mandatory requirement. You
-also need some basic build tools, so it is recommended to install
-`build-essential` and `devscripts` packages.
+work might help, but it is not a mandatory requirement.
+
+You also need some basic build tools, so you should install these packages:
+
+.. code-block:: shell
+
+    sudo apt-get install build-essential debhelper devscripts equivs
+
+These are only required on the *build host*, not the *target hosts* you later install the built packages on.
 
 
 Step 1: Install dh-virtualenv
