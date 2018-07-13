@@ -9,7 +9,14 @@ Installing on older Debian releases
 **TODO**
 
 
-Fixing common package building problems
-=======================================
+Fixing package building problems
+================================
 
-**TODO**
+
+Fixing package installation problems
+====================================
+
+dpkg: too-long line or missing newline in '…/triggers'
+------------------------------------------------------
+
+**TODO** https://github.com/spotify/dh-virtualenv/pull/84
