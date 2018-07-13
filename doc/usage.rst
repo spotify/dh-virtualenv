@@ -1,6 +1,6 @@
-======================================
- Building packages with dh-virtualenv
-======================================
+==================
+ Package Building
+==================
 
 Building packages with *dh-virtualenv* is relatively easy to start
 with but it also supports lot of customization to fit in your general
