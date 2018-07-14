@@ -11,12 +11,64 @@ that are useful in the context of Python software packaging.
     :local:
 
 
+.. _py3-package:
+
+Building Packages for Python3
+=============================
+
+The Python2 EOL in 2020 is not so far away, so you better start to use
+Python3 for new projects, and port old ones that you expect to survive until then.
+The following is for *Ubuntu Xenial* or *Debian Stretch* with Python 3.5,
+and on *Ubuntu Bionic* you get Python 3.6.
+
+In ``debian/control``, the ``Build-Depends`` and ``Pre-Depends`` lists
+have to refer to Python3 packages.
+
+..
+
+.. code-block:: ini
+
+    Source: py3software
+    Section: contrib/python
+    …
+    Build-Depends: debhelper (>= 9), python3, dh-virtualenv (>= 1.0),
+        python3-setuptools, python3-pip, python3-dev, libffi-dev
+    …
+
+    Package: py3software
+    …
+    Pre-Depends: dpkg (>= 1.16.1), python3 (>= 3.5), ${misc:Pre-Depends}
+
+And the Python update triggers in ``debian/«pkgname».triggers`` need to be adapted, too.
+
+.. code-block:: ini
+
+    …
+    interest-noawait /usr/bin/python3.5
+    …
+
+That's all.
+
+
 .. _fhs-links:
 
 Making executables available
 ============================
 
-**TODO** https://github.com/spotify/dh-virtualenv/issues/227
+To make executables in your virtualenv's ``bin`` directory callable from any shell prompt,
+do **not** add that directory to the global ``PATH`` by a ``profile.d`` hook or similar.
+This would add all the other stuff in there too, and you simply do not want that.
+
+So use the ``debian/«pkgname».links`` file to add a symbolic link to *those* exectuables
+you want to be visible, typically the one created by your main application package.
+
+.. code-block:: ini
+
+    opt/venvs/«venvname»/bin/«cmdname» usr/bin/«cmdname»
+
+Replace the contained ``«placeholders»`` with the correct names.
+Add more links if there are addtional tools, one line per extra executable.
+For ``root``-only commands, use ``usr/sbin/…``.
 
 
 .. _manylinux1:
@@ -32,7 +84,81 @@ Handling binary wheels
 Adding Node.js to your virtualenv
 =================================
 
-**TODO**
+There are polyglot projects with a mix of Python and Javascript code,
+and some of the JS code might be executed server-side in a Node.js runtime.
+A typical example is server-side rendering for Angular apps with `Angular Universal`_.
+
+If you have this requirement, there is a useful helper named ``nodeenv``,
+which extends a Python virtualenv to also support installation of NPM packages.
+
+The following changes in ``debian/control`` require *Node.js* to be available on both
+the build and the target hosts.
+As written, the current LTS version is selected (i.e. `8.x` in mid 2018).
+The `NodeSource packages`_ are recommended to provide that dependency.
+
+.. code-block:: ini
+
+    …
+    Build-Depends: debhelper (>= 9), python3, dh-virtualenv (>= 1.0),
+        python3-setuptools, python3-pip, python3-dev, libffi-dev,
+        nodejs (>= 8), nodejs (<< 9)
+    …
+    Depends: ${shlibs:Depends}, ${misc:Depends}, nodejs (>= 8), nodejs (<< 9)
+    …
+
+
+You also need to extend ``debian/rules`` as follows,
+change the variables in the first section to define different versions and filesystem locations.
+
+.. code-block:: make
+
+    export DH_VIRTUALENV_INSTALL_ROOT=/opt/venvs
+    SNAKE=/usr/bin/python3
+    EXTRA_REQUIREMENTS=--upgrade-pip --preinstall "setuptools>=17.1" --preinstall "wheel"
+    NODEENV_VERSION=1.3.1
+
+    PACKAGE=$(shell dh_listpackages)
+    DH_VENV_ARGS=--setuptools --python $(SNAKE) $(EXTRA_REQUIREMENTS)
+    DH_VENV_DIR=debian/$(PACKAGE)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)
+
+    ifeq (,$(wildcard $(CURDIR)/.npmrc))
+        NPM_CONFIG=~/.npmrc
+    else
+        NPM_CONFIG=$(CURDIR)/.npmrc
+    endif
+
+
+    %:
+            dh $@ --with python-virtualenv $(DH_VENV_ARGS)
+
+    .PHONY: override_dh_virtualenv
+
+    override_dh_virtualenv:
+            dh_virtualenv $(DH_VENV_ARGS)
+            $(DH_VENV_DIR)/bin/python $(DH_VENV_DIR)/bin/pip install nodeenv==$(NODEENV_VERSION)
+            $(DH_VENV_DIR)/bin/nodeenv -C '' -p -n system
+            . $(DH_VENV_DIR)/bin/activate \
+                && node /usr/bin/npm install --userconfig=$(NPM_CONFIG) \
+                        -g configurable-http-proxy
+
+You want to always copy all but the last line literally.
+The lines above it install and embed ``nodeenv`` into the virtualenv
+freshly created by the ``dh_virtualenv`` call.
+Also remember to use TABs in makefiles (``debian/rules`` is one).
+
+The last (logical) line globally installs the ``configurable-http-proxy`` NPM package
+– one important result of using ``-g`` is that Javascript commands appear
+in the ``bin`` directory just like Python ones.
+That in turn means that in the activated virtualenv Python can easily call those JS commands,
+because they're on the ``PATH``.
+
+Change the NPM package name to what you want to install.
+``npm`` uses either a local ``.npmrc`` file in the project root,
+or else the ``~/.npmrc`` one.
+Add local repository URLs and credentials to one of these files.
+
+.. _`NodeSource packages`: https://github.com/nodesource/distributions
+.. _`Angular Universal`: https://universal.angular.io/
 
 
 .. _docker-builds:
@@ -48,4 +174,27 @@ Multi-platform builds in Docker
 Cross-packaging for ARM targets
 ===============================
 
-**TODO** https://github.com/spotify/dh-virtualenv/issues/233
+If you need to create packages that can be installed on ARM architectures,
+but want to use any build host (e.g. a CI worker),
+first install the ``qemu-user-static`` and ``binfmt-support`` packages.
+
+Then build the package by starting a container in QEMU using this ``Dockerfile``.
+
+.. code-block:: make
+
+    FROM arm32v7/debian:latest
+
+    RUN apt-get update && apt-get -y upgrade && apt-get update \
+        && apt-get -y install sudo dpkg-dev debhelper dh-virtualenv python3 python3-venv
+    …
+
+The build might fail from time to time, due to unknown causes (maybe instabilities in QEMU).
+If you get a package out of it, that works 100% fine, however.
+
+See :ref:`example-configsite` for the full project that uses this.
+
+.. epigraph::
+
+   — with input from `@Nadav-Ruskin`_
+
+.. _`@Nadav-Ruskin`: https://github.com/Nadav-Ruskin
