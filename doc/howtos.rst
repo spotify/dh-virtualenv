@@ -76,7 +76,32 @@ For ``root``-only commands, use ``usr/sbin/…``.
 Handling binary wheels
 ======================
 
-**TODO**
+The introduction of `manylinux`_ wheels via `PEP 513`_ is a gift,
+sent by the PyPA community to us lowly developers wanting to use
+packages like Numpy while *not* installing a Fortran compiler just for that.
+
+However, two steps during package building often clash with the contained shared libraries,
+namely *stripping* (reducing the size of symbol tables)
+and scraping package dependecies out of shared libraries (*shlibdeps*).
+
+So if you get errors thrown at you by either ``dh_strip`` or ``dh_shlibdeps``,
+extend your ``debian/rules`` file as outlined below.
+
+.. code-block:: makefile
+
+    .PHONY: override_dh_strip override_dh_shlibdeps
+
+    override_dh_strip:
+            dh_strip --exclude=cffi
+
+    override_dh_shlibdeps:
+            dh_shlibdeps -X/x86/ -X/numpy/.libs -X/scipy/.libs -X/matplotlib/.libs
+
+This example works for the Python data science stack
+– you have to list the packages that cause *you* trouble.
+
+.. _manylinux: https://github.com/pypa/manylinux
+.. _`PEP 513`: https://www.python.org/dev/peps/pep-0513/
 
 
 .. _node-env:
