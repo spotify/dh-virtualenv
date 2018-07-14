@@ -67,7 +67,7 @@ you want to be visible, typically the one created by your main application packa
     opt/venvs/«venvname»/bin/«cmdname» usr/bin/«cmdname»
 
 Replace the contained ``«placeholders»`` with the correct names.
-Add more links if there are addtional tools, one line per extra executable.
+Add more links if there are additional tools, one line per extra executable.
 For ``root``-only commands, use ``usr/sbin/…``.
 
 
