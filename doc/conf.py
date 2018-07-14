@@ -25,6 +25,9 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if not on_rtd:
     import sphinx_rtd_theme
 
+html_style = 'css/custom.css'
+
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
