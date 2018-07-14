@@ -18,7 +18,8 @@ debianized-sentry
 :Author: Jürgen Hermann
 :URL: https://github.com/1and1/debianized-sentry
 
-The project packages `Sentry.io`, adding systemd integration for the Sentry Django/uWSGI app and related helper services.
+The project packages `Sentry.io`, adding systemd integration and default configuration
+for the Sentry Django/uWSGI app and related helper services.
 It also shows how to package 3rd party software as relased on PyPI,
 keeping the packaging code separate from the packaged project.
 
