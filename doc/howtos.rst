@@ -191,7 +191,112 @@ Add local repository URLs and credentials to one of these files.
 Multi-platform builds in Docker
 ===============================
 
-**TODO**
+The code shown here is taken from the :ref:`example-debianized-jupyterhub` project,
+and explains how to build a package in a Docker container.
+
+Why build a package in a container? This is why:
+
+* *repeatable* builds in a *clean* environment
+* explicitly *documented installation* of build requirements *(as code)*
+* easy *multi-distro multi-release builds*
+
+The build is driven by a small shell script named ``build.sh``,
+which we use to get the target platform and some project metadata we already have,
+and feed that into the Dockerfile via simple ``sed`` templating.
+
+So we work on a copy of the Dockerfile, and that is one reason for
+anything in the project workdir that is controlled by git being copied to a staging area (a separate build directory).
+The other reason is performance – we present Docker with a pristine copy of our workdir,
+and so there are no accidents like ``COPY``\ ing a full development virtualenv
+or all of ``.git`` into the container build.
+
+.. rubric:: The build script
+
+Let's get to the code – since we apply the :ref:`node-env` recipe,
+we first set the repository where to get Node.js from.
+
+.. literalinclude:: examples/build.sh
+    :language: shell
+    :end-at: NODEREPO
+
+Next, the given platform and existing project metadata is stored into a bunch of variables.
+
+.. literalinclude:: examples/build.sh
+    :language: shell
+    :start-after: NODEREPO
+    :end-before: Prepare
+
+Based on the collected input parameters, the staging area is set up in the ``build/staging`` directory.
+``tar`` does the selective copy work, and ``sed`` is used to inject dynamic values into the copied files.
+
+.. literalinclude:: examples/build.sh
+    :language: shell
+    :start-at: Prepare
+    :end-before: Build in Docker
+
+After all that prep work, we finally get to build our package.
+The results are copied from ``/dpkg`` where the Dockerfile put them (see below),
+and then the package metadata is shown for a quick visual check if everything looks OK.
+
+.. literalinclude:: examples/build.sh
+    :language: shell
+    :start-at: Build in Docker
+
+
+.. rubric:: The Dockerfile
+
+This is the complete Dockerfile, the important things are the two ``RUN`` directives.
+
+.. literalinclude:: examples/Dockerfile.build
+    :language: docker
+
+The first ``RUN`` installs all the build dependencies on top of the base image.
+The second one then builds the package and makes a copy of the resulting files,
+for the build script to pick them up.
+
+
+.. rubric:: Putting it all together
+
+Here's a sample run of building for *Ubuntu Bionic*.
+
+.. code-block:: console
+
+    $ ./build.sh ubuntu:bionic
+    Sending build context to Docker daemon    106kB
+    Step 1/6 : FROM ubuntu:bionic AS dpkg-build
+    …
+    Successfully tagged debianized-jupyterhub-ubuntu-bionic:latest
+    ./
+    ./jupyterhub_0.9.1-1~bionic_amd64.deb
+    ./jupyterhub_0.9.1-1~bionic_amd64.buildinfo
+    ./jupyterhub-dbgsym_0.9.1-1~bionic_amd64.ddeb
+    ./jupyterhub_0.9.1-1~bionic_amd64.changes
+     new debian package, version 2.0.
+     size 265372284 bytes: control archive=390780 bytes.
+          84 bytes,     3 lines      conffiles
+        1214 bytes,    25 lines      control
+     2350661 bytes, 17055 lines      md5sums
+        4369 bytes,   141 lines   *  postinst             #!/bin/sh
+        1412 bytes,    47 lines   *  postrm               #!/bin/sh
+         696 bytes,    35 lines   *  preinst              #!/bin/sh
+        1047 bytes,    41 lines   *  prerm                #!/bin/sh
+         217 bytes,     6 lines      shlibs
+         419 bytes,    10 lines      triggers
+     Package: jupyterhub
+     Version: 0.9.1-1~bionic
+     Architecture: amd64
+     Maintainer: 1&1 Group <jh@web.de>
+     Installed-Size: 563574
+     Pre-Depends: dpkg (>= 1.16.1), python3 (>= 3.5)
+     Depends: perl:any, libc6 (>= 2.25), libexpat1 (>= 2.1~beta3), libgcc1 (>= 1:4.0), …
+     Suggests: oracle-java8-jre | openjdk-8-jre | zulu-8
+     Section: contrib/python
+     Priority: extra
+     Homepage: https://github.com/1and1/debianized-jupyterhub
+     Description: Debian packaging of JupyterHub, a multi-user server for Jupyter notebooks.
+    …
+
+The package files are now in ``build/``, and you can ``dput`` them into your local repository.
 
 
 .. _cross-package:
