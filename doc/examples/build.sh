@@ -30,4 +30,4 @@ sed -r -e s/#UUID#/$(< /proc/sys/kernel/random/uuid)/g \
 # Build in Docker container, save results, and show package info
 docker build --tag $tag "$@" $staging_dir
 docker run --rm $tag tar -C /dpkg -c . | tar -C build -xv
-dpkg-deb -I build/${pkgname}_*.deb
+dpkg-deb -I build/${pkgname}_*~${codename}*.deb
