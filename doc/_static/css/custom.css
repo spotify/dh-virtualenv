@@ -1,0 +1,11 @@
+/* Custom styles */
+
+@import url("theme.css");
+
+body {
+    color: black;
+}
+
+blockquote.epigraph {
+    transform: skew(-15deg, 0deg);
+}

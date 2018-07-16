@@ -25,6 +25,9 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if not on_rtd:
     import sphinx_rtd_theme
 
+html_style = 'css/custom.css'
+
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -51,7 +54,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = meta["name"]
-copyright = u'2013-2017 Spotify AB'
+copyright = u'2013-2018 Spotify AB'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -77,6 +80,11 @@ today_fmt = '%Y-%m-%d'
 exclude_patterns = [
     '*~',
     '_build',
+    'LICENSE.rst',
+    'README.rst',
+    'modules.rst',
+    'dh_virtualenv.1.rst',
+    'api/modules.rst',
 ]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
@@ -133,7 +141,7 @@ if not on_rtd:
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+##html_logo = '_static/img/logo-180px.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32

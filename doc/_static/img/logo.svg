@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 445.555 445.555"
+   style="enable-background:new 0 0 445.555 445.555;"
+   xml:space="preserve"
+   inkscape:version="0.48.3.1 r9886"
+   width="100%"
+   height="100%"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="logo-180px.png"
+   inkscape:export-xdpi="36.35915"
+   inkscape:export-ydpi="36.35915"><metadata
+   id="metadata45"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs43" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="640"
+   inkscape:window-height="480"
+   id="namedview41"
+   showgrid="false"
+   inkscape:zoom="0.75860444"
+   inkscape:cx="222.7775"
+   inkscape:cy="222.7775"
+   inkscape:window-x="136"
+   inkscape:window-y="145"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="Layer_1" />
+<g id="g3">
+  <polygon
+   points="237.777,243.019 237.777,445.555 409.166,337.631 409.167,135.095  "
+   id="polygon5"
+   style="fill:#ffcc33;fill-opacity:1" />
+  <polygon
+   points="222.777,0 50.463,108.506 222.777,217.012 395.092,108.506  "
+   id="polygon7"
+   style="fill:#e7548d;fill-opacity:1" />
+  <polygon
+   points="36.388,337.631 207.777,445.555 207.777,243.019 36.388,135.095  "
+   id="polygon9"
+   style="fill:#366f9f;fill-opacity:1" />
+</g>
+</svg>

@@ -1,12 +1,19 @@
-========
-Tutorial
-========
+=================
+ Getting Started
+=================
 
 This tutorial will guide you through setting up your first project
 using *dh-virtualenv*. Having some knowledge on how Debian packages
-work might help, but it is not a mandatory requirement. You
-also need some basic build tools, so it is recommended to install
-`build-essential` and `devscripts` packages.
+work might help, but it is not a mandatory requirement when working
+on simple projects.
+
+You also need some basic build tools, so you should install these packages:
+
+.. code-block:: shell
+
+    sudo apt-get install build-essential debhelper devscripts equivs
+
+These are only required on the *build host*, not the *target hosts* you later install the built packages on.
 
 
 Step 1: Install dh-virtualenv
@@ -68,8 +75,8 @@ Steps to do that, after you have cloned the repository, are:
 .. _`this PPA`: https://launchpad.net/~spotify-jyrki/+archive/ubuntu/dh-virtualenv
 
 
-Step 2: Setup the Debian packaging
-==================================
+Step 2: Set up Debian packaging
+===============================
 
 Grab your favourite Python project you want to use *dh-virtualenv*
 with and set it up. Only requirement is that your project has a
@@ -123,7 +130,9 @@ named your package in the ``control`` file. It triggers a special script
 whenever the Python binary changes; don't worry, that script is provided
 by ``dh-virtualenv`` automatically.
 
-.. code-block:: «pkgname».triggers
+.. rubric:: «pkgname».triggers
+
+.. code-block:: ini
 
    # Register interest in Python interpreter changes (Python 2 for now); and
    # don't make the Python package dependent on the virtualenv package
@@ -172,4 +181,4 @@ Step 3: Build your project
 ==========================
 
 Now you can just build your project by running ``dpkg-buildpackage -us
--uc``. Enjoy your newly baked *dh-virtualenv* backed project! :)
+-uc``. Enjoy your newly baked *dh-virtualenv* backed project! ☺
