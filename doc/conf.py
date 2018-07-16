@@ -54,7 +54,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = meta["name"]
-copyright = u'2013-2018 Spotify AB and contributors'
+copyright = u'2013-2018 Spotify AB'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -141,7 +141,7 @@ if not on_rtd:
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = '_static/img/logo-180px.png'
+##html_logo = '_static/img/logo-180px.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
