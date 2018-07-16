@@ -25,7 +25,10 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if not on_rtd:
     import sphinx_rtd_theme
 
-html_style = 'css/custom.css'
+# https://docs.readthedocs.io/en/latest/guides/adding-custom-css.html
+def setup(app):
+    app.add_stylesheet('css/custom.css')
+    #app.add_javascript('js/custom.js')
 
 
 # -- General configuration -----------------------------------------------------
