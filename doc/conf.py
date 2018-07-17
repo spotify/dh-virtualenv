@@ -54,7 +54,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = meta["name"]
-copyright = u'2013-2018 Spotify AB'
+copyright = u'2013-2018 Spotify AB and contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
