@@ -117,7 +117,7 @@ few command line options:
 
    .. versionadded:: 1.1
 
-   Name of extras defined in the main package (specifically it's ``setup.py``, in ``extras_require``).
+   Name of extras defined in the main package (specifically its ``setup.py``, in ``extras_require``).
    You can pass this multiple times to add different extra requirements.
 
 .. cmdoption:: --pip-tool <exename>
