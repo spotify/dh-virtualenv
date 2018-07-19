@@ -92,6 +92,9 @@ def get_default_parser():
                       help=('package to install before processing '
                             'requirements.txt.'),
                       default=[])
+    parser.add_option('--extras', action='append',
+                      help=('Activate extras of the main package.'),
+                      default=[])
     parser.add_option('--pip-tool', default='pip',
                       help="Executable that will be used to install "
                       "requirements after the preinstall stage. Usually "

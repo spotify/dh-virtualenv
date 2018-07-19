@@ -113,6 +113,13 @@ few command line options:
    to parse ``setup.py``, and can be provided multiple times to
    pass multiple packages for pre-install.
 
+.. cmdoption:: --extras <name>
+
+   .. versionadded:: 1.1
+
+   Name of extras defined in the main package (specifically its ``setup.py``, in ``extras_require``).
+   You can pass this multiple times to add different extra requirements.
+
 .. cmdoption:: --pip-tool <exename>
 
    Executable that will be used to install requirements after the

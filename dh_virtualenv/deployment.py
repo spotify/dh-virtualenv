@@ -34,6 +34,7 @@ class Deployment(object):
                  package,
                  extra_urls=[],
                  preinstall=[],
+                 extras=[],
                  pip_tool='pip',
                  upgrade_pip=False,
                  index_url=None,
@@ -67,6 +68,7 @@ class Deployment(object):
         self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
 
         self.preinstall = preinstall
+        self.extras = extras
         self.upgrade_pip = upgrade_pip
         self.extra_virtualenv_arg = extra_virtualenv_arg
         self.log_file = tempfile.NamedTemporaryFile()
@@ -107,6 +109,7 @@ class Deployment(object):
         return cls(package,
                    extra_urls=options.extra_index_url,
                    preinstall=options.preinstall,
+                   extras=options.extras,
                    pip_tool=options.pip_tool,
                    upgrade_pip=options.upgrade_pip,
                    index_url=options.index_url,
@@ -243,7 +246,8 @@ class Deployment(object):
 
     def install_package(self):
         if not self.skip_install:
-            subprocess.check_call(self.pip('.'), cwd=os.path.abspath(self.sourcedirectory))
+            package = '.[{}]'.format(','.join(self.extras)) if self.extras else '.'
+            subprocess.check_call(self.pip(package), cwd=os.path.abspath(self.sourcedirectory))
 
     def fix_local_symlinks(self):
         # The virtualenv might end up with a local folder that points outside the package
