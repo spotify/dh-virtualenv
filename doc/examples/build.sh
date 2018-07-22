@@ -20,11 +20,12 @@ staging_dir="build/staging"
 rm -rf $staging_dir 2>/dev/null || true
 mkdir -p $staging_dir
 git ls-files >build/git-files
+test ! -f .npmrc || echo .npmrc >>build/git-files
 tar -c --files-from build/git-files | tar -C $staging_dir -x
 sed -i -r -e 1s/stretch/$codename/g $staging_dir/debian/changelog
 sed -r -e s/#UUID#/$(< /proc/sys/kernel/random/uuid)/g \
     -e s/#DIST_ID#/$dist_id/g -e s/#CODENAME#/$codename/g \
-    -e s/#NODEREPO#/$NODEREPO/ -e s/#PYPI#/$pypi_name/ -e s/#PKGNAME#/$pkgname/ \
+    -e s/#NODEREPO#/$NODEREPO/g -e s/#PYPI#/$pypi_name/g -e s/#PKGNAME#/$pkgname/g \
     <Dockerfile.build >$staging_dir/Dockerfile
 
 # Build in Docker container, save results, and show package info
