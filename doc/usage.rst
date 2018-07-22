@@ -76,35 +76,35 @@ Command line options
 To change its default behavior, the ``dh_virtualenv`` command accepts a
 few command line options:
 
-.. cmdoption:: -p <package>, --package <package>
+.. option:: -p <package>, --package <package>
 
    Act on the package named *<package>*.
 
-.. cmdoption:: -N <package>, --no-package <package>
+.. option:: -N <package>, --no-package <package>
 
    Do not act on the specified package.
 
-.. cmdoption:: -v, --verbose
+.. option:: -v, --verbose
 
    Turn on verbose mode. This has a few effects: it sets the root logger
    level to ``DEBUG``, and passes the verbose flag to ``pip`` when
    installing packages. This can also be provided using the standard
    ``DH_VERBOSE`` environment variable.
 
-.. cmdoption:: --install-suffix <suffix>
+.. option:: --install-suffix <suffix>
 
    Override virtualenv installation suffix. The suffix is appended to
    ``/opt/venvs``, or the :envvar:`DH_VIRTUALENV_INSTALL_ROOT`
    environment variable if specified, to construct the installation
    path.
 
-.. cmdoption:: --extra-index-url <url>
+.. option:: --extra-index-url <url>
 
    Use extra index url *<url>* when running ``pip`` to install
    packages. This can be provided multiple times to pass multiple URLs
    to ``pip``. A common use-case is enabling a private Python package repository.
 
-.. cmdoption:: --preinstall <package>
+.. option:: --preinstall <package>
 
    Package to install before processing the requirements. This flag
    can be used to provide a package that is installed by ``pip``
@@ -113,21 +113,21 @@ few command line options:
    to parse ``setup.py``, and can be provided multiple times to
    pass multiple packages for pre-install.
 
-.. cmdoption:: --extras <name>
+.. option:: --extras <name>
 
    .. versionadded:: 1.1
 
    Name of extras defined in the main package (specifically its ``setup.py``, in ``extras_require``).
    You can pass this multiple times to add different extra requirements.
 
-.. cmdoption:: --pip-tool <exename>
+.. option:: --pip-tool <exename>
 
    Executable that will be used to install requirements after the
    preinstall stage.  Usually you'll install this program by using the
    ``--preinstall`` argument. The replacement is expected to be found
    in the virtualenv's ``bin/`` directory.
 
-.. cmdoption:: --upgrade-pip
+.. option:: --upgrade-pip
 
    .. versionadded:: 1.0
 
@@ -141,7 +141,7 @@ few command line options:
 
    *Note:* This can produce non-repeatable builds.
 
-.. cmdoption:: --index-url <URL>
+.. option:: --index-url <URL>
 
    Base URL of the PyPI server. This flag can be used to pass in a
    custom URL to a PyPI mirror. It's useful if you have an
@@ -150,7 +150,7 @@ few command line options:
    default will be whatever ``pip`` uses as default (usually the API of
    ``https://pypi.org/``).
 
-.. cmdoption:: --extra-pip-arg <PIP ARG>
+.. option:: --extra-pip-arg <PIP ARG>
 
    Extra arguments to pass to the pip executable. This is useful if
    you need to change the behaviour of pip during the packaging process.
@@ -160,13 +160,13 @@ few command line options:
    ``override_dh_virtualenv`` rule in the ``debian/rules`` file will
    disable the generation of ``*.pyc`` files.
 
-.. cmdoption:: --extra-virtualenv-arg <VIRTUALENV ARG>
+.. option:: --extra-virtualenv-arg <VIRTUALENV ARG>
 
    Extra parameters to pass to the virtualenv executable. This is useful if
    you need to change the behaviour of virtualenv during the packaging process.
    You can use this flag multiple times to pass in different virtualenv flags.
 
-.. cmdoption:: --requirements <REQUIREMENTS FILE>
+.. option:: --requirements <REQUIREMENTS FILE>
 
    Use a different requirements file when installing. Some packages
    such as `pbr <http://docs.openstack.org/developer/pbr/>`_ expect
@@ -176,11 +176,11 @@ few command line options:
    ``requirements.txt`` file that may include pip specific flags such
    as ``-i``, ``-r-`` and ``-e``.
 
-.. cmdoption:: --setuptools
+.. option:: --setuptools
 
    Use setuptools instead of distribute in the virtualenv.
 
-.. cmdoption:: --setuptools-test
+.. option:: --setuptools-test
 
    .. versionadded:: 1.0
 
@@ -188,13 +188,13 @@ few command line options:
    the old default behaviour before version 1.0. This option is
    incompatible with the deprecated :option:`--no-test`.
 
-.. cmdoption:: --python <path>
+.. option:: --python <path>
 
    Use a specific Python interpreter found in ``path`` as the
    interpreter for the virtualenv. Default is to use the system
    default, usually ``/usr/bin/python``.
 
-.. cmdoption:: --builtin-venv
+.. option:: --builtin-venv
 
    Enable the use of the build-in ``venv`` module, i.e. use ``python -m venv``
    to create the virtualenv. It will only work with Python 3.4 or later,
@@ -203,12 +203,12 @@ few command line options:
    ``venv`` module, but virtualenvs created with Python 3.3 are not
    bootstrapped with setuptools or pip.)
 
-.. cmdoption:: -S, --use-system-packages
+.. option:: -S, --use-system-packages
 
    Enable the use of system site-packages in the created virtualenv
    by passing the ``--system-site-packages`` flag to ``virtualenv``.
 
-.. cmdoption:: --skip-install
+.. option:: --skip-install
 
    Skip running ``pip install .`` after dependencies have been
    installed. This will result in anything specified in ``setup.py`` being
@@ -223,12 +223,12 @@ few command line options:
    Typically, the ``debian/«packagename».install`` file is used
    to place the application at a location outside of the virtual environment.
 
-.. cmdoption:: --pypi-url <URL>
+.. option:: --pypi-url <URL>
 
    .. deprecated:: 1.0
       Use :option:`--index-url` instead.
 
-.. cmdoption:: --no-test
+.. option:: --no-test
 
    .. deprecated:: 1.0
       This option has no effect. See :option:`--setuptools-test`.
