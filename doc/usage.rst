@@ -271,7 +271,7 @@ With those caveats, here are some tips for making pip and dh_virtual work
 inside pbuilder.
 
 If you want pip to retrieve packages from the network, you need to
-add ``USE_NETWORK=yes`` to your /etc/pbuilderrc or ~/.pbuilderrc file.
+add ``USENETWORK=yes`` to your /etc/pbuilderrc or ~/.pbuilderrc file.
 
 pip has several options that can be used to make it more compatible
 with pbuilder.
