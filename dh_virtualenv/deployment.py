@@ -129,6 +129,7 @@ class Deployment(object):
         shutil.rmtree(self.debian_root)
 
     def create_virtualenv(self):
+        # Specify interpreter and virtual environment options
         if self.builtin_venv:
             virtualenv = [self.python, '-m', 'venv']
         else:
@@ -154,6 +155,15 @@ class Deployment(object):
 
         virtualenv.append(self.package_dir)
         subprocess.check_call(virtualenv)
+
+        # Due to Python bug https://bugs.python.org/issue24875
+        # venv doesn't bootstrap pip/setuptools in the virtual
+        # environment with --system-site-packages .
+        # The workaround is to reconfigure it with this option
+        # after it has been created.
+        if self.builtin_venv and self.use_system_packages:
+            virtualenv.append('--system-site-packages')
+            subprocess.check_call(virtualenv)
 
     def venv_bin(self, binary_name):
         return os.path.abspath(os.path.join(self.bin_dir, binary_name))
