@@ -310,7 +310,7 @@ first install the ``qemu-user-static`` and ``binfmt-support`` packages.
 
 Then build the package by starting a container in QEMU using this ``Dockerfile``.
 
-.. code-block:: make
+.. code-block:: docker
 
     FROM arm32v7/debian:latest
 
