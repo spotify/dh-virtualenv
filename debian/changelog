@@ -1,3 +1,9 @@
+dh-virtualenv (1.1-0.1) UNRELEASED; urgency=medium
+
+  * Release 1.1
+
+ -- Jyrki Pulliainen <jyrki@spotify.com>  Tue, 04 Sep 2018 16:02:18 +0200
+
 dh-virtualenv (1.0-1) unstable; urgency=medium
 
   * New upstream release
