@@ -3,9 +3,9 @@ Section: python
 Priority: optional
 Maintainer: Jyrki Pulliainen <jyrki@spotify.com>
 Build-Depends: debhelper (>= 9), python(>= 2.6.6-3~),
- python-setuptools, python-sphinx, python-mock, dh-exec,
+ python-setuptools, python-sphinx, python-mock, dh-exec, dh-python,
 # python-sphinx-rtd-theme doesn't exist in distributions
-# predating Debian Jessie and Ubuntu Xenial. On these legacy 
+# predating Debian Jessie and Ubuntu Xenial. On these legacy
 # systems:
 # 1. Comment the dependency below.
 # 2. pip install sphinx_rtd_theme.
@@ -17,7 +17,7 @@ Homepage: http://www.github.com/spotify/dh-virtualenv
 
 Package: dh-virtualenv
 Architecture: all
-Depends: ${python:Depends}, ${misc:Depends},  ${sphinxdoc:Depends},
+Depends: ${python:Depends}, ${misc:Depends}, ${sphinxdoc:Depends},
  virtualenv | python-virtualenv (>= 1.7)
 Description: wrap and build python packages using virtualenv
  This package provides a dh sequencer that helps you to deploy your
