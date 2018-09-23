@@ -18,11 +18,14 @@
 # <http://www.gnu.org/licenses/>.
 
 """Helpers to handle debhelper command line options."""
+from __future__ import absolute_import
 
 import os
 import warnings
 
 from optparse import OptionParser, SUPPRESS_HELP, OptionValueError
+
+from ._version import version
 
 
 class DebhelperOptionParser(OptionParser):
@@ -76,7 +79,7 @@ def _check_for_deprecated_options(
 
 def get_default_parser():
     usage = '%prog [options]'
-    parser = DebhelperOptionParser(usage, version='%prog 1.0')
+    parser = DebhelperOptionParser(usage, version='%prog ' + version)
     parser.add_option('-p', '--package', action='append',
                       help='act on the package named PACKAGE')
     parser.add_option('-N', '--no-package', action='append',

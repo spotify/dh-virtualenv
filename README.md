@@ -100,6 +100,20 @@ To **start a watchdog that auto-rebuilds documentation** and reloads the opened 
 call ``invoke docs -w -b`` (stop the watchdog using the ``-k`` option).
 
 
+## Releasing a new version
+
+Follow these steps when creating a new release:
+
+1. Check version in `dh_virtualenv/_version.py` and `debian/changelog`.
+1. Make sure `doc/changes.rst` is complete.
+1. Sync `debian/changelog` with `doc/changes.rst`.
+1. Tag the release and `git push --tags`.
+1. Edit release entry on GitHub (add changes).
+1. Bump to next release version in `dh_virtualenv/_version.py`.
+1. Open new section in `debian/changelog` (with `…-0.1+dev` added).
+1. Open a new section in `doc/changes.rst`, so it can be maintained as features are added!
+
+
 ## Code of conduct
 
 This project adheres to the [Open Code of Conduct][code-of-conduct].

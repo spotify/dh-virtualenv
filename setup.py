@@ -18,17 +18,28 @@
 # along with dh-virtualenv. If not, see
 # <http://www.gnu.org/licenses/>.
 
+import io
+import re
+import os
 import sys
 import json
 
 from setuptools import setup
 
-project = dict(
+version_py = os.path.join(os.path.dirname(__file__), "dh_virtualenv", "_version.py")
+project = {}
+with io.open(version_py, 'r', encoding='utf-8') as handle:
+    for line in handle:
+        try:
+            key, value = re.match(r"^(\w+) ?= ?u?'(.+?)'$", line).groups()
+        except (AttributeError, TypeError, ValueError):
+            pass
+        else:
+            project[key] = value
+assert all(x in project for x in ('version', 'author', 'author_email', 'url')), 'Bad metadata in _version.py!'
+
+project.update(
     name='dh_virtualenv',
-    version='1.0',
-    author=u'Jyrki Pulliainen',
-    author_email='jyrki@spotify.com',
-    url='https://github.com/spotify/dh-virtualenv',
     description='Debian packaging sequence for Python virtualenvs.',
     license='GNU General Public License v2 or later',
     scripts=['bin/dh_virtualenv'],

@@ -29,3 +29,4 @@ debian/*.debhelper
 debian/*.substvars
 debian/dh-virtualenv/
 debian/files
+debian/debhelper-build-stamp

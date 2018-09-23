@@ -9,16 +9,16 @@ dh\_virtualenv package
 Submodules
 ----------
 
-dh\_virtualenv.cmdline module
------------------------------
+dh\_virtualenv\.cmdline module
+------------------------------
 
 .. automodule:: dh_virtualenv.cmdline
     :members:
     :undoc-members:
     :show-inheritance:
 
-dh\_virtualenv.deployment module
---------------------------------
+dh\_virtualenv\.deployment module
+---------------------------------
 
 .. automodule:: dh_virtualenv.deployment
     :members:
