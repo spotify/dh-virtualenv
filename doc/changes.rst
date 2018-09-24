@@ -21,6 +21,8 @@ For a full list, consult the `git history`_ of the project.
 * buildsystem: Allow to specify a virtualenv name (#180) [@dzen]
 * docs: Improved structure, new chapters [@jhermann]
 * docs: Fix reference to pbuilder's USENETWORK option (#246) [@mkohler]
+* Fix setuptools and pip setup when using built-in virtualenv with
+  :option:`--system-site-packages` (#247) [@lucasrangit]
 
 
 1.0
