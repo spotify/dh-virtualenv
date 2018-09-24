@@ -199,9 +199,7 @@ few command line options:
    Enable the use of the build-in ``venv`` module, i.e. use ``python -m venv``
    to create the virtualenv. It will only work with Python 3.4 or later,
    e.g. by using the option
-   :option:`--python` ``/usr/bin/python3.4``. (Python 3.3 has the
-   ``venv`` module, but virtualenvs created with Python 3.3 are not
-   bootstrapped with setuptools or pip.)
+   :option:`--python` ``/usr/bin/python3.4``.
 
 .. option:: -S, --use-system-packages
 
