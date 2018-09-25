@@ -9,7 +9,9 @@
   * [Using dh-virtualenv](#using-dh-virtualenv)
   * [How does it work?](#how-does-it-work)
   * [Running tests](#running-tests)
+  * [Building the package in a Docker container](#building-the-package-in-a-docker-container)
   * [Building the documentation locally](#building-the-documentation-locally)
+  * [Releasing a new version](#releasing-a-new-version)
   * [Code of conduct](#code-of-conduct)
   * [License](#license)
 
