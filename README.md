@@ -99,6 +99,8 @@ The resulting files must be copied out of the build container, using these comma
 mkdir -p dist && docker run --rm dh-venv-builder tar -C /dpkg -c . | tar -C dist -xv
 ```
 
+There is also a short-cut for all this, in the form of ``invoke bdist_deb``.
+
 
 ## Building the documentation locally
 
