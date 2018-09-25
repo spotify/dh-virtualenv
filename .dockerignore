@@ -1,0 +1,17 @@
+# Dockerignore for package building container
+.git/
+.tox/
+.venv/
+build/
+dist/
+*~
+*.egg-info/
+*.py[co]
+.pip-cache/
+debian/debhelper-build-stamp
+debian/files
+debian/*.debhelper
+debian/*.substvars
+debian/sdist/
+debian/dh-virtualenv/
+debian/dh-virtualenv-*.*/
