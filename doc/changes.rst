@@ -8,6 +8,9 @@ For a full list, consult the `git history`_ of the project.
 .. _`git history`: https://github.com/spotify/dh-virtualenv/commits/master
 
 
+1.2 (UNRELEASED)
+================
+
 1.1
 ===
 
