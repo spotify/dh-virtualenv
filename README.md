@@ -9,7 +9,9 @@
   * [Using dh-virtualenv](#using-dh-virtualenv)
   * [How does it work?](#how-does-it-work)
   * [Running tests](#running-tests)
+  * [Building the package in a Docker container](#building-the-package-in-a-docker-container)
   * [Building the documentation locally](#building-the-documentation-locally)
+  * [Releasing a new version](#releasing-a-new-version)
   * [Code of conduct](#code-of-conduct)
   * [License](#license)
 
@@ -83,6 +85,21 @@ In the new sequence, `dh_virtualenv` is inserted right before `dh_installinit`.
 ## Running tests
 
     $ nosetests ./test/test_deployment.py
+
+
+## Building the package in a Docker container
+
+To build ``dh-virtualenv`` itself in a Docker container, call ``docker build --tag dh-venv-builder .``.
+This will build the DEB package for Debian stable by default.
+Add e.g. ``--build-arg distro=ubuntu:bionic`` to build for Ubuntu LTS instead.
+
+The resulting files must be copied out of the build container, using these commands:
+
+```sh
+mkdir -p dist && docker run --rm dh-venv-builder tar -C /dpkg -c . | tar -C dist -xv
+```
+
+There is also a short-cut for all this, in the form of ``invoke bdist_deb``.
 
 
 ## Building the documentation locally

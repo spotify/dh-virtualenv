@@ -10,6 +10,7 @@
 
 # Build files
 build/
+dist/
 dh_virtualenv.egg-info/
 .tox
 
