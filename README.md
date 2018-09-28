@@ -123,7 +123,7 @@ Follow these steps when creating a new release:
 
 1. Check version in `dh_virtualenv/_version.py` and `debian/changelog`.
 1. Make sure `doc/changes.rst` is complete.
-1. Sync `debian/changelog` with `doc/changes.rst`.
+1. Bump release date in `debian/changelog` (`dch -r`).
 1. Tag the release and `git push --tags`.
 1. Edit release entry on GitHub (add changes).
 1. Bump to next release version in `dh_virtualenv/_version.py`.
