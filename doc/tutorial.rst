@@ -13,25 +13,35 @@ You also need some basic build tools, so you should install these packages:
 
     sudo apt-get install build-essential debhelper devscripts equivs
 
-These are only required on the *build host*, not the *target hosts* you later install the built packages on.
+These are only required on the *build host*,
+not the *target hosts* you later install the built packages on.
+
+If you perform your :ref:`package builds in a Docker container <docker-builds>`,
+you can also skip installing these tools, because then only ``docker-ce`` is needed.
 
 
 Step 1: Install dh-virtualenv
 =============================
 
+.. rubric:: Overview
+
 In order to use it, you need to install *dh-virtualenv* as a debhelper add-on
 on the build host. For Debian and Ubuntu, there are pre-built packages for
 the 1.0 version available – note that some of this info might get outdated over time,
-so take extra care to check the version numbers you're actually getting.
+so take extra care to check the version numbers you're actually getting vs. what features you need.
 
 The following paragraphs describe the various installation options,
 including building from source when your specific environment provides
 no packages or only older versions.
-Using pre-1.0 versions might be possible, but you don't get all features described in this document,
+
+Using pre-1.1 versions is possible, but you don't get all features described in this document,
 and not all projects using dh-virtualenv might work with older versions
 (check their documentation).
 
-To install on *Jessie* (Debian stable) from `their package repositories`_, use these commands:
+.. rubric:: Package installation from OS repositories
+
+On Debian *Stretch* (stable) it is a simple ``apt install dh-virtualenv`` to get v1.0 installed.
+To install on *Jessie* (oldstable) from `their package repositories`_, use these commands:
 
 .. code-block:: bash
 
@@ -40,33 +50,46 @@ To install on *Jessie* (Debian stable) from `their package repositories`_, use t
     sudo apt-get update -qq
     sudo apt-get install -t jessie-backports dh-virtualenv
 
-Note that only ``jessie-backports`` offers the 1.0 version.
-Newer versions (Stretch and Sid) provide 1.0 out-of-the-box.
-
-In the `official Ubuntu repositories`_, *Zesty* provides a package
-that works on older releases too. So on *Zesty* use a standard ``apt-get`` install,
-and on older releases do this:
-
-.. code-block:: bash
-
-    ( cd /tmp && curl -LO "http://mirrors.kernel.org/ubuntu/pool/universe/d/dh-virtualenv/dh-virtualenv_1.0-1_all.deb" )
-    sudo dpkg -i /tmp/dh-virtualenv_1.0-1_all.deb
+Note that ``jessie-backports`` also only offers the 1.0 version.
 
 Another option to check out for *Ubuntu* is `this PPA`_, maintained by the author.
 
-For all other systems you have to build and install the tool yourself.
-Steps to do that, after you have cloned the repository, are:
+It is also possible to get newer versions from Debian testing (sid)
+or recent releases in the `official Ubuntu repositories`_.
+Since dh-virtualenv has the ``all`` architecture (contains no native code),
+that is generally possible, but you might need to take extra care of dependencies.
+The recommendation is to only follow that route in :ref:`Docker container builds <docker-builds>`,
+where manipulating dependencies has no lasting effect
+– don't do that on your workstation.
+
+.. rubric:: Build your own package
+
+For all other platforms you have to build and install the tool yourself.
+The easiest way (since v1.1) is to build the package using Docker
+with the ``invoke bdist_deb`` command in a boot-strapped working directory,
+see the README for details on that.
+Using Docker also allows cross-distribution builds.
+
+Otherwise, after you have cloned the repository,
+you must install build tools and dependencies on your worksatation,
+and then start the build:
 
 .. code-block:: bash
 
-   sudo apt-get install devscripts python-virtualenv python-sphinx python-sphinx-rtd-theme git equivs # Install needed packages
-   git clone https://github.com/spotify/dh-virtualenv.git       # Clone Git repository
-   cd dh-virtualenv                                             # Move into the repository
-   sudo mk-build-deps -ri                                       # This will install build dependencies
-   dpkg-buildpackage -us -uc -b                                 # Build the *dh-virtualenv* package
+   # Install needed packages
+   sudo apt-get install devscripts python-virtualenv python-sphinx \
+                        python-sphinx-rtd-theme git equivs
+   # Clone git repository
+   git clone https://github.com/spotify/dh-virtualenv.git
+   # Change into working directory
+   cd dh-virtualenv
+   # This will install build dependencies
+   sudo mk-build-deps -ri
+   # Build the *dh-virtualenv* package
+   dpkg-buildpackage -us -uc -b
 
-   # and finally, install it (you might have to solve some
-   # dependencies when doing this):
+   # And finally, install it (you might have to solve some
+   # dependencies when doing this)
    sudo dpkg -i ../dh-virtualenv_<version>.deb
 
 
@@ -75,17 +98,30 @@ Steps to do that, after you have cloned the repository, are:
 .. _`this PPA`: https://launchpad.net/~spotify-jyrki/+archive/ubuntu/dh-virtualenv
 
 
-Step 2: Set up Debian packaging
-===============================
+Step 2: Set up packaging for your project
+=========================================
 
 Grab your favourite Python project you want to use *dh-virtualenv*
 with and set it up. Only requirement is that your project has a
 somewhat sane ``setup.py`` and requirements listed in a
 ``requirements.txt`` file. Note however that defining any requirements
-is not mandatory.
+is not mandatory, if you have none.
 
-Next you need to define the Debian packaging for your software. To do
-this, create a directory called ``debian`` in the project root.
+Instead of following all the steps outlined below,
+you can use cookiecutters (project templates) to quickly create the needed information
+in the ``debian/`` directory for any existing project.
+
+ * `dh-virtualenv-mold <https://github.com/Springerle/dh-virtualenv-mold>`_ is
+   a cookiecutter template to add easy Debianization to any existing Python project.
+ * `debianized-pypi-mold <https://github.com/Springerle/debianized-pypi-mold>`_
+   does the same for 3rd party software released to PyPI which you want to package
+   for deployment.
+
+See the related READMEs for details.
+
+For the manual way,
+start with defining the Debian packaging metadata for your software.
+To do this, create a directory called ``debian`` in the project root.
 
 To be able to build a debian package, a few files are needed. First, we
 need to define the compatibility level of the project. For this, do:
@@ -96,8 +132,8 @@ need to define the compatibility level of the project. For this, do:
 
 The 9 is a magic number for latest compatibility level, but we don't
 need to worry about that. Next we need a file that tells what our
-project is about, a file called ``control``. Enter a following
-``debian/control`` file:
+project is about, a file called ``control``.
+Create a ``debian/control`` file similar to the following:
 
 .. code-block:: control
 
@@ -112,16 +148,17 @@ project is about, a file called ``control``. Enter a following
    Architecture: any
    Pre-Depends: dpkg (>= 1.16.1), python2.7 | python2.6, ${misc:Pre-Depends}
    Depends: ${misc:Depends}
-   Description: really neat package!
-    second line can contain extra information about it.
+   Description: A short summary of what this is.
+       Further indented lines can contain extra information.
+       .
+       A single dot separates paragraphs.
 
 The ``control`` file is used to define the build dependencies, so if you
 are building a package that requires for example ``lxml``, make sure
-you define ``libxml2-dev`` in *Build-Depends* etc.
+you define ``libxml2-dev`` in *Build-Depends*.
 
-*Depends* in the lower section is used to define run-time dependencies.
-Following the example above, in case of lxml you would add ``libxml2``
-in to the *Depends* field.
+*Depends* in the 2nd section is used to define run-time dependencies.
+The *debhelper* magic will usually take care of that via the ``${misc:Depends}`` you see above.
 
 To help keeping your installed virtualenv in sync with the host's Python
 interpreter in case of updates, create a file named
@@ -143,6 +180,10 @@ by ``dh-virtualenv`` automatically.
    # Also provide a symbolic trigger for all dh-virtualenv packages
    interest dh-virtualenv-interpreter-update
 
+That file *must* end with a new-line –
+if your editor is misconfigured to eat the end of the last line in a file,
+you better fix that.
+
 Note that if you provide a custom ``postinst`` script with your package,
 then don't forget to put the ``#DEBHELPER#`` marker into it, else the trigger
 script will be missing.
@@ -163,9 +204,9 @@ package builder. Here's a short sample changelog to be entered in
 You don't need to create this file by hand, a handy tool called
 ``dch`` exists for entering new changelog entries.
 
-Now, last bit is left, which is the ``debian/rules`` file. This file
-is basically a Makefile that Debian uses to build the package. Content
-for that is fairly straightforward:
+Now, the last bit left is adding the ``debian/rules`` file. This file
+is usually an executable *Makefile* that Debian uses to build the package.
+The content for that is fairly simple:
 
 .. code-block:: make
 
@@ -176,9 +217,16 @@ for that is fairly straightforward:
 
 And there we go, debianization of your new package is ready!
 
+.. tip::
+
+    Do not forget to ``git add`` the ``debian/`` directory *before*
+    you build for the first time, because generated files will be added there
+    that you don't want in your source code repository.
+
 
 Step 3: Build your project
 ==========================
 
-Now you can just build your project by running ``dpkg-buildpackage -us
--uc``. Enjoy your newly baked *dh-virtualenv* backed project! ☺
+Now you can just build your project by running
+``dpkg-buildpackage -us -uc -b``.
+Enjoy your newly baked *dh-virtualenv* backed project! ☺
