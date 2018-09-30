@@ -24,8 +24,6 @@ and on *Ubuntu Bionic* you get Python 3.6.
 In ``debian/control``, the ``Build-Depends`` and ``Pre-Depends`` lists
 have to refer to Python3 packages.
 
-..
-
 .. code-block:: ini
 
     Source: py3software
