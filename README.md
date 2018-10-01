@@ -6,6 +6,7 @@
 **Contents**
 
   * [Overview](#overview)
+  * [Presentations, Blogs & Other Resources](#presentations-blogs--other-resources)
   * [Using dh-virtualenv](#using-dh-virtualenv)
   * [How does it work?](#how-does-it-work)
   * [Running tests](#running-tests)
@@ -31,6 +32,20 @@ operating system.
 
 For complete online documentation including installation instructions, see
 [the online documentation](https://dh-virtualenv.readthedocs.io/en/latest/).
+
+
+## Presentations, Blogs & Other Resources
+
+Here are a few external resources that can help you
+to get a more detailed first impression of dh-virtualenv,
+or advocate its use in your company or project team.
+
+* [How We Deploy Python Code](https://www.nylas.com/blog/packaging-deploying-python/)
+  – Building, packaging & deploying Python using versioned artifacts in Debian packages at Nylas.
+* [DevOps Tool Bazaar](https://speakerdeck.com/jhermann/devops-karlsruhe-meetup-2018-02-20)
+  – Slide deck presented at the DevOps Karlsruhe Meetup in February 2018, regarding Python software deployment for Debian with a practical example.
+* [The Architecture of Open Source Applications: Python Packaging](http://aosabook.org/en/packaging.html)
+  – This provides a lot of background (and possibly things you didn't know) about the Python side of packaging.
 
 
 ## Using dh-virtualenv
