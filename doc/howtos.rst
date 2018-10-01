@@ -197,44 +197,36 @@ Why build a package in a container? This is why:
 * *repeatable* builds in a *clean* environment
 * explicitly *documented installation* of build requirements *(as code)*
 * easy *multi-distro multi-release builds*
+* *only need ‘docker-ce’ installed* on your workstation / the build host
 
 The build is driven by a small shell script named ``build.sh``,
 which we use to get the target platform and some project metadata we already have,
-and feed that into the Dockerfile via simple ``sed`` templating.
+and feed that into the Dockerfile as build arguments.
+It also takes care of copying the resulting files out of the build container.
 
-So we work on a copy of the Dockerfile, and that is one reason for
-anything in the project workdir that is controlled by git being copied to a staging area (a separate build directory).
-The other reason is performance – we present Docker with a pristine copy of our workdir,
-and so there are no accidents like ``COPY``\ ing a full development virtualenv
-or all of ``.git`` into the container build.
+Besides the ``Dockerfile`` itself we also need a ``.dockerignore`` file,
+to avoid having a full development virtualenv or all of ``.git``
+as part of the container build context.
+
+So keep an eye on the ``Sending build context to Docker daemon`` message
+that ``docker build`` emits very early in a build,
+it should be only one to a few hundred KiB at most.
+If it is more, check your ``.dockerignore`` file for omissions that you might need to add.
+
 
 .. rubric:: The build script
 
-Let's get to the code – since we apply the :ref:`node-env` recipe,
-we first set the repository where to get Node.js from.
+Let's get to the code – at the start of the build script,
+the given platform and existing project metadata is stored into a bunch of variables.
 
 .. literalinclude:: examples/build.sh
     :language: shell
-    :end-at: NODEREPO
-
-Next, the given platform and existing project metadata is stored into a bunch of variables.
-
-.. literalinclude:: examples/build.sh
-    :language: shell
-    :start-after: NODEREPO
-    :end-before: Prepare
-
-Based on the collected input parameters, the staging area is set up in the ``build/staging`` directory.
-``tar`` does the selective copy work, and ``sed`` is used to inject dynamic values into the copied files.
-
-.. literalinclude:: examples/build.sh
-    :language: shell
-    :start-at: Prepare
     :end-before: Build in Docker
 
-After all that prep work, we finally get to build our package.
-The results are copied from ``/dpkg`` where the Dockerfile put them (see below),
-and then the package metadata is shown for a quick visual check if everything looks OK.
+After that prep work, we get to build our package, passing along the needed build arguments.
+The results are copied using ``docker run`` out of the ``/dpkg`` directory,
+where the Docker build process put them (see below).
+Also the package metadata is shown for a quick visual check if everything looks OK.
 
 .. literalinclude:: examples/build.sh
     :language: shell
@@ -243,14 +235,44 @@ and then the package metadata is shown for a quick visual check if everything lo
 
 .. rubric:: The Dockerfile
 
-This is the complete Dockerfile, the important things are the two ``RUN`` directives.
+This is the complete Dockerfile, the most important things are the ``RUN`` instructions.
 
 .. literalinclude:: examples/Dockerfile.build
     :language: docker
 
 The first ``RUN`` installs all the build dependencies on top of the base image.
-The second one then builds the package and makes a copy of the resulting files,
+The second one installs the latest dh-virtualenv version,
+and also updates the Python packaging toolset to the latest versions.
+The ``ADD`` instruction above it downloads the pre-built dh-virtualenv DEB from Debian ‘sid’
+– this way we get the same version across all platforms,
+and can also rely on the features of the latest release.
+Finally, the third ``RUN`` builds the package for your project and makes a copy of the resulting files,
 for the build script to pick them up.
+
+See the comments in the Dockerfile for more details,
+and `this README <https://github.com/jhermann/docker-calves#docker-calves>`_
+for an explanation of ‘special’ ``apt`` arguments,
+used to speed up the build process and keep image sizes small.
+
+To adapt this to your own project, you have to change these things:
+
+ * Remove the instructions and commands for installing NodeJS, if you don't need that
+   (``ARG NODEREPO``, and several commands near the end of the first ``RUN`` instruction).
+ * Check the second part of the package list in the first ``apt`` call –
+   remove and add libraries depending on your project's build dependencies.
+ * As mentioned in the comments, you can activate a local Python repository
+   by setting ``PIP_*`` environment variables accordingly.
+
+
+.. rubric:: The .dockerignore file
+
+As previously mentioned, we want to keep artifacts generated in the workdir out of Docker builds,
+for performance reasons and to avoid polluting the build context.
+
+This is an example, you need to at least change the project name (``jupyterhub``) in your own copy:
+
+.. literalinclude:: examples/.dockerignore
+    :language: ini
 
 
 .. rubric:: Putting it all together
@@ -260,41 +282,53 @@ Here's a sample run of building for *Ubuntu Bionic*.
 .. code-block:: console
 
     $ ./build.sh ubuntu:bionic
-    Sending build context to Docker daemon    106kB
-    Step 1/6 : FROM ubuntu:bionic AS dpkg-build
+    Sending build context to Docker daemon  127.5kB
+    Step 1/16 : ARG DIST_ID="debian"
+    Step 2/16 : ARG CODENAME="stretch"
+    Step 3/16 : ARG PKGNAME
+    Step 4/16 : ARG NODEREPO="node_8.x"
+    Step 5/16 : ARG DEB_POOL="http://ftp.nl.debian.org/debian/pool/main"
+    Step 6/16 : FROM ${DIST_ID}:${CODENAME} AS dpkg-build
+     ---> cd6d8154f1e1
     …
-    Successfully tagged debianized-jupyterhub-ubuntu-bionic:latest
-    ./
-    ./jupyterhub_0.9.1-1~bionic_amd64.deb
-    ./jupyterhub_0.9.1-1~bionic_amd64.buildinfo
-    ./jupyterhub-dbgsym_0.9.1-1~bionic_amd64.ddeb
-    ./jupyterhub_0.9.1-1~bionic_amd64.changes
-     new debian package, version 2.0.
-     size 265372284 bytes: control archive=390780 bytes.
-          84 bytes,     3 lines      conffiles
-        1214 bytes,    25 lines      control
-     2350661 bytes, 17055 lines      md5sums
-        4369 bytes,   141 lines   *  postinst             #!/bin/sh
-        1412 bytes,    47 lines   *  postrm               #!/bin/sh
+    dpkg-buildpackage: info: binary-only upload (no source included)
+     new Debian package, version 2.0.
+     size 21160196 bytes: control archive=192388 bytes.
+         110 bytes,     4 lines      conffiles
+        1250 bytes,    25 lines      control
+     1023901 bytes,  8079 lines      md5sums
+        4853 bytes,   156 lines   *  postinst             #!/bin/sh
+        1475 bytes,    48 lines   *  postrm               #!/bin/sh
          696 bytes,    35 lines   *  preinst              #!/bin/sh
         1047 bytes,    41 lines   *  prerm                #!/bin/sh
-         217 bytes,     6 lines      shlibs
+          70 bytes,     2 lines      shlibs
          419 bytes,    10 lines      triggers
      Package: jupyterhub
-     Version: 0.9.1-1~bionic
+     Version: 0.9.4-0.1~bionic
      Architecture: amd64
      Maintainer: 1&1 Group <jh@web.de>
-     Installed-Size: 563574
+     Installed-Size: 112648
      Pre-Depends: dpkg (>= 1.16.1), python3 (>= 3.5)
-     Depends: perl:any, libc6 (>= 2.25), libexpat1 (>= 2.1~beta3), libgcc1 (>= 1:4.0), …
+     Depends: libc6 (>= 2.25), libcurl4 (>= 7.18.0), libexpat1 (>= 2.1~beta3), libgcc1 (>= 1:3.0),
+         libssl1.1 (>= 1.1.0), libstdc++6 (>= 4.1.1), zlib1g (>= 1:1.2.0), python3-tk (>= 3.5),
+         nodejs (>= 8), nodejs (<< 9)
      Suggests: oracle-java8-jre | openjdk-8-jre | zulu-8
      Section: contrib/python
      Priority: extra
      Homepage: https://github.com/1and1/debianized-jupyterhub
      Description: Debian packaging of JupyterHub, a multi-user server for Jupyter notebooks.
-    …
+         …
+    Removing intermediate container 4fd85ab1f1cc
+     ---> 4197e1d56385
+    Successfully built 4197e1d56385
+    Successfully tagged debianized-jupyterhub-ubuntu-bionic:latest
+    -rw-r----- 1 jhe jhe 9,8K Oct  1 15:33 dist/jupyterhub_0.9.4-0.1~bionic_amd64.buildinfo
+    -rw-r----- 1 jhe jhe 1,4K Oct  1 15:33 dist/jupyterhub_0.9.4-0.1~bionic_amd64.changes
+    -rw-r----- 1 jhe jhe  21M Oct  1 15:33 dist/jupyterhub_0.9.4-0.1~bionic_amd64.deb
+    -rw-r----- 1 jhe jhe 330K Oct  1 15:32 dist/jupyterhub-dbgsym_0.9.4-0.1~bionic_amd64.ddeb
 
-The package files are now in ``build/``, and you can ``dput`` them into your local repository.
+The package files are now in ``dist/``, and you can ``dput`` them into your local repository,
+or install them using ``dpkg -i …``.
 
 
 .. _cross-package:

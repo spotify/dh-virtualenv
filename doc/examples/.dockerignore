@@ -1,0 +1,17 @@
+# Keep in sync with ".gitignore" and "debian/source/options"!
+.git/
+.venv/
+*~
+*.egg-info/
+*.py[co]
+.pip-cache/
+dist/
+build/
+#.npmrc
+debian/debhelper-build-stamp
+debian/files
+debian/*.debhelper
+debian/*.substvars
+debian/sdist/
+debian/jupyterhub/
+debian/jupyterhub-*.*.*/
