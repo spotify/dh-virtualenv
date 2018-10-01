@@ -15,7 +15,7 @@ os.environ['INVOKE_RITUALS_DOCS_SOURCES'] = os.path.join(os.path.dirname(__file_
 
 @task(help={'distro': "base image name to use for building"})
 def bdist_deb(ctx, distro=None):
-    """Build package for Debina stable using Docker"""
+    """Build package for Debian stable using Docker"""
     ctx.run("docker build --tag dh-venv-builder --build-arg distro={} ."
             .format(distro or 'debian:stable'))
     os.path.exists('dist') or os.makedirs('dist')
