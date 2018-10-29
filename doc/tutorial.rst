@@ -187,6 +187,7 @@ you better fix that.
 Note that if you provide a custom ``postinst`` script with your package,
 then don't forget to put the ``#DEBHELPER#`` marker into it, else the trigger
 script will be missing.
+The same applies to other maintainer scripts.
 
 Next, we need a changelog file. It is basically a documentation of
 changes in your package plus the source for version number for Debian

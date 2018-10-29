@@ -82,6 +82,10 @@ def main():
                 package=package,
                 install_dir=deploy.virtualenv_install_dir,
             ))
+            dh.autoscript(package, 'prerm', 'prerm-dh-virtualenv', _shell_vars(
+                package=package,
+                install_dir=deploy.virtualenv_install_dir,
+            ))
 
         _info('Creating virtualenv')
         deploy.create_virtualenv()
