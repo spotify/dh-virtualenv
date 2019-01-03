@@ -210,6 +210,16 @@ def test_upgrade_pip(callmock):
 
 
 @patch('subprocess.check_call')
+def test_upgrade_setuptools(callmock):
+    d = Deployment('test', upgrade_setuptools=True)
+    d.pip_prefix = d.pip_preinstall_prefix = ['pip']
+    d.pip_args = ['install']
+    d.install_dependencies()
+    callmock.assert_called_with(
+        ['pip', 'install', ANY, '-U', 'setuptools'])
+
+
+@patch('subprocess.check_call')
 def test_upgrade_pip_with_preinstall(callmock):
     d = Deployment('test', upgrade_pip=True, preinstall=['foobar'])
     d.pip_prefix = d.pip_preinstall_prefix = ['pip']

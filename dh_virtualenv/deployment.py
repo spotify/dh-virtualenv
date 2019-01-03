@@ -37,6 +37,7 @@ class Deployment(object):
                  extras=[],
                  pip_tool='pip',
                  upgrade_pip=False,
+                 upgrade_setuptools=False,
                  index_url=None,
                  setuptools=False,
                  python=None,
@@ -70,6 +71,7 @@ class Deployment(object):
         self.preinstall = preinstall
         self.extras = extras
         self.upgrade_pip = upgrade_pip
+        self.upgrade_setuptools = upgrade_setuptools
         self.extra_virtualenv_arg = extra_virtualenv_arg
         self.log_file = tempfile.NamedTemporaryFile()
         self.verbose = verbose
@@ -98,7 +100,7 @@ class Deployment(object):
             '--extra-index-url={0}'.format(url) for url in extra_urls
         ])
         self.pip_args.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
-        # Keep a copy with well-suported options only (for upgrading pip itself)
+        # Keep a copy with well-supported options only (for upgrading pip and setuptools)
         self.pip_upgrade_args = self.pip_args[:]
         # Add in any user supplied pip args
         self.pip_args.extend(extra_pip_arg)
@@ -112,6 +114,7 @@ class Deployment(object):
                    extras=options.extras,
                    pip_tool=options.pip_tool,
                    upgrade_pip=options.upgrade_pip,
+                   upgrade_setuptools=options.upgrade_setuptools,
                    index_url=options.index_url,
                    setuptools=options.setuptools,
                    python=options.python,
@@ -182,6 +185,8 @@ class Deployment(object):
         if self.upgrade_pip:
             # First, bootstrap pip with a reduced option set (well-supported options)
             subprocess.check_call(self.pip_preinstall_prefix + self.pip_upgrade_args + ['-U', 'pip'])
+        if self.upgrade_setuptools:
+            subprocess.check_call(self.pip_preinstall_prefix + self.pip_upgrade_args + ['-U', 'setuptools'])
         if self.preinstall:
             subprocess.check_call(self.pip_preinstall(*self.preinstall))
 
