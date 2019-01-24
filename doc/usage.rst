@@ -145,8 +145,8 @@ few command line options:
 
    .. versionadded:: 1.2
 
-   Same as :option:`--upgrade-pip`, but install a explicitly provided version.
-   You can secify ``latest`` to get the exact same behaviour as with the simple option.
+   Same as :option:`--upgrade-pip`, but install an explicitly provided version.
+   You can specify ``latest`` to get the exact same behaviour as with the simple option.
 
    *Note:* This can be used for more repeatable builds that do not have the risk of
    breaking on a new ``pip`` release.
