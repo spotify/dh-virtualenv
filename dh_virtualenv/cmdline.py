@@ -80,25 +80,25 @@ def _check_for_deprecated_options(
 def get_default_parser():
     usage = '%prog [options]'
     parser = DebhelperOptionParser(usage, version='%prog ' + version)
-    parser.add_option('-p', '--package', action='append',
-                      help='act on the package named PACKAGE')
-    parser.add_option('-N', '--no-package', action='append',
-                      help='do not act on the specified package')
+    parser.add_option('-p', '--package', action='append', metavar='PACKAGE',
+                      help='Act on the package(s) named PACKAGE')
+    parser.add_option('-N', '--no-package', action='append', metavar='PACKAGE',
+                      help='Do not act on the specified package(s)')
     parser.add_option('-v', '--verbose', action='store_true',
                       default=False, help='Turn on verbose mode')
     parser.add_option('-s', '--setuptools', action='store_true',
                       default=False, help='Use Setuptools instead of Distribute')
-    parser.add_option('--extra-index-url', action='append',
-                      help='extra index URL to pass to pip.',
+    parser.add_option('--extra-index-url', action='append', metavar='URL',
+                      help='Extra index URL(s) to pass to pip.',
                       default=[])
-    parser.add_option('--preinstall', action='append',
-                      help=('package to install before processing '
+    parser.add_option('--preinstall', action='append', metavar='PACKAGE',
+                      help=('Package(s) to install before processing '
                             'requirements.txt.'),
                       default=[])
-    parser.add_option('--extras', action='append',
-                      help=('Activate extras of the main package.'),
+    parser.add_option('--extras', action='append', metavar='NAME',
+                      help=('Activate one or more extras of the main package.'),
                       default=[])
-    parser.add_option('--pip-tool', default='pip',
+    parser.add_option('--pip-tool', default='pip', metavar='EXECUTABLE',
                       help="Executable that will be used to install "
                       "requirements after the preinstall stage. Usually "
                       "you'll install this program by using the --preinstall "
@@ -108,21 +108,22 @@ def get_default_parser():
                       help='Upgrade pip to the latest available version')
     parser.add_option('--upgrade-pip-to', default='', metavar='VERSION',
                       help='Upgrade pip to a specific version')
-    parser.add_option('--extra-pip-arg', action='append',
-                      help='Extra args for the pip binary.'
+    parser.add_option('--extra-pip-arg', action='append', metavar='ARG',
+                      help='One or more extra args for the pip binary.'
                       'You can use this flag multiple times to pass in'
                       ' parameters to pip.', default=[])
-    parser.add_option('--extra-virtualenv-arg', action='append',
-                      help='Extra args for the virtualenv binary.'
+    parser.add_option('--extra-virtualenv-arg', action='append', metavar='ARG',
+                      help='One or more extra args for the virtualenv binary.'
                       'You can use this flag multiple times to pass in'
                       ' parameters to the virtualenv binary.', default=[])
-    parser.add_option('--index-url',
+    parser.add_option('--index-url', metavar='URL',
                       help='Base URL of the PyPI server',
                       action='callback',
                       type='string',
                       dest='index_url',
                       callback=_check_for_deprecated_options)
-    parser.add_option('--python', help='The Python to use')
+    parser.add_option('--python', metavar='EXECUTABLE',
+                      help='The Python command to use')
     parser.add_option('--builtin-venv', action='store_true',
                       help='Use the built-in venv module. Only works on '
                       'Python 3.4 and later.')
@@ -140,10 +141,10 @@ def get_default_parser():
                       default=False,
                       dest='skip_install',
                       help="Skip running pip install within the source directory.")
-    parser.add_option('--install-suffix',
+    parser.add_option('--install-suffix', metavar='DIRNAME',
                       dest='install_suffix',
                       help="Override installation path suffix")
-    parser.add_option('--requirements',
+    parser.add_option('--requirements', metavar='FILEPATH',
                       dest='requirements_filename',
                       help='Specify the filename for requirements.txt',
                       default='requirements.txt')
@@ -168,7 +169,7 @@ def get_default_parser():
                       action="store_true")
 
     # Deprecated options
-    parser.add_option('--pypi-url',
+    parser.add_option('--pypi-url', metavar='URL',
                       help=('!!DEPRECATED, use --index-url instead!! '
                             'Base URL of the PyPI server'),
                       action='callback',
