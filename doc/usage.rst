@@ -139,7 +139,17 @@ few command line options:
    because the default ``pip`` of your system might not support them
    (since version 1.1).
 
-   *Note:* This can produce non-repeatable builds.
+   *Note:* This can produce non-repeatable builds. See also :option:`--upgrade-pip-to`.
+
+.. option:: --upgrade-pip-to
+
+   .. versionadded:: 1.2
+
+   Same as :option:`--upgrade-pip`, but install a explicitly provided version.
+   You can secify ``latest`` to get the exact same behaviour as with the simple option.
+
+   *Note:* This can be used for more repeatable builds that do not have the risk of
+   breaking on a new ``pip`` release.
 
 .. option:: --index-url <URL>
 

@@ -106,6 +106,8 @@ def get_default_parser():
                       "the virtualenv's bin/ directory.")
     parser.add_option('--upgrade-pip', action='store_true', default=False,
                       help='Upgrade pip to the latest available version')
+    parser.add_option('--upgrade-pip-to', default='', metavar='VERSION',
+                      help='Upgrade pip to a specific version')
     parser.add_option('--extra-pip-arg', action='append',
                       help='Extra args for the pip binary.'
                       'You can use this flag multiple times to pass in'
