@@ -141,7 +141,7 @@ few command line options:
 
    *Note:* This can produce non-repeatable builds. See also :option:`--upgrade-pip-to`.
 
-.. option:: --upgrade-pip-to
+.. option:: --upgrade-pip-to <VERSION>
 
    .. versionadded:: 1.2
 
