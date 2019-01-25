@@ -229,5 +229,5 @@ Step 3: Build your project
 ==========================
 
 Now you can just build your project by running
-``dpkg-buildpackage -us -uc -b``.
+``( deactivate ; dpkg-buildpackage -us -uc -b )``.
 Enjoy your newly baked *dh-virtualenv* backed project! ☺

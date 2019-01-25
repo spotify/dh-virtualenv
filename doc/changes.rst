@@ -11,6 +11,9 @@ For a full list, consult the `git history`_ of the project.
 1.2 (UNRELEASED)
 ================
 
+* New option :option:`--upgrade-pip-to` for increased build stability (#266) [@jhermann]
+
+
 1.1
 ===
 
