@@ -45,7 +45,25 @@ And the Python update triggers in ``debian/«pkgname».triggers`` need to be ada
     interest-noawait /usr/bin/python3.5
     …
 
-That's all.
+You may also need to add the :option:`--python` option in ``debian/rules``.
+
+.. code-block:: make
+
+    %:
+        dh $@ --with python-virtualenv
+
+    override_dh_virtualenv:
+        dh_virtualenv --python python3
+
+If you're using the buildsystem alternative, it is instead specified through
+the :envvar:`DH_VIRTUALENV_ARGUMENTS` variable.
+
+.. code-block:: make
+
+    export DH_VIRTUALENV_ARGUMENTS := --no-site-packages --python python3
+
+    %:
+        dh $@ --buildsystem dh_virtualenv
 
 
 .. _fhs-links:
