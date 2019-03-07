@@ -41,6 +41,7 @@ class Deployment(object):
                  setuptools=False,
                  python=None,
                  builtin_venv=False,
+                 builtin_pip=False,
                  sourcedirectory=None,
                  verbose=False,
                  extra_pip_arg=[],
@@ -88,8 +89,12 @@ class Deployment(object):
         # executable. Otherwise it would just blow up due to too long
         # shebang-line.
         python = self.venv_bin('python')
-        self.pip_preinstall_prefix = [python, self.venv_bin('pip')]
-        self.pip_prefix = [python, self.venv_bin(pip_tool)]
+        if builtin_pip:
+            self.pip_preinstall_prefix = [python, '-m', 'pip']
+            self.pip_prefix = [python, '-m', pip_tool]
+        else:
+            self.pip_preinstall_prefix = [python, self.venv_bin('pip')]
+            self.pip_prefix = [python, self.venv_bin(pip_tool)]
         self.pip_args = ['install']
 
         if self.verbose:
@@ -119,6 +124,7 @@ class Deployment(object):
                    setuptools=options.setuptools,
                    python=options.python,
                    builtin_venv=options.builtin_venv,
+                   builtin_pip=options.builtin_pip,
                    sourcedirectory=options.sourcedirectory,
                    verbose=verbose,
                    extra_pip_arg=options.extra_pip_arg,
