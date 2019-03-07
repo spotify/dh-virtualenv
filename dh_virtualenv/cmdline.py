@@ -127,6 +127,8 @@ def get_default_parser():
     parser.add_option('--builtin-venv', action='store_true',
                       help='Use the built-in venv module. Only works on '
                       'Python 3.4 and later.')
+    parser.add_option('--builtin-pip', action='store_true',
+                      help='Use the built-in pip module.')    
     parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
                       help='The source directory')
     parser.add_option('-n', '--noscripts', action='store_false', dest='autoscripts',
