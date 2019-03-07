@@ -144,13 +144,13 @@ class Deployment(object):
         else:
             virtualenv = ['virtualenv']
 
-            if self.python:
-                virtualenv.extend(('--python', self.python))
-
             if self.use_system_packages:
                 virtualenv.append('--system-site-packages')
             else:
-                virtualenv.append('--no-site-packages')
+                virtualenv.append('--no-site-packages')            
+            
+            if self.python:
+                virtualenv.extend(('--python', self.python))
 
         if self.setuptools:
             virtualenv.append('--setuptools')
