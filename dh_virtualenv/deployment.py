@@ -137,22 +137,26 @@ class Deployment(object):
         # Specify interpreter and virtual environment options
         if self.builtin_venv:
             virtualenv = [self.python, '-m', 'venv']
+
+            if self.use_system_packages:
+                virtualenv.append('--system-site-packages')
+
         else:
             virtualenv = ['virtualenv']
 
             if self.use_system_packages:
                 virtualenv.append('--system-site-packages')
             else:
-                virtualenv.append('--no-site-packages')
-
-            if self.setuptools:
-                virtualenv.append('--setuptools')
-
-            if self.verbose:
-                virtualenv.append('--verbose')
-
+                virtualenv.append('--no-site-packages')            
+            
             if self.python:
                 virtualenv.extend(('--python', self.python))
+
+        if self.setuptools:
+            virtualenv.append('--setuptools')
+
+        if self.verbose:
+            virtualenv.append('--verbose')
 
         # Add in any user supplied virtualenv args
         if self.extra_virtualenv_arg:
