@@ -326,6 +326,18 @@ def test_create_venv_with_extra_pip_arg(callmock):
     eq_(['install', LOG_ARG, '--no-compile'], d.pip_args)
 
 
+@patch('subprocess.check_call')
+def test_create_venv_without_log_file(callmock):
+    d = Deployment('test', pip_logfile='-')
+    d.create_virtualenv()
+    d.install_dependencies()
+    eq_('debian/test/opt/venvs/test', d.package_dir)
+    callmock.assert_called_with(['virtualenv', '--no-site-packages',
+                                 'debian/test/opt/venvs/test'])
+    eq_([PY_CMD, PIP_CMD], d.pip_prefix)
+    eq_(['install'], d.pip_args)
+
+
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 @patch('subprocess.check_call')
 def test_create_venv_with_setuptools(callmock):

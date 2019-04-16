@@ -50,6 +50,7 @@ class Deployment(object):
                  install_suffix=None,
                  requirements_filename='requirements.txt',
                  upgrade_pip_to='',
+                 pip_logfile=None,
         ):
 
         self.package = package
@@ -74,7 +75,17 @@ class Deployment(object):
         self.upgrade_pip = upgrade_pip
         self.upgrade_pip_to = upgrade_pip_to
         self.extra_virtualenv_arg = extra_virtualenv_arg
-        self.log_file = tempfile.NamedTemporaryFile()
+
+        if pip_logfile is None:
+            # default: transient logfile
+            self.log_file = tempfile.NamedTemporaryFile()
+        elif pip_logfile in ('-', '/dev/stdout'):
+            # no log file (should print to stdout)
+            self.log_file = None
+        else:
+            # user-defined log file
+            self.log_file = open(pip_logfile, 'w+')
+
         self.verbose = verbose
         self.setuptools = setuptools
         self.python = python
@@ -100,7 +111,8 @@ class Deployment(object):
         self.pip_args.extend([
             '--extra-index-url={0}'.format(url) for url in extra_urls
         ])
-        self.pip_args.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
+        if self.log_file:
+            self.pip_args.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
         # Keep a copy with well-suported options only (for upgrading pip itself)
         self.pip_upgrade_args = self.pip_args[:]
         # Add in any user supplied pip args
@@ -128,6 +140,7 @@ class Deployment(object):
                    install_suffix=options.install_suffix,
                    requirements_filename=options.requirements_filename,
                    upgrade_pip_to=options.upgrade_pip_to,
+                   pip_logfile=options.pip_logfile,
                   )
 
     def clean(self):

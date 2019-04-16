@@ -154,6 +154,11 @@ def get_default_parser():
                       action='callback',
                       help='Run `setup.py test` when building the package',
                       callback=_check_for_deprecated_options)
+    parser.add_option('--pip-logfile',
+                      dest='pip_logfile',
+                      default=None,
+                      help='Set a specific file for pip logging, '
+                           'use `-` to log to standard output')
 
     # Ignore user-specified option bundles
     parser.add_option('-O', help=SUPPRESS_HELP)
