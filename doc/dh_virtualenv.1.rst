@@ -45,6 +45,7 @@ OPTIONS
 --preinstall=PACKAGE			Preinstall a PACKAGE before running pip.
 --pip-tool=PIP_TOOL			Tool used to install requirements.
 --extra-pip-arg				Extra arg for the pip executable.
+--pip-logfile				Use specific log file for the pip executable
 --extra-virtualenv-arg			Extra arg for the virtualenv executable.
 --index-url				Base URL for PyPI server.
 --setuptools				Use setuptools instead of distribute.

@@ -156,6 +156,7 @@ def get_default_parser():
                       callback=_check_for_deprecated_options)
     parser.add_option('--pip-logfile',
                       dest='pip_logfile',
+                      metavar='FILEPATH',
                       default=None,
                       help='Set a specific file for pip logging, '
                            'use `-` to log to standard output')

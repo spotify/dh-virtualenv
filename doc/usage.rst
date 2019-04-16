@@ -176,6 +176,13 @@ few command line options:
    you need to change the behaviour of virtualenv during the packaging process.
    You can use this flag multiple times to pass in different virtualenv flags.
 
+.. option:: --pip-logfile <FILENAME>
+
+   Specific log file passed on to the pip executable. Use `-` (or `/dev/stdout`)
+   to disable file logging (pip output will be sent to standard output).
+
+   The default behaviour is to create a random temporary log file.
+
 .. option:: --requirements <REQUIREMENTS FILE>
 
    Use a different requirements file when installing. Some packages
