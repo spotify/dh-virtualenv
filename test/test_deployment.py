@@ -25,6 +25,7 @@ import textwrap
 import contextlib
 
 from mock import patch, call, ANY
+import pytest
 
 from nose.tools import eq_
 from dh_virtualenv import Deployment
@@ -73,27 +74,26 @@ def create_new_style_shebang(executable):
     return shebang
 
 
-def test_shebangs_fix():
+@pytest.mark.parametrize("interpreter", ['python', 'pypy', 'ipy', 'jython'])
+def test_shebangs_fix(interpreter):
     """Generate a test for each possible interpreter"""
-    for interpreter in ('python', 'pypy', 'ipy', 'jython'):
-        yield check_shebangs_fix, interpreter, '/opt/venvs/test'
+    check_shebangs_fix(interpreter, '/opt/venvs/test')
 
 
-def test_shebangs_fix_overridden_root():
+@pytest.mark.parametrize("interpreter", ['python', 'pypy', 'ipy', 'jython'])
+def test_shebangs_fix_overridden_root(interpreter):
     """Generate a test for each possible interpreter while overriding root"""
     with patch.dict(os.environ, {'DH_VIRTUALENV_INSTALL_ROOT': 'foo'}):
-        for interpreter in ('python', 'pypy', 'ipy', 'jython'):
-            yield check_shebangs_fix, interpreter, 'foo/test'
+        check_shebangs_fix(interpreter, 'foo/test')
 
 
-def test_shebangs_fix_special_chars_in_path():
+@pytest.mark.parametrize("interpreter", ['python', 'pypy', 'ipy', 'jython'])
+def test_shebangs_fix_special_chars_in_path(interpreter):
     """Shebang fix: Don't trip on special characters in path"""
     with patch.dict(
         os.environ,
         {'DH_VIRTUALENV_INSTALL_ROOT': 'some-directory:with/special_chars'}):
-        for interpreter in ('python', 'pypy', 'ipy', 'jython'):
-            yield (check_shebangs_fix, interpreter,
-                   'some-directory:with/special_chars/test')
+        check_shebangs_fix(interpreter, 'some-directory:with/special_chars/test')
 
 
 def test_shebangs_fix_new_pip_with_over_127_chars():
