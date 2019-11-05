@@ -95,6 +95,10 @@ def get_default_parser():
                       help=('Package(s) to install before processing '
                             'requirements.txt.'),
                       default=[])
+    parser.add_option('--postinstall', action='append', metavar='PACKAGE',
+                      help=('Package(s) to install after processing '
+                            'requirements.txt.'),
+                      default=[])
     parser.add_option('--extras', action='append', metavar='NAME',
                       help=('Activate one or more extras of the main package.'),
                       default=[])

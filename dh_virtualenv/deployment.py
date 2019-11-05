@@ -34,6 +34,7 @@ class Deployment(object):
                  package,
                  extra_urls=[],
                  preinstall=[],
+                 postinstall=[],
                  extras=[],
                  pip_tool='pip',
                  upgrade_pip=False,
@@ -70,6 +71,7 @@ class Deployment(object):
         self.local_bin_dir = os.path.join(self.package_dir, 'local', 'bin')
 
         self.preinstall = preinstall
+        self.postinstall = postinstall
         self.extras = extras
         self.upgrade_pip = upgrade_pip
         self.upgrade_pip_to = upgrade_pip_to
@@ -112,6 +114,7 @@ class Deployment(object):
         return cls(package,
                    extra_urls=options.extra_index_url,
                    preinstall=options.preinstall,
+                   postinstall=options.postinstall,
                    extras=options.extras,
                    pip_tool=options.pip_tool,
                    upgrade_pip=options.upgrade_pip,
@@ -202,6 +205,9 @@ class Deployment(object):
         requirements_path = os.path.join(self.sourcedirectory, self.requirements_filename)
         if os.path.exists(requirements_path):
             subprocess.check_call(self.pip('-r', requirements_path))
+
+        if self.postinstall:
+            subprocess.check_call(self.pip(*self.postinstall))
 
     def run_tests(self):
         python = self.venv_bin('python')

@@ -233,6 +233,19 @@ def test_install_dependencies_with_preinstall_with_requirements(callmock):
     ])
 
 
+@patch('os.path.exists', lambda x: True)
+@patch('subprocess.check_call')
+def test_install_dependencies_with_requirements_with_postinstall(callmock):
+    d = Deployment('test', postinstall=['foobar==1.0 --install-option=--compile'])
+    d.pip_prefix = ['pip']
+    d.pip_args = ['install']
+    d.install_dependencies()
+    callmock.assert_has_calls([
+        call(['pip', 'install', '-r', './requirements.txt']),
+        call(['pip', 'install', 'foobar==1.0 --install-option=--compile'])
+    ])
+
+
 @patch('os.path.exists', return_value=True)
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 @patch('subprocess.check_call')

@@ -344,3 +344,20 @@ See :ref:`example-configsite` for the full project that uses this.
    — with input from `@Nadav-Ruskin`_
 
 .. _`@Nadav-Ruskin`: https://github.com/Nadav-Ruskin
+
+
+.. _postinstall:
+
+Post-installing Packages
+========================
+
+Including `optional install flags`_ for ``pip`` within the requirements file causes builds to 
+avoid wheel packages, which is often undesireable. The ``--postinstall`` option allows
+packages to be installed after the main requirements, where their ``pip`` flags will
+not affect the broader requirements.
+
+.. code-block:: make
+
+    dh_virtualenv --postinstall "foobar==1.0 --install-option=--fuzzbar"
+
+.. _`optional_install_flags`: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option

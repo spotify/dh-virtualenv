@@ -113,6 +113,14 @@ few command line options:
    to parse ``setup.py``, and can be provided multiple times to
    pass multiple packages for pre-install.
 
+.. option:: --postinstall <package>
+
+    Package to install after processing the requirements. This flag
+    can be used to provide a package that is installed by ``pip``.
+    This is useful when additional ``pip`` commands are needed to install
+    a package (e.g. ``--install-option``), which would otherwise cause
+    packages in the requirements to not use wheel builds.
+
 .. option:: --extras <name>
 
    .. versionadded:: 1.1
