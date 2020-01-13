@@ -1,7 +1,12 @@
 #!/usr/bin/make -f
 
+DH_ARGS ?=
+ifeq (,$(findstring nodoc, $(DEB_BUILD_OPTIONS)))
+	DH_ARGS += --with sphinxdoc
+endif
+
 %:
-	dh $@ --with python2 --with sphinxdoc
+	dh $@ --with python2 $(DH_ARGS)
 
 override_dh_auto_clean:
 	rm -rf doc/_build
@@ -13,6 +18,7 @@ override_dh_auto_build:
 	rst2man doc/dh_virtualenv.1.rst >doc/dh_virtualenv.1
 	dh_auto_build
 
+ifeq (,$(findstring nodoc, $(DEB_BUILD_OPTIONS)))
 override_dh_installdocs:
 	python setup.py build_sphinx
 	dh_installdocs doc/_build/html
@@ -21,3 +27,4 @@ override_dh_installdocs:
 override_dh_sphinxdoc:
 	dh_sphinxdoc -X.rst.html -X.rst.txt \
 	             -Xunderscore.js -Xjquery.js -X searchtools.js -X doctools.js
+endif
