@@ -48,7 +48,7 @@ OPTIONS
 --extra-virtualenv-arg			Extra arg for the virtualenv executable.
 --index-url				Base URL for PyPI server.
 --setuptools				Use setuptools instead of distribute.
---install-suffix=SUFFIX			Override virttualenv installation suffix
+--install-suffix=SUFFIX			Override virtualenv installation suffix
 --upgrade-pip				Force upgrade pip in virtualenv
 --requirements=FILE			Use FILE for requirements
 --setuptools-test			Run `setup.py test` upon build.
