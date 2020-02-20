@@ -33,6 +33,7 @@ from dh_virtualenv.cmdline import get_default_parser
 
 PY_CMD = os.path.abspath('debian/test/opt/venvs/test/bin/python')
 PIP_CMD = os.path.abspath('debian/test/opt/venvs/test/bin/pip')
+TEST_VENV_PATH = 'debian/test/opt/venvs/test'
 
 
 class FakeTemporaryFile(object):
@@ -255,9 +256,8 @@ def test_custom_pip_tool_used_for_installation(callmock, _):
 def test_create_venv(callmock):
     d = Deployment('test')
     d.create_virtualenv()
-    eq_('debian/test/opt/venvs/test', d.package_dir)
-    callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 'debian/test/opt/venvs/test'])
+    eq_(TEST_VENV_PATH, d.package_dir)
+    callmock.assert_called_with(['virtualenv', TEST_VENV_PATH])
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -265,10 +265,8 @@ def test_create_venv(callmock):
 def test_create_venv_with_verbose(callmock):
     d = Deployment('test', verbose=True)
     d.create_virtualenv()
-    eq_('debian/test/opt/venvs/test', d.package_dir)
-    callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 '--verbose',
-                                 'debian/test/opt/venvs/test'])
+    eq_(TEST_VENV_PATH, d.package_dir)
+    callmock.assert_called_with(['virtualenv', '--verbose', TEST_VENV_PATH])
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -276,9 +274,8 @@ def test_create_venv_with_verbose(callmock):
 def test_create_venv_with_extra_urls(callmock):
     d = Deployment('test', extra_urls=['foo', 'bar'])
     d.create_virtualenv()
-    eq_('debian/test/opt/venvs/test', d.package_dir)
-    callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 'debian/test/opt/venvs/test'])
+    eq_(TEST_VENV_PATH, d.package_dir)
+    callmock.assert_called_with(['virtualenv', TEST_VENV_PATH])
     eq_([PY_CMD, PIP_CMD], d.pip_prefix)
     eq_(['install', '--extra-index-url=foo',
          '--extra-index-url=bar',
@@ -290,10 +287,8 @@ def test_create_venv_with_extra_urls(callmock):
 def test_create_venv_with_extra_virtualenv(callmock):
     d = Deployment('test', extra_virtualenv_arg=["--never-download"])
     d.create_virtualenv()
-    eq_('debian/test/opt/venvs/test', d.package_dir)
-    callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 '--never-download',
-                                 'debian/test/opt/venvs/test'])
+    eq_(TEST_VENV_PATH, d.package_dir)
+    callmock.assert_called_with(['virtualenv', '--never-download', TEST_VENV_PATH])
 
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
@@ -302,9 +297,8 @@ def test_create_venv_with_custom_index_url(callmock):
     d = Deployment('test', extra_urls=['foo', 'bar'],
                    index_url='http://example.com/simple')
     d.create_virtualenv()
-    eq_('debian/test/opt/venvs/test', d.package_dir)
-    callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 'debian/test/opt/venvs/test'])
+    eq_(TEST_VENV_PATH, d.package_dir)
+    callmock.assert_called_with(['virtualenv', TEST_VENV_PATH])
     eq_([PY_CMD, PIP_CMD], d.pip_prefix)
     eq_(['install',
          '--index-url=http://example.com/simple',
@@ -319,9 +313,8 @@ def test_create_venv_with_extra_pip_arg(callmock):
     d = Deployment('test', extra_pip_arg=['--no-compile'])
     d.create_virtualenv()
     d.install_dependencies()
-    eq_('debian/test/opt/venvs/test', d.package_dir)
-    callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 'debian/test/opt/venvs/test'])
+    eq_(TEST_VENV_PATH, d.package_dir)
+    callmock.assert_called_with(['virtualenv', TEST_VENV_PATH])
     eq_([PY_CMD, PIP_CMD], d.pip_prefix)
     eq_(['install', LOG_ARG, '--no-compile'], d.pip_args)
 
@@ -331,10 +324,8 @@ def test_create_venv_with_extra_pip_arg(callmock):
 def test_create_venv_with_setuptools(callmock):
     d = Deployment('test', setuptools=True)
     d.create_virtualenv()
-    eq_('debian/test/opt/venvs/test', d.package_dir)
-    callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 '--setuptools',
-                                 'debian/test/opt/venvs/test'])
+    eq_(TEST_VENV_PATH, d.package_dir)
+    callmock.assert_called_with(['virtualenv', '--setuptools', TEST_VENV_PATH])
     eq_([PY_CMD, PIP_CMD], d.pip_prefix)
     eq_(['install', LOG_ARG], d.pip_args)
 
@@ -344,9 +335,9 @@ def test_create_venv_with_setuptools(callmock):
 def test_create_venv_with_system_packages(callmock):
     d = Deployment('test', use_system_packages=True)
     d.create_virtualenv()
-    eq_('debian/test/opt/venvs/test', d.package_dir)
+    eq_(TEST_VENV_PATH, d.package_dir)
     callmock.assert_called_with(['virtualenv', '--system-site-packages',
-                                 'debian/test/opt/venvs/test'])
+                                 TEST_VENV_PATH])
     eq_([PY_CMD, PIP_CMD], d.pip_prefix)
     eq_(['install', LOG_ARG], d.pip_args)
 
@@ -356,10 +347,8 @@ def test_create_venv_with_system_packages(callmock):
 def test_venv_with_custom_python(callmock):
     d = Deployment('test', python='/tmp/python')
     d.create_virtualenv()
-    eq_('debian/test/opt/venvs/test', d.package_dir)
-    callmock.assert_called_with(['virtualenv', '--no-site-packages',
-                                 '--python', '/tmp/python',
-                                 'debian/test/opt/venvs/test'])
+    eq_(TEST_VENV_PATH, d.package_dir)
+    callmock.assert_called_with(['virtualenv', '--python', '/tmp/python', TEST_VENV_PATH])
     eq_([PY_CMD, PIP_CMD], d.pip_prefix)
     eq_(['install', LOG_ARG], d.pip_args)
 
