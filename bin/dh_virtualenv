@@ -38,7 +38,7 @@ log = logging.getLogger(__name__)
 def _shell_vars(**kwargs):
     """Convert the given values into the equivalent shell snippet defining them."""
     return '\n'.join("dh_venv_{0}='{1}'".format(k, v.replace("'", r"'\''"))
-                     for k, v in sorted(kwargs.iteritems()))
+                     for k, v in sorted(kwargs.items()))
 
 
 def main():
