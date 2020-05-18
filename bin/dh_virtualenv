@@ -23,12 +23,9 @@ import logging
 import os
 import sys
 
-# The debpython resides here
-sys.path.insert(1, '/usr/share/python/')
-
-from debpython.debhelper import DebHelper
 from dh_virtualenv import Deployment
 from dh_virtualenv.cmdline import get_default_parser
+from dh_virtualenv.debhelper import DebHelper
 
 logging.basicConfig(format='%(levelname).1s: %(module)s:%(lineno)d: '
                     '%(message)s')
