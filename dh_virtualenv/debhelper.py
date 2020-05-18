@@ -106,12 +106,12 @@ class DebHelper(object):
         self.packages[package]['rtupdates'].append(value)
 
     def save_autoscripts(self):
-        for package, settings in self.packages.iteritems():
+        for package, settings in self.packages.items():
             autoscripts = settings.get('autoscripts')
             if not autoscripts:
                 continue
 
-            for when, templates in autoscripts.iteritems():
+            for when, templates in autoscripts.items():
                 fn = "debian/%s.%s.debhelper" % (package, when)
                 if exists(fn):
                     data = open(fn, 'r').read()
@@ -119,7 +119,7 @@ class DebHelper(object):
                     data = ''
 
                 new_data = ''
-                for tpl_name, args in templates.iteritems():
+                for tpl_name, args in templates.items():
                     for i in args:
                         # try local one first (useful while testing dh_python2)
                         fpath = join(dirname(__file__), '..',
@@ -143,7 +143,7 @@ class DebHelper(object):
                     fp.close()
 
     def save_substvars(self):
-        for package, settings in self.packages.iteritems():
+        for package, settings in self.packages.items():
             substvars = settings.get('substvars')
             if not substvars:
                 continue
@@ -152,7 +152,7 @@ class DebHelper(object):
                 data = open(fn, 'r').read()
             else:
                 data = ''
-            for name, values in substvars.iteritems():
+            for name, values in substvars.items():
                 p = data.find("%s=" % name)
                 if p > -1:  # parse the line and remove it from data
                     e = data[p:].find('\n')
@@ -179,7 +179,7 @@ class DebHelper(object):
                 fp.close()
 
     def save_rtupdate(self):
-        for package, settings in self.packages.iteritems():
+        for package, settings in self.packages.items():
             pkg_arg = '' if self.options.compile_all else "-p %s" % package
             values = settings.get('rtupdates')
             if not values:
@@ -202,7 +202,7 @@ class DebHelper(object):
                 fp = open(fn, 'w')
                 fp.write(data)
                 fp.close()
-                chmod(fn, 0755)
+                chmod(fn, 0o755)
 
     def save(self):
         self.save_substvars()
