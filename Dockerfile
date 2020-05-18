@@ -11,8 +11,8 @@ RUN apt-get update -qq -o Acquire::Languages=none \
     && env DEBIAN_FRONTEND=noninteractive apt-get install \
         -yqq --no-install-recommends -o Dpkg::Options::=--force-unsafe-io \
         build-essential debhelper devscripts equivs lsb-release libparse-debianchangelog-perl \
-        python python-setuptools python-pip python-dev \
-        python-sphinx python-mock dh-exec dh-python python-sphinx-rtd-theme \
+        python3 python3-setuptools python3-pip python3-dev \
+        python3-sphinx python3-mock dh-exec dh-python python3-sphinx-rtd-theme \
     && apt-get clean && rm -rf "/var/lib/apt/lists"/*
 WORKDIR /dpkg-build
 COPY ./ ./
