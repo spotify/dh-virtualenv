@@ -6,7 +6,7 @@ ifeq (,$(findstring nodoc, $(DEB_BUILD_OPTIONS)))
 endif
 
 %:
-	dh $@ --with python2 $(DH_ARGS)
+	dh $@ --buildsystem=pybuild --with python2 $(DH_ARGS)
 
 override_dh_auto_clean:
 	rm -rf doc/_build
