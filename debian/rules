@@ -6,7 +6,7 @@ ifeq (,$(findstring nodoc, $(DEB_BUILD_OPTIONS)))
 endif
 
 %:
-	dh $@ --with python2 $(DH_ARGS)
+	dh $@ --buildsystem=pybuild --with python3 $(DH_ARGS)
 
 override_dh_auto_clean:
 	rm -rf doc/_build
@@ -20,7 +20,7 @@ override_dh_auto_build:
 
 ifeq (,$(findstring nodoc, $(DEB_BUILD_OPTIONS)))
 override_dh_installdocs:
-	python setup.py build_sphinx
+	python3 setup.py build_sphinx
 	dh_installdocs doc/_build/html
 
 # Make Sphinxdocs build on Jessie and Xenial
