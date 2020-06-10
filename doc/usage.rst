@@ -185,6 +185,7 @@ few command line options:
    list. This command option allows specifying a different
    ``requirements.txt`` file that may include pip specific flags such
    as ``-i``, ``-r-`` and ``-e``.
+   You can use this flag multiple times to pass in different requirements files.
 
 .. option:: --setuptools
 

@@ -147,7 +147,8 @@ def get_default_parser():
     parser.add_option('--requirements', metavar='FILEPATH',
                       action='append',
                       dest='requirements_filenames',
-                      help='Specify the filename for requirements.txt',
+                      help='Specify the requirements filename. '
+                      'This option can be used multiple times.',
                       default=['requirements.txt'])
     parser.add_option('--setuptools-test',
                       dest='setuptools_test',
