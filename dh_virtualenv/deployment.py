@@ -48,7 +48,7 @@ class Deployment(object):
                  use_system_packages=False,
                  skip_install=False,
                  install_suffix=None,
-                 requirements_filename='requirements.txt',
+                 requirements_filenames=['requirements.txt'],
                  upgrade_pip_to='',
         ):
 
@@ -82,7 +82,7 @@ class Deployment(object):
         self.sourcedirectory = '.' if sourcedirectory is None else sourcedirectory
         self.use_system_packages = use_system_packages
         self.skip_install = skip_install
-        self.requirements_filename = requirements_filename
+        self.requirements_filenames = requirements_filenames
 
         # We need to prefix the pip run with the location of python
         # executable. Otherwise it would just blow up due to too long
@@ -126,7 +126,7 @@ class Deployment(object):
                    use_system_packages=options.use_system_packages,
                    skip_install=options.skip_install,
                    install_suffix=options.install_suffix,
-                   requirements_filename=options.requirements_filename,
+                   requirements_filenames=options.requirements_filenames,
                    upgrade_pip_to=options.upgrade_pip_to,
                   )
 
@@ -197,9 +197,13 @@ class Deployment(object):
         if self.preinstall:
             subprocess.check_call(self.pip_preinstall(*self.preinstall))
 
-        requirements_path = os.path.join(self.sourcedirectory, self.requirements_filename)
-        if os.path.exists(requirements_path):
-            subprocess.check_call(self.pip('-r', requirements_path))
+        requirements_args = []
+        for filename in self.requirements_filenames:
+            requirements_path = os.path.join(self.sourcedirectory, filename)
+            if os.path.exists(requirements_path):
+                requirements_args.extend(['-r', requirements_path])
+        if requirements_args:
+            subprocess.check_call(self.pip(*requirements_args))
 
     def run_tests(self):
         python = self.venv_bin('python')

@@ -145,9 +145,10 @@ def get_default_parser():
                       dest='install_suffix',
                       help="Override installation path suffix")
     parser.add_option('--requirements', metavar='FILEPATH',
-                      dest='requirements_filename',
+                      action='append',
+                      dest='requirements_filenames',
                       help='Specify the filename for requirements.txt',
-                      default='requirements.txt')
+                      default=['requirements.txt'])
     parser.add_option('--setuptools-test',
                       dest='setuptools_test',
                       default=False,
