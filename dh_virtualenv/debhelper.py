@@ -91,7 +91,7 @@ class DebHelper(object):
             log.error('Please remove XS-Python-Version from debian/control')
 
         log.debug('source=%s, binary packages=%s', self.source_name, \
-                                                   self.packages.keys())
+                                                   list(self.packages.keys()))
 
     def addsubstvar(self, package, name, value):
         """debhelper's addsubstvar"""
