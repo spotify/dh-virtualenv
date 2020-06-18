@@ -19,6 +19,6 @@ Package: dh-virtualenv
 Architecture: all
 Depends: ${python3:Depends}, ${misc:Depends}, ${sphinxdoc:Depends},
  virtualenv | python-virtualenv (>= 1.7) | python3-venv
-Description: wrap and build python packages using virtualenv
+Description: wrap and build Python packages using virtualenv
  This package provides a dh sequencer that helps you to deploy your
  virtualenv wrapped installation inside a Debian package.
