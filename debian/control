@@ -12,7 +12,7 @@ Build-Depends: debhelper-compat (= 12), python3,
 # 3. Proceed with your build process (typically dpkg-build).
 # See https://github.com/spotify/dh-virtualenv/issues/230
  python3-sphinx-rtd-theme
-Standards-Version: 4.2.1
+Standards-Version: 4.5.0
 Homepage: https://www.github.com/spotify/dh-virtualenv
 Rules-Requires-Root: no
 
