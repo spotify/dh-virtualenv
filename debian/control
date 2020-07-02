@@ -1,7 +1,7 @@
 Source: dh-virtualenv
 Section: python
 Priority: optional
-Maintainer: Jyrki Pulliainen <jyrki@spotify.com>
+Maintainer: Jyrki Pulliainen <jyrki@dywypi.org>
 Build-Depends: debhelper-compat (= 12), python3,
  python3-setuptools, python3-sphinx, python3-mock, dh-exec, dh-python,
 # python-sphinx-rtd-theme doesn't exist in distributions
