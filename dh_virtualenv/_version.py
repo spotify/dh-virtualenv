@@ -9,5 +9,5 @@ maintained redundantly.
 
 version = '1.2'
 author = u'Jyrki Pulliainen'
-author_email = 'jyrki@spotify.com'
+author_email = 'jyrki@dywypi.org'
 url = 'https://github.com/spotify/dh-virtualenv'

@@ -8,10 +8,16 @@ For a full list, consult the `git history`_ of the project.
 .. _`git history`: https://github.com/spotify/dh-virtualenv/commits/master
 
 
-1.2 (UNRELEASED)
-================
+1.2
+===
 
-* New option :option:`--upgrade-pip-to` for increased build stability (#266) [@jhermann]
+* Requires Python 3 to build (#300) [@richvdh]
+* Removed deprecated / disappeared virtualenv option (#293)
+  [@jhermann]
+* Add support for DEB_BUILD_OPTIONS=nodoc (#289) [@mgagne]
+* Support venv options for builtin venv (#276) [@paulbovbel]
+* New option :option:`--upgrade-pip-to` for increased build stability
+  (#266) [@jhermann]
 
 
 1.1
