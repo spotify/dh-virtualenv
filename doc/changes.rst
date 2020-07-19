@@ -8,6 +8,11 @@ For a full list, consult the `git history`_ of the project.
 .. _`git history`: https://github.com/spotify/dh-virtualenv/commits/master
 
 
+1.2.1
+=====
+
+* Bugfix release: Fixes a binary dependency to depend on Python 3 version of virtualenv
+
 1.2
 ===
 
