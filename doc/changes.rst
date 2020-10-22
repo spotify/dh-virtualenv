@@ -8,6 +8,11 @@ For a full list, consult the `git history`_ of the project.
 .. _`git history`: https://github.com/spotify/dh-virtualenv/commits/master
 
 
+1.2.2
+=====
+
+* Bugfix release: Addresses removal of python3-venv on Debian testing/sid
+
 1.2.1
 =====
 

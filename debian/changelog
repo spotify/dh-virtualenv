@@ -1,3 +1,9 @@
+dh-virtualenv (1.2.2-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #970810)
+
+ -- Jyrki Pulliainen <jyrki@dywypi.org>  Thu, 22 Oct 2020 13:39:46 +0300
+
 dh-virtualenv (1.2.1-1) unstable; urgency=medium
 
   * New upstream release (Closes: #936392)
