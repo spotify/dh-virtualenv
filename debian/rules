@@ -26,12 +26,5 @@ override_dh_gencontrol:
 ifeq (,$(findstring nodoc, $(DEB_BUILD_OPTIONS)))
 override_dh_installdocs:
 	python3 setup.py build_sphinx
-	ln -sf /usr/share/javascript/jquery/jquery.js doc/_build/html/_static/jquery.js
-	ln -sf /usr/share/javascript/underscore/underscore.js doc/_build/html/_static/underscore.js
 	dh_installdocs doc/_build/html
-
-# Make Sphinxdocs build on Jessie and Xenial
-override_dh_sphinxdoc:
-	dh_sphinxdoc -X.rst.html -X.rst.txt \
-	             -Xunderscore.js -Xjquery.js -X searchtools.js -X doctools.js
 endif
