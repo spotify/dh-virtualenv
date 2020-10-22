@@ -5,6 +5,8 @@ ifeq (,$(findstring nodoc, $(DEB_BUILD_OPTIONS)))
 	DH_ARGS += --with sphinxdoc
 endif
 
+PYTHON_VERSION := $(shell python3 -c 'import sys; print("%s.%s" % sys.version_info[:2])')
+
 %:
 	dh $@ --buildsystem=pybuild --with python3 $(DH_ARGS)
 
@@ -17,6 +19,9 @@ override_dh_auto_clean:
 override_dh_auto_build:
 	rst2man doc/dh_virtualenv.1.rst >doc/dh_virtualenv.1
 	dh_auto_build
+
+override_dh_gencontrol:
+	dh_gencontrol -- -Vpyversion=$(PYTHON_VERSION)
 
 ifeq (,$(findstring nodoc, $(DEB_BUILD_OPTIONS)))
 override_dh_installdocs:
