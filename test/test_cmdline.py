@@ -170,3 +170,19 @@ def test_that_use_system_packages_option_can_be_true():
     parser = cmdline.get_default_parser()
     opts, args = parser.parse_args(['--use-system-packages'])
     eq_(True, opts.use_system_packages)
+
+
+def test_builtin_venv_and_setuptools_conflict():
+    error_message = '--setuptools flag is not supported by builtin venv module'
+    args_list = [
+        ['--builtin-venv', '--setuptools'],
+        ['--setuptools', '--builtin-venv'],
+    ]
+
+    for args in args_list:
+        f = get_mocked_stderr()
+        with patch('sys.stderr', f), patch('sys.exit') as sysexit:
+            parser = cmdline.get_default_parser()
+            parser.parse_args(args)
+            ok_(error_message in f.getvalue())
+            sysexit.assert_called_once_with(2)

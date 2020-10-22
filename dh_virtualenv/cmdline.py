@@ -77,6 +77,28 @@ def _check_for_deprecated_options(
         setattr(parser.values, '_test_flag_seen', True)
 
 
+def _set_builtin_venv(
+    option, opt_str, value, parser, *args, **kwargs
+):
+    if parser.values.setuptools:
+        raise OptionValueError(
+            '--setuptools flag is not supported by builtin venv module'
+        )
+    else:
+        parser.values.builtin_venv = True
+
+
+def _set_setuptools(
+    option, opt_str, value, parser, *args, **kwargs
+):
+    if parser.values.builtin_venv:
+        raise OptionValueError(
+            '--setuptools flag is not supported by builtin venv module'
+        )
+    else:
+        parser.values.setuptools = True
+
+
 def get_default_parser():
     usage = '%prog [options]'
     parser = DebhelperOptionParser(usage, version='%prog ' + version)
@@ -86,7 +108,9 @@ def get_default_parser():
                       help='Do not act on the specified package(s)')
     parser.add_option('-v', '--verbose', action='store_true',
                       default=False, help='Turn on verbose mode')
-    parser.add_option('-s', '--setuptools', action='store_true',
+    parser.add_option('-s', '--setuptools', action='callback',
+                      dest='setuptools',
+                      callback=_set_setuptools,
                       default=False, help='Use Setuptools instead of Distribute')
     parser.add_option('--extra-index-url', action='append', metavar='URL',
                       help='Extra index URL(s) to pass to pip.',
@@ -124,7 +148,9 @@ def get_default_parser():
                       callback=_check_for_deprecated_options)
     parser.add_option('--python', metavar='EXECUTABLE',
                       help='The Python command to use')
-    parser.add_option('--builtin-venv', action='store_true',
+    parser.add_option('--builtin-venv', action='callback',
+                      dest='builtin_venv',
+                      callback=_set_builtin_venv,
                       help='Use the built-in venv module. Only works on '
                       'Python 3.4 and later.')
     parser.add_option('-D', '--sourcedirectory', dest='sourcedirectory',
