@@ -27,7 +27,7 @@ For a full list, consult the `git history`_ of the project.
 * Add support for DEB_BUILD_OPTIONS=nodoc (`#289 <https://github.com/spotify/dh-virtualenv/issues/289>`_) [`@mgagne <https://github.com/mgagne>`_]
 * Support venv options for builtin venv (`#276 <https://github.com/spotify/dh-virtualenv/issues/276>`_) [`@paulbovbel <https://github.com/paulbovbel>`_]
 * New option :option:`--upgrade-pip-to` for increased build stability
-  (#266) [`@jhermann <https://github.com/jhermann>`_]
+  (`#266 <https://github.com/spotify/dh-virtualenv/issues/266>`_) [`@jhermann <https://github.com/jhermann>`_]
 
 
 1.1
