@@ -95,7 +95,7 @@ and then start the build:
 
 .. _`their package repositories`: https://packages.debian.org/source/sid/dh-virtualenv
 .. _`official Ubuntu repositories`: http://packages.ubuntu.com/search?keywords=dh-virtualenv
-.. _`this PPA`: https://launchpad.net/~spotify-jyrki/+archive/ubuntu/dh-virtualenv
+.. _`this PPA`: https://launchpad.net/~jyrki-pulliainen/+archive/ubuntu/dh-virtualenv
 
 
 Step 2: Set up packaging for your project
