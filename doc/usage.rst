@@ -189,6 +189,7 @@ few command line options:
 .. option:: --setuptools
 
    Use setuptools instead of distribute in the virtualenv.
+   Not supported when using builtin `venv` module with :option:`--builtin-venv`.
 
 .. option:: --setuptools-test
 

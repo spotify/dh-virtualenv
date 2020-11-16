@@ -150,11 +150,11 @@ class Deployment(object):
             if self.python:
                 virtualenv.extend(('--python', self.python))
 
-        if self.setuptools:
-            virtualenv.append('--setuptools')
+            if self.setuptools:
+                virtualenv.append('--setuptools')
 
-        if self.verbose:
-            virtualenv.append('--verbose')
+            if self.verbose:
+                virtualenv.append('--verbose')
 
         # Add in any user supplied virtualenv args
         if self.extra_virtualenv_arg:

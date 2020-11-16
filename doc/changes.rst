@@ -8,6 +8,11 @@ For a full list, consult the `git history`_ of the project.
 .. _`git history`: https://github.com/spotify/dh-virtualenv/commits/master
 
 
+Unreleased
+==========
+
+* Fix --verbose and --setuptools command line argument usage together with --builtin-venv
+
 1.2.2
 =====
 

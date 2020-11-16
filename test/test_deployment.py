@@ -355,6 +355,20 @@ def test_venv_with_custom_python(callmock):
 
 @patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
 @patch('subprocess.check_call')
+def test_create_builtin_venv_with_unsupported_options(callmock):
+    d = Deployment(
+        'test', python='python_interpreter',
+        builtin_venv=True, setuptools=True, verbose=True
+    )
+    d.create_virtualenv()
+    eq_(TEST_VENV_PATH, d.package_dir)
+    callmock.assert_called_with(
+        ['python_interpreter', '-m', 'venv', TEST_VENV_PATH]
+    )
+
+
+@patch('tempfile.NamedTemporaryFile', FakeTemporaryFile)
+@patch('subprocess.check_call')
 def test_install_package(callmock):
     d = Deployment('test')
     d.bin_dir = 'derp'
