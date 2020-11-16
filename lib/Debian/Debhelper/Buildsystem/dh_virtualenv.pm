@@ -94,17 +94,17 @@ sub build {
     if (defined $ENV{DH_UPGRADE_PIP}) {
         my $version = length $ENV{DH_UPGRADE_PIP} && '=='.$ENV{DH_UPGRADE_PIP} || '';
         $this->doit_in_sourcedir(
-            @pip, 'install', '-U', 'pip' . $version);
+            @pip, 'install', '-U', 'pip' . $version, @pipargs);
     }
     if (defined $ENV{DH_UPGRADE_SETUPTOOLS}) {
         my $version = length $ENV{DH_UPGRADE_SETUPTOOLS} && '=='.$ENV{DH_UPGRADE_SETUPTOOLS} || '';
         $this->doit_in_sourcedir(
-            @pip, 'install', '-U', 'setuptools' . $version);
+            @pip, 'install', '-U', 'setuptools' . $version, @pipargs);
     }
     if (defined $ENV{DH_UPGRADE_WHEEL}) {
         my $version = length $ENV{DH_UPGRADE_WHEEL} && '=='.$ENV{DH_UPGRADE_WHEEL} || '';
         $this->doit_in_sourcedir(
-            @pip, 'install', '-U', 'wheel' . $version);
+            @pip, 'install', '-U', 'wheel' . $version, @pipargs);
     }
     $this->doit_in_sourcedir(
         @pip, 'install', '-r', $reqfile, @pipargs);
