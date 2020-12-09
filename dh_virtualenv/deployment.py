@@ -210,7 +210,7 @@ class Deployment(object):
     def find_script_files(self):
         """Find list of files containing python shebangs in the bin directory"""
         command = ['grep', '-l', '-r',
-                   '-e', r'^#!\(python\|.*bin/\(env \)\?{0}\)'.format(_PYTHON_INTERPRETERS_REGEX),
+                   '-e', r'^#!\({0}\|.*bin/\(env \)\?{0}\)'.format(_PYTHON_INTERPRETERS_REGEX),
                    '-e', r"^'''exec.*bin/{0}".format(_PYTHON_INTERPRETERS_REGEX),
                    self.bin_dir]
         grep_proc = subprocess.Popen(command, stdout=subprocess.PIPE)
@@ -223,7 +223,7 @@ class Deployment(object):
         """
         pythonpath = os.path.join(self.virtualenv_install_dir, 'bin/python')
         for f in self.find_script_files():
-            regex = (r's-^#!\(python\|.*bin/\(env \)\?{names}\"\?\)-#!{pythonpath}-;'
+            regex = (r's-^#!\({names}\|.*bin/\(env \)\?{names}\"\?\)-#!{pythonpath}-;'
                      r"s-^'''exec'.*bin/{names}-'''exec' {pythonpath}-"
             ).format(names=_PYTHON_INTERPRETERS_REGEX, pythonpath=re.escape(pythonpath))
             p = subprocess.Popen(
