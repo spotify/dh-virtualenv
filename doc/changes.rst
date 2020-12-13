@@ -12,6 +12,11 @@ Unreleased
 ==========
 
 * Fix --verbose and --setuptools command line argument usage together with --builtin-venv
+* Also fix ``#!python`` shebang lines
+  (`#317 <https://github.com/spotify/dh-virtualenv/pull/317>`_)
+  [`@blag <https://github.com/blag>`_, `@Kami <https://github.com/Kami>`_,
+  `@dennybaa <https://github.com/dennybaa>`_, and
+  `@StackStorm contributors <https://github.com/StackStorm>`_]
 
 1.2.2
 =====
