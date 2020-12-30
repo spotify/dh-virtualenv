@@ -126,6 +126,11 @@ sub install {
     my $venv = $this->get_venv_builddir();
     my $prefix = $this->get_install_root();
 
+    if ( $destdir =~ /\/tmp$/ ) {
+        my $mainpackage = $ENV{DH_VIRTUALENV_MAINPACKAGE} || $sourcepackage;
+        $destdir =~ s/\/tmp$/\/$mainpackage/;
+    }
+
     $this->doit_in_sourcedir(
         @pip, 'install', '.');
 
