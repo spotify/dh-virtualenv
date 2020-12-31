@@ -150,7 +150,7 @@ sub install {
 
     if (defined $ENV{DH_VIRTUALENV_INSTALL_SUFFIX}) {
         $new_python = "$prefix/" . $ENV{DH_VIRTUALENV_INSTALL_SUFFIX} . "/bin/python";
-        my $curdir = "$destdir$prefix" . $ENV{DH_VIRTUALENV_INSTALL_SUFFIX} . "/bin/*";
+        my $curdir = "$destdir$prefix/" . $ENV{DH_VIRTUALENV_INSTALL_SUFFIX} . "/bin/*";
         @binaries = glob($curdir);
     } else {
         $new_python = "$prefix/$sourcepackage/bin/python";
