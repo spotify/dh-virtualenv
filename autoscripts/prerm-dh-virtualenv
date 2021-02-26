@@ -9,8 +9,8 @@ $DH_VENV_DEBUG set -x
 case "$1" in
     remove|deconfigure)
         $DH_VENV_DEBUG echo "$0 $1 called with $# args:" "$@"
-        rm -f "${dh_venv_install_dir:-/should_be_an_arg}/bin"/*,orig >/dev/null 2>&1 || true
-        rm -f "${dh_venv_install_dir:-/should_be_an_arg}/lib"/python*/__pycache__/*.pyc >/dev/null 2>&1 || true
+        rm -rf "${dh_venv_install_dir:-/should_be_an_arg}/bin"/*,orig >/dev/null 2>&1 || true
+        rm -rf "${dh_venv_install_dir:-/should_be_an_arg}/lib"/python*/__pycache__/*.pyc >/dev/null 2>&1 || true
         ;;
 
     upgrade|failed-upgrade)
