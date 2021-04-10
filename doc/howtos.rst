@@ -116,6 +116,16 @@ extend your ``debian/rules`` file as outlined below.
 This example works for the Python data science stack
 – you have to list the packages that cause *you* trouble.
 
+To skip all shared libraries in all packages, you can do the following.
+
+.. code-block:: makefile
+
+    override_dh_strip:
+            dh_strip --exclude=/site-packages/
+
+    override_dh_shlibdeps:
+            dh_shlibdeps --exclude=/site-packages/
+
 .. _manylinux: https://github.com/pypa/manylinux
 .. _`PEP 513`: https://www.python.org/dev/peps/pep-0513/
 
