@@ -27,7 +27,7 @@ if not on_rtd:
 
 # https://docs.readthedocs.io/en/latest/guides/adding-custom-css.html
 def setup(app):
-    app.add_stylesheet('css/custom.css')
+    app.add_css_file('css/custom.css')
     #app.add_javascript('js/custom.js')
 
 
