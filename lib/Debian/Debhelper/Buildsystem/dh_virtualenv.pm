@@ -69,7 +69,7 @@ sub build {
     my $this = shift;
     my $sourcedir = $this->get_sourcedir();
     my $builddir = $this->get_venv_builddir();
-    my @params = ('--no-site-packages');
+    my @params = ();
     my $reqfile = ('requirements.txt');
     my @pipargs = ();
 
