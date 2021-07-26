@@ -4,7 +4,6 @@ use strict;
 use base 'Debian::Debhelper::Buildsystem';
 use Debian::Debhelper::Dh_Lib;
 use File::Spec;
-use Cwd;
 
 sub DESCRIPTION {
     'Python Virtualenv';
@@ -47,7 +46,7 @@ sub get_exec {
     my $this = shift;
     my $executable = shift;
     my $builddir = $this->get_venv_builddir();
-    return Cwd::abs_path("$builddir/bin/$executable");
+    return "$builddir/bin/$executable";
 }
 
 sub get_python {
