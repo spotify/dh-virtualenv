@@ -354,3 +354,27 @@ See :ref:`example-configsite` for the full project that uses this.
    — with input from `@Nadav-Ruskin`_
 
 .. _`@Nadav-Ruskin`: https://github.com/Nadav-Ruskin
+
+
+.. _disabling-pip:
+
+Disabling pip in your virtualenv
+================================
+
+To avoid divergence between systems using your ``dh-virtualenv`` package, you
+may want to disable using ``pip`` to mutate the installed virtualenv. To do
+this, you can uninstall it from the created virtualenv immediately after
+``dh_virtualenv`` runs:
+
+.. code-block:: make
+
+    export DH_VIRTUALENV_INSTALL_ROOT=/opt/venvs
+    PACKAGE=$(shell dh_listpackages)
+    DH_VENV_DIR=debian/$(PACKAGE)$(DH_VIRTUALENV_INSTALL_ROOT)/$(PACKAGE)
+
+    %:
+        dh $@ --with python-virtualenv
+
+    override_dh_virtualenv:
+        dh_virtualenv --python python3
+        $(DH_VENV_DIR)/bin/python -m pip uninstall --yes pip
