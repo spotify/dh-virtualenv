@@ -12,6 +12,8 @@ Unreleased
 ==========
 
 * Fix --verbose and --setuptools command line argument usage together with --builtin-venv
+* Ignore unknown options passed via -O (as intended according to the debhelper
+  man page).
 * Also fix ``#!python`` shebang lines
   (`#317 <https://github.com/spotify/dh-virtualenv/pull/317>`_)
   [`@blag <https://github.com/blag>`_, `@Kami <https://github.com/Kami>`_,

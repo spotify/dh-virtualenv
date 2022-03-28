@@ -36,7 +36,7 @@ class DebhelperOptionParser(OptionParser):
 
     """
     def parse_args(self, args=None, values=None):
-        args = [o[2:] if o.startswith('-O-') else o
+        args = [o[2:] if (o.startswith('-O-') and self.has_option(o[2:])) else o
                 for o in self._get_args(args)]
         args.extend(os.environ.get('DH_OPTIONS', '').split())
         # Unfortunately OptionParser is an old style class :(
