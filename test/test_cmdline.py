@@ -53,12 +53,18 @@ def test_test_debhelper_option_parsing():
     eq_([], args)
 
 
+def test_ignore_unknown_debhelper_options():
+    parser = cmdline.DebhelperOptionParser()
+    parser.add_option('-O')
+    opts, args = parser.parse_args(['-O--buildsystem=none'])
+    eq_([], args)
+
+
 def test_parser_picks_up_DH_OPTIONS_from_environ():
     with patch.dict(os.environ, {'DH_OPTIONS': '--sourcedirectory=/tmp/'}):
         parser = cmdline.get_default_parser()
         opts, args = parser.parse_args()
         eq_('/tmp/', opts.sourcedirectory)
-
 
 def test_get_default_parser():
     parser = cmdline.get_default_parser()
