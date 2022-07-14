@@ -20,7 +20,7 @@ debianized-sentry
 
 The project packages `Sentry.io`, adding systemd integration and default configuration
 for the Sentry Django/uWSGI app and related helper services.
-It also shows how to package 3rd party software as relased on PyPI,
+It also shows how to package 3rd party software as released on PyPI,
 keeping the packaging code separate from the packaged project.
 
 It is based on the `debianized-pypi-mold`_ cookiecutter, which allows you to set up

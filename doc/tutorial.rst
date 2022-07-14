@@ -71,7 +71,7 @@ see the README for details on that.
 Using Docker also allows cross-distribution builds.
 
 Otherwise, after you have cloned the repository,
-you must install build tools and dependencies on your worksatation,
+you must install build tools and dependencies on your workstation,
 and then start the build:
 
 .. code-block:: bash
