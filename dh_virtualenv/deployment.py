@@ -101,7 +101,7 @@ class Deployment(object):
             '--extra-index-url={0}'.format(url) for url in extra_urls
         ])
         self.pip_args.append('--log={0}'.format(os.path.abspath(self.log_file.name)))
-        # Keep a copy with well-suported options only (for upgrading pip itself)
+        # Keep a copy with well-supported options only (for upgrading pip itself)
         self.pip_upgrade_args = self.pip_args[:]
         # Add in any user supplied pip args
         self.pip_args.extend(extra_pip_arg)

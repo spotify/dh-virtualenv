@@ -75,7 +75,7 @@ To make executables in your virtualenv's ``bin`` directory callable from any she
 do **not** add that directory to the global ``PATH`` by a ``profile.d`` hook or similar.
 This would add all the other stuff in there too, and you simply do not want that.
 
-So use the ``debian/«pkgname».links`` file to add a symbolic link to *those* exectuables
+So use the ``debian/«pkgname».links`` file to add a symbolic link to *those* executables
 you want to be visible, typically the one created by your main application package.
 
 .. code-block:: ini

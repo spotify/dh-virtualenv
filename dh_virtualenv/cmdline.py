@@ -45,7 +45,7 @@ class DebhelperOptionParser(OptionParser):
 
 def _check_for_deprecated_options(
         option, opt_str, value, parser, *args, **kwargs):
-    # TODO: If more deprectaed options pop up, refactor this method to
+    # TODO: If more deprecated options pop up, refactor this method to
     # handle them in more generic way (or actually remove the
     # deprecated options)
     if opt_str in ('--pypi-url', '--index-url'):
