@@ -63,6 +63,12 @@ class DebHelper(object):
                     #del self.packages[binary_package]
                     self.packages[binary_package]['arch'] = arch
                     continue
+                elif line.startswith('X-Dh-Virtualenv-'):
+                    header = line[16:]
+                    option_name, _, option_value = header.partition(':')
+                    option_name = option_name.replace("-", "_").lower()
+                    option_value = option_value.strip()
+                    self.packages[binary_package]['header-options'][option_name] = option_value
             elif line.startswith('Package:'):
                 binary_package = line[8:].strip()
                 if binary_package.startswith('python3'):
@@ -75,7 +81,8 @@ class DebHelper(object):
                 self.packages[binary_package] = {'substvars': {},
                                                  'autoscripts': {},
                                                  'rtupdates': [],
-                                                 'arch': 'any'}
+                                                 'arch': 'any',
+                                                 'header-options': {}}
             elif line.startswith('Source:'):
                 self.source_name = line[7:].strip()
             elif source_section:

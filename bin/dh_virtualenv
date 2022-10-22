@@ -71,7 +71,7 @@ def main():
             log.info('{0}: {1}'.format(package, msg))
 
         _info('Processing package...')
-        deploy = Deployment.from_options(package, options)
+        deploy = Deployment.from_options_and_headers(package, options, details['header-options'])
 
         if options.autoscripts:
             _info('Adding autoscripts...')

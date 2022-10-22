@@ -130,6 +130,44 @@ class Deployment(object):
                    upgrade_pip_to=options.upgrade_pip_to,
                   )
 
+    @classmethod
+    def from_options_and_headers(cls, package, options, headers):
+        accepted_headers = [
+            "setuptools",
+            "extra_index_url",
+            "preinstall",
+            "extras",
+            "pip_tool",
+            "upgrade_pip",
+            "upgrade_pip_to",
+            "extra_pip_arg",
+            "extra_virtualenv_arg",
+            "index_url",
+            "python",
+            "builtin_venv",
+            "autoscripts",
+            "use_system_packages",
+            "skip_install",
+            "install_suffix",
+            "requirements_filename",
+            "setuptools_test",
+        ]
+
+        for header_name in accepted_headers:
+            type_ = type(getattr(options, header_name))
+            header_value = headers.get(header_name)
+            if header_value is not None:
+                if type_ in [type(None), str]:
+                    setattr(options, header_name, header_value)
+                elif type_ is list:
+                    header_value = [ value.strip() for value in header_value.split(',') ]
+                    setattr(options, header_name, header_value)
+                elif type_ is bool:
+                    header_value = header_value.lower() in ["yes", "enable", "on", "true", "1"]
+                    setattr(options, header_name, header_value)
+
+        return cls.from_options(package, options)
+
     def clean(self):
         shutil.rmtree(self.debian_root)
 
