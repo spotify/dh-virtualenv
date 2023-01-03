@@ -19,6 +19,8 @@ Unreleased
   [`@blag <https://github.com/blag>`_, `@Kami <https://github.com/Kami>`_,
   `@dennybaa <https://github.com/dennybaa>`_, and
   `@StackStorm contributors <https://github.com/StackStorm>`_]
+* Replace usage of `inspect.getargspec` with `inspect.getfullargspec` for compatibility
+  with Python 3.11.
 
 1.2.2
 =====
