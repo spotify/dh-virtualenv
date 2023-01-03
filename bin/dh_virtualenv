@@ -57,7 +57,7 @@ def main():
     # passed the packages keyword argument. Newer (like Ubuntu
     # Precise) expect the whole options to be passed.
 
-    arguments = inspect.getargspec(DebHelper.__init__).args
+    arguments = inspect.getfullargspec(DebHelper.__init__).args
     if 'packages' in arguments:
         dh = DebHelper(packages=options.package or None)
     else:
