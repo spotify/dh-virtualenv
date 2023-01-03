@@ -1,0 +1,104 @@
+Description: Add passing options via individual binary package headers
+ Useful for building multiple variants of a package (eg. different extras).
+ .
+ dh-virtualenv (1.2.2-2+headopt) unstable; urgency=medium
+ .
+   * Add passing options via individual binary package headers
+Author: Marcin Szewczyk <marcin.szewczyk@wodny.org>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2022-10-22
+
+--- dh-virtualenv-1.2.2.orig/bin/dh_virtualenv
++++ dh-virtualenv-1.2.2/bin/dh_virtualenv
+@@ -71,7 +71,7 @@ def main():
+             log.info('{0}: {1}'.format(package, msg))
+ 
+         _info('Processing package...')
+-        deploy = Deployment.from_options(package, options)
++        deploy = Deployment.from_options_and_headers(package, options, details['header-options'])
+ 
+         if options.autoscripts:
+             _info('Adding autoscripts...')
+--- dh-virtualenv-1.2.2.orig/dh_virtualenv/debhelper.py
++++ dh-virtualenv-1.2.2/dh_virtualenv/debhelper.py
+@@ -63,6 +63,12 @@ class DebHelper(object):
+                     #del self.packages[binary_package]
+                     self.packages[binary_package]['arch'] = arch
+                     continue
++                elif line.startswith('X-Dh-Virtualenv-'):
++                    header = line[16:]
++                    option_name, _, option_value = header.partition(':')
++                    option_name = option_name.replace("-", "_").lower()
++                    option_value = option_value.strip()
++                    self.packages[binary_package]['header-options'][option_name] = option_value
+             elif line.startswith('Package:'):
+                 binary_package = line[8:].strip()
+                 if binary_package.startswith('python3'):
+@@ -75,7 +81,8 @@ class DebHelper(object):
+                 self.packages[binary_package] = {'substvars': {},
+                                                  'autoscripts': {},
+                                                  'rtupdates': [],
+-                                                 'arch': 'any'}
++                                                 'arch': 'any',
++                                                 'header-options': {}}
+             elif line.startswith('Source:'):
+                 self.source_name = line[7:].strip()
+             elif source_section:
+--- dh-virtualenv-1.2.2.orig/dh_virtualenv/deployment.py
++++ dh-virtualenv-1.2.2/dh_virtualenv/deployment.py
+@@ -130,6 +130,44 @@ class Deployment(object):
+                    upgrade_pip_to=options.upgrade_pip_to,
+                   )
+ 
++    @classmethod
++    def from_options_and_headers(cls, package, options, headers):
++        accepted_headers = [
++            "setuptools",
++            "extra_index_url",
++            "preinstall",
++            "extras",
++            "pip_tool",
++            "upgrade_pip",
++            "upgrade_pip_to",
++            "extra_pip_arg",
++            "extra_virtualenv_arg",
++            "index_url",
++            "python",
++            "builtin_venv",
++            "autoscripts",
++            "use_system_packages",
++            "skip_install",
++            "install_suffix",
++            "requirements_filename",
++            "setuptools_test",
++        ]
++
++        for header_name in accepted_headers:
++            type_ = type(getattr(options, header_name))
++            header_value = headers.get(header_name)
++            if header_value is not None:
++                if type_ in [type(None), str]:
++                    setattr(options, header_name, header_value)
++                elif type_ is list:
++                    header_value = [ value.strip() for value in header_value.split(',') ]
++                    setattr(options, header_name, header_value)
++                elif type_ is bool:
++                    header_value = header_value.lower() in ["yes", "enable", "on", "true", "1"]
++                    setattr(options, header_name, header_value)
++
++        return cls.from_options(package, options)
++
+     def clean(self):
+         shutil.rmtree(self.debian_root)
+ 

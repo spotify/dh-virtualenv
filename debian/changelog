@@ -1,3 +1,9 @@
+dh-virtualenv (1.2.2-2+headopt) unstable; urgency=medium
+
+  * Add passing options via individual binary package headers
+
+ -- Marcin Szewczyk <marcin.szewczyk@wodny.org>  Sat, 22 Oct 2022 11:41:43 +0200
+
 dh-virtualenv (1.2.2-1) unstable; urgency=medium
 
   * New upstream release (Closes: #970810)
