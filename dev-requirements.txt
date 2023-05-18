@@ -16,3 +16,4 @@ sphinx-autobuild==0.7.1
 
 # Add project itself
 -e .
+tornado>=6.3.2 # not directly required, pinned by Snyk to avoid a vulnerability
